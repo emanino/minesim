@@ -64,12 +64,10 @@ public class Person implements MovingObject {
 		return carried;
 	}
 	
-	public void addCarried(Integer movId) {
-		if(movId == id)
+	public void addCarried(MovingObject obj) {
+		if(obj == this)
 			throw new IllegalArgumentException("A Person cannot carry themselves");
-		if(!(state.getObject(movId) instanceof MovingObject))
-			throw new IllegalArgumentException("A Person can only carry MovingObjects");
-		carried.add(movId);
+		carried.add(obj.getId());
 	}
 	
 	public void removeCarried(Integer movId) {

@@ -1,9 +1,7 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import static org.junit.Assert.*;
-
-import java.util.Set;
-
+import java.util.HashSet;
 import org.junit.Test;
 
 public class MineTest {
@@ -23,5 +21,14 @@ public class MineTest {
 		
 		assertEquals("Unexpected number of LayoutAtoms", 44, nAtoms);
 	}
-
+	
+	@Test
+	public void testUpdate() {
+		
+		// temporary test
+		Mine mine = new Mine(0, 0);
+		
+		for(int t = 0; t < 2; ++t)
+			mine.update(new HashSet<Action>());
+	}
 }

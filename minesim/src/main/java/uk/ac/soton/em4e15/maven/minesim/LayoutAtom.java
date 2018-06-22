@@ -29,7 +29,7 @@ public class LayoutAtom implements AtomObject {
 		// find the neighbours automatically
 		for(AtomObject obj: state.getObjectsInRadius(pos, radius))
 			if(obj instanceof LayoutAtom && obj.getId() != id)
-				this.linkWith(obj.getId());
+				this.linkWith((LayoutAtom) obj);
 	}
 	
 	// copy the LayoutAtom into the next state
@@ -65,17 +65,19 @@ public class LayoutAtom implements AtomObject {
 		return neighbours;
 	}
 	
-	public void addNeighbour(Integer atomId) {
-		if(atomId == id)
+	public void addNeighbour(LayoutAtom atom) {
+		if(atom == this)
 			throw new IllegalArgumentException("A LayoutAtom cannot have itself as a neighbour");
-		if(!(state.getObject(atomId) instanceof LayoutAtom))
-			throw new IllegalArgumentException("The neighbours of a LayoutAtom must be LayoutAtoms");
-		neighbours.add(atomId);
+		neighbours.add(atom.getId());
 	}
 	
-	public void linkWith(Integer atomId) {
-		this.addNeighbour(atomId);
-		((LayoutAtom) state.getObject(atomId)).addNeighbour(id);
+	public void removeNeighbour(Integer atomId) {
+		neighbours.remove(atomId);
+	}
+	
+	public void linkWith(LayoutAtom atom) {
+		this.addNeighbour(atom);
+		atom.addNeighbour(this);
 	}
 
 	@Override
