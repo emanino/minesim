@@ -20,6 +20,10 @@ public class Position {
 		this(coordinates.get(0), coordinates.get(1), coordinates.get(2));
 	}
 	
+	Position(Position pos) {
+		this(pos.getX(), pos.getY(), pos.getZ());
+	}
+	
 	public Double getX() {
 		return x;
 	}
@@ -54,5 +58,9 @@ public class Position {
 	
 	public double distanceTo(Position pos) {
 		return pos.minus(this).length();
+	}
+	
+	public String toJsonGui() {
+		return "[" + x + "," + y + "," + z + "]";
 	}
 }

@@ -63,12 +63,12 @@ public class LayoutAtomTest {
 		LayoutAtom h = new LayoutAtom(0, new Position(0, 3, 0), state, new LayoutAtomStatus(), 1.1);
 		LayoutAtom i = new LayoutAtom(0, new Position(0, 1, 0), state, new LayoutAtomStatus(), 1.1);
 		
-		List<Integer> path1 = b.shortestPathTo(h.getId(), new HashSet<Integer>());
-		List<Integer> path2 = b.shortestPathTo(h.getId(), new HashSet<Integer>(Arrays.asList(i.getId())));
-		List<Integer> path3 = b.shortestPathTo(h.getId(), new HashSet<Integer>(Arrays.asList(g.getId())));
+		Path path1 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>());
+		Path path2 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(i.getId())));
+		Path path3 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(g.getId())));
 		
-		assertEquals("Failed to find the shortest path", Arrays.asList(h.getId(), g.getId(), i.getId(), a.getId(), b.getId()), path1);
-		assertEquals("Failed to find the alternative path", Arrays.asList(h.getId(), g.getId(), f.getId(), e.getId(), d.getId(), c.getId(), b.getId()), path2);
-		assertEquals("Failed to spot that the target is unreachable", null, path3);
+		assertEquals("Failed to find the shortest path", Arrays.asList(b.getId(), a.getId(), i.getId(), g.getId(), h.getId()), path1.getAtomIds());
+		assertEquals("Failed to find the alternative path", Arrays.asList(b.getId(), c.getId(), d.getId(), e.getId(), f.getId(), g.getId(), h.getId()), path2.getAtomIds());
+		assertEquals("Failed to spot that the target is unreachable", null, path3.getAtomIds());
 	}
 }

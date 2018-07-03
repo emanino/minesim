@@ -7,4 +7,5 @@ public interface MineObject {
 	
 	public Integer getId();
 	public void update(Set<Action> actions, Random rand, MineState next);
+	public String toJsonGui();
 }

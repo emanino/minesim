@@ -72,4 +72,9 @@ public class SimpleSensor implements MovingObject {
 		SimpleSensor sensor = new SimpleSensor(this, next);
 		sensor.updateReading();
 	}
+	
+	@Override
+	public String toJsonGui() {
+		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+	}
 }

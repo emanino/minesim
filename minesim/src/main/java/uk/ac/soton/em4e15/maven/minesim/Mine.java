@@ -121,4 +121,11 @@ public class Mine {
 			createBranch(tail, subDir.get(b), nLevels - 1, maxBranching, nAtoms - nLevels, granularity, radius);
 		}
 	}
+	
+	public String toJsonGui() {
+		String json = "{\"mineObjects\":[";
+		for(MineObject obj: state.getObjects())
+			json += obj.toJsonGui();
+		return json + "]}";
+	}
 }

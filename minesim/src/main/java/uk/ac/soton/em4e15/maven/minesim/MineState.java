@@ -28,6 +28,10 @@ public class MineState {
 		++maxId;
 	}
 	
+	public void removeObject(Integer id) {
+		objects.remove(id);
+	}
+	
 	public MineObject getObject(Integer id) {
 		return objects.get(id);
 	}

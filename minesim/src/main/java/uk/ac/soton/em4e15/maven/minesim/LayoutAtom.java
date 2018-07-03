@@ -1,9 +1,8 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
 
@@ -15,6 +14,7 @@ public class LayoutAtom implements AtomObject {
 	private MineState state;
 	private LayoutAtomStatus status;
 	private Set<Integer> neighbours;
+	private double radius;
 	
 	// create a new LayoutAtom
 	LayoutAtom(Integer superId, Position pos, MineState state, LayoutAtomStatus status, double radius) {
@@ -24,6 +24,7 @@ public class LayoutAtom implements AtomObject {
 		this.state = state;
 		this.status = status;
 		neighbours = new HashSet<Integer>();
+		this.radius = radius;
 		state.addNew(this);
 		
 		// find the neighbours automatically
@@ -40,6 +41,7 @@ public class LayoutAtom implements AtomObject {
 		state = next;
 		status = atom.getStatus();
 		neighbours = atom.getNeighbours();
+		radius = atom.getRadius();
 		state.addOld(this);
 	}
 
@@ -79,36 +81,63 @@ public class LayoutAtom implements AtomObject {
 		this.addNeighbour(atom);
 		atom.addNeighbour(this);
 	}
+	
+	public double getRadius() {
+		return radius;
+	}
 
 	@Override
 	public void update(Set<Action> actions, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
-		// update atom...
-		// - status (given occupants)
+		
+		// compute the damage caused by Fires
+		for(AtomObject obj: state.getObjectsInRadius(pos, radius))
+			if(obj instanceof Fire)
+				atom.getStatus().update((Fire) obj);
+		
+		// compute the effect of neighbouring LayoutAtoms
+		Set<LayoutAtomStatus> statuses = new HashSet<LayoutAtomStatus>();
+		for(Integer atomId: neighbours)
+			statuses.add(((LayoutAtom) state.getObject(atomId)).getStatus());
+		atom.getStatus().update(statuses);
+		
+		// TO DO: people, vehicles, ventilation, etc
 	}
 	
-	public List<Integer> shortestPathTo(Integer target, Set<Integer> block) {
+	public Path shortestPathTo(Set<Integer> targets, Set<Integer> block) {
 		
-		if(target == id)
-			return new ArrayList<Integer>(Arrays.asList(id));
+		if(targets.contains(id))
+			return new Path(new LinkedList<Integer>(Arrays.asList(id)), 0.0);
 		
-		List<Integer> subpath = null;
-		int length = Integer.MAX_VALUE;
+		Path subpath = new Path();
 		block.add(id);
 		
 		for(Integer atomId: neighbours)
 			if(!block.contains(atomId)) {
-				List<Integer> candidate = ((LayoutAtom) state.getObject(atomId)).shortestPathTo(target, block);
-				if(candidate != null && candidate.size() < length) {
-					length = candidate.size();
+				Path candidate = ((LayoutAtom) state.getObject(atomId)).shortestPathTo(targets, block);
+				if(candidate.betterThan(subpath))
 					subpath = candidate;
-				}
 			}
 		
-		if(subpath != null)
-			subpath.add(id); // the final path will be in reverse order
+		subpath.prependAtomId(id);
+		subpath.increaseCost(1.0);
 		block.remove(id);
 		
 		return subpath;
+	}
+	
+	public Path shortestPathOut(Set<Integer> evacuate) {
+		
+		Set<Integer> targets = new HashSet<Integer>();
+		for(MineObject obj: state.getObjects())
+			if(obj instanceof LayoutAtom && !evacuate.contains(obj.getId()))
+				targets.add(obj.getId());
+		
+		return this.shortestPathTo(targets, new HashSet<Integer>());
+	}
+	
+	@Override
+	public String toJsonGui() {
+		return "{\"type\":\"atom\",\"name\":\"A"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
 }

@@ -1,8 +1,7 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -13,9 +12,6 @@ public class Person implements MovingObject {
 	private MineState state;
 	private PersonStatus status;
 	private Set<Integer> carried;
-	
-	// this attribute is temporary (needed to do a random walk)
-	private LayoutAtom target = null;
 	
 	// create a new Person
 	Person(Position pos, MineState state, PersonStatus status) {
@@ -56,6 +52,10 @@ public class Person implements MovingObject {
 			((MovingObject) state.getObject(obId)).setPosition(pos);
 	}
 	
+	public MineState getState() {
+		return state;
+	}
+	
 	public PersonStatus getStatus() {
 		return status;
 	}
@@ -77,46 +77,89 @@ public class Person implements MovingObject {
 	@Override
 	public void update(Set<Action> actions, Random rand, MineState next) {
 		Person person = new Person(this, next);
-		// update person...
-		// - moves around, does stuff (just a random walk for now)
 		
-		// find the closest LayoutAtom
+		// find the subset of Actions that pertain this Person
+		Set<Action> myActions = new HashSet<Action>();
+		for(Action act: actions)
+			if(act.getRecipientIds().contains(id))
+				myActions.add(act);
+		
+		// find the current LayoutAtom
 		LayoutAtom currAtom = state.getClosestLayoutAtom(pos);
 		
-		// target is reached, choose the next one
-		if(target == null || target.getId() == currAtom.getId()) {
+		// TAKE DAMAGE:
+		// high temperatures
+		// high CO2
+		person.getStatus().update(currAtom.getStatus());
+		
+		// MOVE AROUND:
+		// extract the atoms we need to evacuate (if any)
+		// if we need to evacuate the atom we are on, do so
+		// else try to reach the target atom (if any)
+		// while avoiding the atoms to be evacuated
+		
+		// find all the LayoutAtoms to be evacuated
+		Set<Integer> evacuate = new HashSet<Integer>();
+		for(Action act: myActions)
+			if(act instanceof EvacuateAction)
+				evacuate.addAll(((EvacuateAction) act).getAtomIds());
+		
+		// run away (if need be)!
+		Path path = null;
+		if(evacuate.contains(currAtom.getId())) {
+			path = currAtom.shortestPathOut(evacuate);
 			
-			// find all the LayoutAtoms
-			List<LayoutAtom> atoms = new ArrayList<LayoutAtom>();
-			for(MineObject obj: state.getObjects())
-				if(obj instanceof LayoutAtom)
-					atoms.add((LayoutAtom) obj);
+		// find the target(s)
+		} else {
+			Set<Integer> targets = new HashSet<Integer>();
+			for(Action act: myActions)
+				if(act instanceof MoveAction)
+					targets.add(((MoveAction) act).getTargetId());
 			
-			// choose one at random
-			int a = rand.nextInt(atoms.size());
-			target = atoms.get(a);
+			// shortest path to the target(s)
+			if(targets.size() > 0)
+				path = currAtom.shortestPathTo(targets, evacuate);
 		}
 		
-		// find the path to the target
-		List<Integer> path = currAtom.shortestPathTo(target.getId(), new HashSet<Integer>());
+		// make a move
+		if(path != null) {
+			Position newPos = this.moveAlongPath(path, currAtom);
+			person.setPosition(newPos);
+		}
 		
-		// move towards the target
-		double distanceLeft = status.getSpeed();
-		Position newPos = new Position(pos.getXYZ());
-		for(int i = path.size() - 2; i >= 0; --i) {
-			Position nextAtom = ((LayoutAtom) state.getObject(path.get(i))).getPosition();
-			Position difference = nextAtom.minus(newPos);
-			double length = difference.length();
-			if(length < distanceLeft) {
-				newPos = newPos.plus(difference);
-				distanceLeft -= length;
+		// DO OTHER STUFF
+	}
+	
+	protected Position moveAlongPath(Path path, LayoutAtom currAtom) {
+		
+		if(path.getAtomIds().get(0) != currAtom.getId())
+			throw new IllegalArgumentException("The current LayoutAtom must be the first LayoutAtom in this Path");
+		
+		Position newPos = new Position(pos);
+		double distance = status.getDistance();
+		
+		Iterator<Integer> atomIds = path.getAtomIds().iterator();
+		atomIds.next(); // skip the first atom
+		
+		while(atomIds.hasNext()) {
+			Position step = ((LayoutAtom) state.getObject(atomIds.next())).getPosition().minus(newPos);
+			double length = step.length();
+			
+			// jump to the next LayoutAtom
+			if(length < distance) {
+				newPos = newPos.plus(step);
+				distance -= length;
 			} else {
-				newPos = newPos.plus(difference.times(distanceLeft / length));
+				newPos = newPos.plus(step.times(distance / length)); // fall short if we run out of distance
 				break;
 			}
 		}
 		
-		// overwrite the Position in the new Person
-		person.setPosition(newPos);
+		return newPos;
+	}
+	
+	@Override
+	public String toJsonGui() {
+		return "{\"type\":\"person\",\"name\":\"P"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
 }

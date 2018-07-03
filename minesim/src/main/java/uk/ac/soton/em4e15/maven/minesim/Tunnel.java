@@ -34,7 +34,7 @@ public class Tunnel implements LayoutObject {
 		// create uniform atoms along the length of the Tunnel
 		Position pos = head.plus(increment.times(0.5));
 		for(int i = 0; i < nAtoms; ++i) {
-			LayoutAtom atom = new LayoutAtom(id, pos, state, status, radius);
+			LayoutAtom atom = new LayoutAtom(id, pos, state, new LayoutAtomStatus(status), radius);
 			atoms.add(atom.getId());
 			pos = pos.plus(increment);
 		}
@@ -91,5 +91,10 @@ public class Tunnel implements LayoutObject {
 		Tunnel tunnel = new Tunnel(this, next);
 		// update tunnel...
 		// - e.g. if an explosion increases its length
+	}
+
+	@Override
+	public String toJsonGui() {
+		return "{\"type\":\"tunnel\",\"name\":\"T"+ id + "\",\"c1\":" + head.toJsonGui() + ",\"c2\":" + tail.toJsonGui() + "}";
 	}
 }
