@@ -26,9 +26,9 @@ public class Tunnel implements LayoutObject {
 		// check increment.length inside (radius/2, radius)
 		Position increment = tail.minus(head).times(1.0 / (double) nAtoms);
 		double length = increment.length();
-		if(length < radius / 2.0)
+		if(radius >= length * 2.0)
 			throw new IllegalArgumentException("The required number of atoms is too large for this radius");
-		if(length > radius)
+		if(radius <= length)
 			throw new IllegalArgumentException("The required number of atoms is too small for this radius");
 		
 		// create uniform atoms along the length of the Tunnel
@@ -88,7 +88,8 @@ public class Tunnel implements LayoutObject {
 
 	@Override
 	public void update(Set<Action> actions, Random rand, MineState next) {
-		Tunnel tunnel = new Tunnel(this, next);
+		// Tunnel tunnel = new Tunnel(this, next);
+		new Tunnel(this, next);
 		// update tunnel...
 		// - e.g. if an explosion increases its length
 	}

@@ -10,7 +10,7 @@ public class MineTest {
 	public void testConstructor() {
 		
 		// temporary test
-		Mine mine = new Mine(0, 0);
+		Mine mine = new Mine(1, 0);
 		MineState state = mine.getState();
 		
 		// count the number of LayoutAtoms
@@ -19,16 +19,25 @@ public class MineTest {
 			if(obj instanceof LayoutAtom)
 				++nAtoms;
 		
-		assertEquals("Unexpected number of LayoutAtoms", 44, nAtoms);
+		assertEquals("Unexpected number of LayoutAtoms", 184, nAtoms);
 	}
 	
 	@Test
 	public void testUpdate() {
 		
 		// temporary test
-		Mine mine = new Mine(0, 0);
+		Mine mine = new Mine(1, 0);
 		
 		for(int t = 0; t < 2; ++t)
 			mine.update(new HashSet<Action>());
+	}
+	
+	@Test
+	public void testToJsonGui() {
+		
+		Mine mine = new Mine(1, 0);
+		String json = mine.toJsonGui();
+		
+		System.out.println(json);
 	}
 }

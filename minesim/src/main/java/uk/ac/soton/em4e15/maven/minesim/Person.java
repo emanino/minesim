@@ -92,6 +92,11 @@ public class Person implements MovingObject {
 		// high CO2
 		person.getStatus().update(currAtom.getStatus());
 		
+		// SLOWLY RECOVER
+		// if close to the exit
+		if(pos.distanceTo(new Position(0.0, 0.0, 0.0)) < 0.1)
+			person.getStatus().recoverHealth();
+		
 		// MOVE AROUND:
 		// extract the atoms we need to evacuate (if any)
 		// if we need to evacuate the atom we are on, do so

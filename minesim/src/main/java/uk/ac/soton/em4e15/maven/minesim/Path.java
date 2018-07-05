@@ -1,6 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
-import java.util.HashSet;
 import java.util.List;
 
 public class Path {

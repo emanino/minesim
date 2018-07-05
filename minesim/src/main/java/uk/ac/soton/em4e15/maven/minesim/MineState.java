@@ -1,7 +1,9 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,5 +68,12 @@ public class MineState {
 	
 	public int getNextId() {
 		return maxId;
+	}
+	
+	public String toJsonGui() {
+		List<String> strings = new ArrayList<String>();
+		for(Map.Entry<Integer, MineObject> entry: objects.entrySet())
+			strings.add(entry.getValue().toJsonGui());
+		return "{\"mineObjects\":[" + String.join(",", strings) + "]}";
 	}
 }

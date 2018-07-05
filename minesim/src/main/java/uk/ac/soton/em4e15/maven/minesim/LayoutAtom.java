@@ -101,7 +101,8 @@ public class LayoutAtom implements AtomObject {
 			statuses.add(((LayoutAtom) state.getObject(atomId)).getStatus());
 		atom.getStatus().update(statuses);
 		
-		// TO DO: people, vehicles, ventilation, etc
+		// the status slowly recovers on its own
+		atom.getStatus().recover();
 	}
 	
 	public Path shortestPathTo(Set<Integer> targets, Set<Integer> block) {

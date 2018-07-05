@@ -1,7 +1,7 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -27,7 +27,6 @@ public class Mine {
 
 	// constructor from file
 	// save minimal info on file
-	// save on JSON for visualisation
 	
 	public long getLayoutSeed() {
 		return layoutSeed;
@@ -48,84 +47,132 @@ public class Mine {
 		state = next; // overwrite the old state with the new one
 	}
 	
-	// this is just a draft
 	private void createLayout() {
 		
 		// all of these parameters should go into a configuration file
-		double granularity = 1.0;
-		double radius = 1.1;
-		int nAtoms = 10;
-		int nLevels = 2;
+		int maxSections = 5;
+		int maxAtoms = 10;
+		double atomRadius = 1.0;
 		
-		Position head = new Position(0.0, 0.0, 0.0); // convention: the exit is always the origin
-		Position tail = new Position(10.0, 0.0, 0.0); // convention: the first tunnel always follows the positive x axis
-		new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), radius);
-		
-		createBranch(tail, 0, nLevels, 3, nAtoms - 3, granularity, radius);
+		Position exit = new Position(0.0, 0.0, 0.0); // convention: the exit is always the origin
+		extendTunnel(exit, Direction.SOUTH, maxSections, maxAtoms, atomRadius, 0);
 	}
 	
-	// this is just a draft
 	private void fillLayout() {
 		
 		// all of these parameters should go into a configuration file
 		int nPeople = 4;
+		int nFirePeople = 1;
 		
-		// find all the LayoutAtoms
-		List<LayoutAtom> atoms = new ArrayList<LayoutAtom>();
-		for(MineObject obj: state.getObjects())
-			if(obj instanceof LayoutAtom)
-				atoms.add((LayoutAtom) obj);
+		// create all the people close to the exit
+		for(int i = 0; i < nPeople; ++i) {
+			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
+			new Person(pos, state, new PersonStatus());
+		}
 		
-		// create the people in random locations
-		for(int p = 0; p < nPeople; ++p) {
-			int a = layoutRand.nextInt(atoms.size());
-			new Person(atoms.get(a).getPosition(), state, new PersonStatus());
+		// create all the firepeople close to the exit
+		for(int i = 0; i < nFirePeople; ++i) {
+			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
+			new FirePerson(pos, state, new PersonStatus(), new FireExtinguishingSkill());
+		}
+		
+		// create the sensors
+		LayoutAtom exit = state.getClosestLayoutAtom(new Position(0.0, 0.0, 0.0));
+		placeSensors(exit, new HashSet<Integer>(), 1.0);
+	}
+	
+	// HTML axis orientation (y is upside down)
+	private enum Direction {
+		
+		NORTH(new Position(0, -1, 0)),
+		SOUTH(new Position(0, +1, 0)),
+		EAST(new Position(+1, 0, 0)),
+		WEST(new Position(-1, 0, 0));
+		
+		private Position vector;
+		
+		private Direction(Position vector) {
+			this.vector = vector;
+		}
+		
+		public Position getVector() {
+			return vector;
+		}
+		
+		public boolean isOppositeTo(Direction dir) {
+			switch(this) {
+				case NORTH:
+					return (dir == SOUTH);
+				case SOUTH:
+					return (dir == NORTH);
+				case EAST:
+					return (dir == WEST);
+				case WEST:
+					return (dir == EAST);
+				default:
+					return false; // just to please the compiler
+			}
 		}
 	}
 	
-	// this is just a draft
-	private void createBranch(Position head, int lastDir, int nLevels, int maxBranching, int nAtoms, double granularity, double radius) {
-		
-		// some mild argument checking
-		if(lastDir < 0 || lastDir > 3)
-			throw new IllegalArgumentException("There are only 4 directions for now");
-		if(maxBranching < 1 || maxBranching > 3)
-			throw new IllegalArgumentException("The branching factor is limited between 1 and 3 for now");
-		if(nAtoms < 1)
-			throw new IllegalArgumentException("Tunnels must contain at least one LayoutAtom");
+	private void extendTunnel(Position head, Direction dir, int nSections, int nAtoms, double atomRadius, int nDirChanges) {
 		
 		// end the recursion
-		if(nLevels <= 0) return;
+		if(nSections <= 0 || nAtoms <= 0)
+			return;
 		
-		// extract the branching factor
-		int nBranch = layoutRand.nextInt(maxBranching - 1) + 1;
+		// add a Tunnel section
+		double atomDistance = atomRadius * 0.8; // slightly larger than 1/sqrt(2) so that diagonal atoms do not overlap 
+		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
+		if(tail.getY() <= 0.0)
+			return; // make sure we stay underground
+		new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), atomRadius);
 		
-		// list all the possible directions
-		List<Position> allDir = Arrays.asList(new Position(1, 0, 0),
-										      new Position(-1, 0, 0),
-										      new Position(0, 1, 0),
-										      new Position(0, -1, 0));
+		// keep extending in the same direction with {100%, 70%, 40%, 10%} chance
+		if(layoutRand.nextDouble() < 1.0 - (double) nDirChanges * 0.30)
+			extendTunnel(tail, dir, nSections - 1, nAtoms, atomRadius, nDirChanges);
 		
-		// extract the directions
-		List<Integer> subDir = new ArrayList<Integer>();
-		for(int b = 0; b < nBranch; ++b) {
-			int d = layoutRand.nextInt(4);
-			if(d != (lastDir ^ 1)) subDir.add(d);
-			else --b;
+		// extract the branching factor in [-1,2] so that there is 50% chance of not branching
+		int nBranches = layoutRand.nextInt(4) - 1;
+		
+		// extract the next directions
+		List<Direction> directions = new ArrayList<Direction>();
+		for(int i = 0; i < nBranches; ++i) {
+			Direction nextDir = Direction.values()[layoutRand.nextInt(4)];
+			if(nextDir == dir || nextDir.isOppositeTo(dir))
+				--i;
+			else
+				directions.add(nextDir);
 		}
 		
-		// create the branches
-		for(int b = 0; b < nBranch; ++b) {
-			Position tail = head.plus(allDir.get(subDir.get(b)).times(granularity * (double) nAtoms));
-			new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), radius);
-			createBranch(tail, subDir.get(b), nLevels - 1, maxBranching, nAtoms - nLevels, granularity, radius);
-		}
+		// branch!
+		for(int i = 0; i < nBranches; ++i)
+			extendTunnel(tail, directions.get(i), nSections - 1, nAtoms - 2, atomRadius, nDirChanges + 1);
+	}
+	
+	private void placeSensors(LayoutAtom atom, Set<Integer> visited, double prob) {
+		
+		// end the recursion
+		if(visited.contains(atom.getId()))
+			return;
+		
+		// create a new sensor here
+		if(layoutRand.nextDouble() >= prob) {
+			new SimpleSensor(atom.getPosition(), state, SimpleSensor.SensorType.TEMP);
+			new SimpleSensor(atom.getPosition(), state, SimpleSensor.SensorType.CO2);
+			prob = 1.0;
+		
+			// or decrease the probability of not creating one next
+		} else
+			prob *= 0.98;
+		
+		// recursive visit of the whole graph
+		visited.add(atom.getId());
+		for(Integer atomId: atom.getNeighbours())
+			placeSensors((LayoutAtom) state.getObject(atomId), visited, prob);
 	}
 	
 	public String toJsonGui() {
-		String json = "{\"mineObjects\":[";
-		for(MineObject obj: state.getObjects())
-			json += obj.toJsonGui();
-		return json + "]}";
+		return state.toJsonGui();
 	}
 }

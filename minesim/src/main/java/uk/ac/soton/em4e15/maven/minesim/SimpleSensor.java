@@ -28,6 +28,7 @@ public class SimpleSensor implements MovingObject {
 		id = sensor.getId();
 		pos = sensor.getPosition();
 		state = next;
+		type = sensor.getType();
 		reading = sensor.getReading();
 		state.addOld(this);
 	}
@@ -75,6 +76,7 @@ public class SimpleSensor implements MovingObject {
 	
 	@Override
 	public String toJsonGui() {
-		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+		// add field with Sensor Type
+		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + reading + "}";
 	}
 }

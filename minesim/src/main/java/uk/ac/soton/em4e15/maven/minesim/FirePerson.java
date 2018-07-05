@@ -77,4 +77,9 @@ public class FirePerson extends Person {
 				this.getState().removeObject(fire.getId());
 		}
 	}
+	
+	@Override
+	public String toJsonGui() {
+		return "{\"type\":\"fireperson\",\"name\":\"P"+ this.getId() + "\",\"c\":" + this.getPosition().toJsonGui() + "}";
+	}
 }
