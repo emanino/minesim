@@ -1,16 +1,25 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import static org.junit.Assert.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import org.junit.Test;
 
 public class TunnelTest {
 
 	@Test
-	public void testConstructor() {
+	public void testConstructor() throws FileNotFoundException, IOException {
 		
-		MineState state = new MineState(0);
+		// create a state
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		MineState state = new MineState(0, prop);
+		
 		Position head = new Position(0, 0, 0);
 		Position tail = new Position(2, 2, 2);
 		

@@ -43,7 +43,7 @@ public class Fire implements AtomObject {
 	}
 
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		Fire fire = new Fire(this, next);
 		fire.getStatus().increaseStrength(); // gradually increase the strength of the fire
 		// create another fire in a certain radius with a certain probability

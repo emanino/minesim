@@ -3,6 +3,7 @@ package uk.ac.soton.em4e15.maven.minesim;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
@@ -14,12 +15,12 @@ public class Mine {
 	private Random updateRand;
 	private MineState state;
 	
-	Mine(long layoutSeed, long updateSeed) {
+	Mine(Properties prop, long layoutSeed, long updateSeed) {
 		this.layoutSeed = layoutSeed;
 		this.updateSeed = updateSeed;
 		layoutRand = new Random(layoutSeed);
 		updateRand = new Random(updateSeed);
-		state = new MineState(0);
+		state = new MineState(0, prop);
 		
 		createLayout();
 		fillLayout();
@@ -40,8 +41,11 @@ public class Mine {
 		return state;
 	}
 	
-	public void update(Set<Action> actions) {
-		MineState next = new MineState(state.getNextId()); // make sure the old ids are kept the same
+	public void update() { // add user actions
+		
+		Set<MicroAction> actions = new HashSet<MicroAction>();
+		
+		MineState next = new MineState(state);
 		for(MineObject obj: state.getObjects())
 			obj.update(actions, updateRand, next); // update all the elements
 		state = next; // overwrite the old state with the new one
@@ -169,7 +173,7 @@ public class Mine {
 		// recursive visit of the whole graph
 		visited.add(atom.getId());
 		for(Integer atomId: atom.getNeighbours())
-			placeSensors((LayoutAtom) state.getObject(atomId), visited, prob);
+			placeSensors(state.getObject(LayoutAtom.class, atomId), visited, prob);
 	}
 	
 	public String toJsonGui() {

@@ -49,7 +49,7 @@ public class Person implements MovingObject {
 		
 		// move all the carried objects to the new position
 		for(Integer obId: carried)
-			((MovingObject) state.getObject(obId)).setPosition(pos);
+			state.getObject(MovingObject.class, obId).setPosition(pos);
 	}
 	
 	public MineState getState() {
@@ -75,12 +75,12 @@ public class Person implements MovingObject {
 	}
 
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		Person person = new Person(this, next);
 		
 		// find the subset of Actions that pertain this Person
-		Set<Action> myActions = new HashSet<Action>();
-		for(Action act: actions)
+		Set<MicroAction> myActions = new HashSet<MicroAction>();
+		for(MicroAction act: actions)
 			if(act.getRecipientIds().contains(id))
 				myActions.add(act);
 		
@@ -105,9 +105,9 @@ public class Person implements MovingObject {
 		
 		// find all the LayoutAtoms to be evacuated
 		Set<Integer> evacuate = new HashSet<Integer>();
-		for(Action act: myActions)
-			if(act instanceof EvacuateAction)
-				evacuate.addAll(((EvacuateAction) act).getAtomIds());
+		for(MicroAction act: myActions)
+			if(act instanceof EvacuateMicroAction)
+				evacuate.addAll(((EvacuateMicroAction) act).getAtomIds());
 		
 		// run away (if need be)!
 		Path path = null;
@@ -117,9 +117,9 @@ public class Person implements MovingObject {
 		// find the target(s)
 		} else {
 			Set<Integer> targets = new HashSet<Integer>();
-			for(Action act: myActions)
-				if(act instanceof MoveAction)
-					targets.add(((MoveAction) act).getTargetId());
+			for(MicroAction act: myActions)
+				if(act instanceof MoveMicroAction)
+					targets.add(((MoveMicroAction) act).getTargetId());
 			
 			// shortest path to the target(s)
 			if(targets.size() > 0)

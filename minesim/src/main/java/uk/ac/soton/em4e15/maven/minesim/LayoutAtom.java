@@ -28,9 +28,9 @@ public class LayoutAtom implements AtomObject {
 		state.addNew(this);
 		
 		// find the neighbours automatically
-		for(AtomObject obj: state.getObjectsInRadius(pos, radius))
-			if(obj instanceof LayoutAtom && obj.getId() != id)
-				this.linkWith((LayoutAtom) obj);
+		for(LayoutAtom atom: state.getObjectsInRadius(LayoutAtom.class, pos, radius))
+			if(atom.getId() != id)
+				this.linkWith(atom);
 	}
 	
 	// copy the LayoutAtom into the next state
@@ -87,18 +87,17 @@ public class LayoutAtom implements AtomObject {
 	}
 
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
 		
 		// compute the damage caused by Fires
-		for(AtomObject obj: state.getObjectsInRadius(pos, radius))
-			if(obj instanceof Fire)
-				atom.getStatus().update((Fire) obj);
+		for(Fire fire: state.getObjectsInRadius(Fire.class, pos, radius))
+			atom.getStatus().update(fire);
 		
 		// compute the effect of neighbouring LayoutAtoms
 		Set<LayoutAtomStatus> statuses = new HashSet<LayoutAtomStatus>();
 		for(Integer atomId: neighbours)
-			statuses.add(((LayoutAtom) state.getObject(atomId)).getStatus());
+			statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
 		atom.getStatus().update(statuses);
 		
 		// the status slowly recovers on its own
@@ -115,7 +114,7 @@ public class LayoutAtom implements AtomObject {
 		
 		for(Integer atomId: neighbours)
 			if(!block.contains(atomId)) {
-				Path candidate = ((LayoutAtom) state.getObject(atomId)).shortestPathTo(targets, block);
+				Path candidate = state.getObject(LayoutAtom.class, atomId).shortestPathTo(targets, block);
 				if(candidate.betterThan(subpath))
 					subpath = candidate;
 			}
@@ -130,9 +129,9 @@ public class LayoutAtom implements AtomObject {
 	public Path shortestPathOut(Set<Integer> evacuate) {
 		
 		Set<Integer> targets = new HashSet<Integer>();
-		for(MineObject obj: state.getObjects())
-			if(obj instanceof LayoutAtom && !evacuate.contains(obj.getId()))
-				targets.add(obj.getId());
+		for(LayoutAtom atom: state.getObjects(LayoutAtom.class))
+			if(!evacuate.contains(atom.getId()))
+				targets.add(atom.getId());
 		
 		return this.shortestPathTo(targets, new HashSet<Integer>());
 	}

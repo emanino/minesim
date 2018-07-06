@@ -1,19 +1,26 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import static org.junit.Assert.*;
-import java.util.HashSet;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.junit.Test;
 
 public class MineTest {
 
 	@Test
-	public void testConstructor() {
+	public void testConstructor() throws FileNotFoundException, IOException {
 		
-		// temporary test
-		Mine mine = new Mine(1, 0);
-		MineState state = mine.getState();
+		// create a mine
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		Mine mine = new Mine(prop, 1, 0);
 		
 		// count the number of LayoutAtoms
+		MineState state = mine.getState();
 		int nAtoms = 0;
 		for(MineObject obj: state.getObjects())
 			if(obj instanceof LayoutAtom)
@@ -23,21 +30,26 @@ public class MineTest {
 	}
 	
 	@Test
-	public void testUpdate() {
-		
-		// temporary test
-		Mine mine = new Mine(1, 0);
+	public void testUpdate() throws FileNotFoundException, IOException {
+	
+		// create a mine
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		Mine mine = new Mine(prop, 1, 0);
 		
 		for(int t = 0; t < 2; ++t)
-			mine.update(new HashSet<Action>());
+			mine.update();
 	}
 	
 	@Test
-	public void testToJsonGui() {
+	public void testToJsonGui() throws FileNotFoundException, IOException {
 		
-		Mine mine = new Mine(1, 0);
+		// create a mine
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		Mine mine = new Mine(prop, 1, 0);
+		
 		String json = mine.toJsonGui();
-		
 		System.out.println(json);
 	}
 }

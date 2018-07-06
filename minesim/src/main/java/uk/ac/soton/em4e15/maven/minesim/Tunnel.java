@@ -87,7 +87,7 @@ public class Tunnel implements LayoutObject {
 	}
 
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		// Tunnel tunnel = new Tunnel(this, next);
 		new Tunnel(this, next);
 		// update tunnel...

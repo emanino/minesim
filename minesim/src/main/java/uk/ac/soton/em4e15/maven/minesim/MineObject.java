@@ -6,6 +6,6 @@ import java.util.Set;
 public interface MineObject {
 	
 	public Integer getId();
-	public void update(Set<Action> actions, Random rand, MineState next);
+	public void update(Set<MicroAction> actions, Random rand, MineState next);
 	public String toJsonGui();
 }

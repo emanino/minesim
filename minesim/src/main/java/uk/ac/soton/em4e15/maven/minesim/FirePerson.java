@@ -23,12 +23,12 @@ public class FirePerson extends Person {
 	}
 	
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		FirePerson person = new FirePerson(this, next);
 		
 		// find the subset of Actions that pertain this FirePerson
-		Set<Action> myActions = new HashSet<Action>();
-		for(Action act: actions)
+		Set<MicroAction> myActions = new HashSet<MicroAction>();
+		for(MicroAction act: actions)
 			if(act.getRecipientIds().contains(this.getId()))
 				myActions.add(act);
 		
@@ -43,9 +43,9 @@ public class FirePerson extends Person {
 			
 		// find the target(s)
 		Set<Integer> targets = new HashSet<Integer>();
-		for(Action act: myActions)
-			if(act instanceof MoveAction)
-				targets.add(((MoveAction) act).getTargetId());
+		for(MicroAction act: myActions)
+			if(act instanceof MoveMicroAction)
+				targets.add(((MoveMicroAction) act).getTargetId());
 		
 		// move along the shortest path to the targets
 		if(targets.size() > 0) {
@@ -62,10 +62,7 @@ public class FirePerson extends Person {
 	private void extinguishFires() {
 		
 		// find the fires around the FirePerson
-		Set<Fire> fires = new HashSet<Fire>();
-		for(AtomObject obj: this.getState().getObjectsInRadius(this.getPosition(), skill.getRadius()))
-			if(obj instanceof Fire)
-				fires.add((Fire) obj);
+		Set<Fire> fires = this.getState().getObjectsInRadius(Fire.class, this.getPosition(), skill.getRadius());
 		
 		// smother the fires, remove them when finished
 		for(Fire fire: fires) {

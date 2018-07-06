@@ -69,7 +69,7 @@ public class SimpleSensor implements MovingObject {
 	}
 
 	@Override
-	public void update(Set<Action> actions, Random rand, MineState next) {
+	public void update(Set<MicroAction> actions, Random rand, MineState next) {
 		SimpleSensor sensor = new SimpleSensor(this, next);
 		sensor.updateReading();
 	}

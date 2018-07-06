@@ -2,8 +2,12 @@ package uk.ac.soton.em4e15.maven.minesim;
 
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import org.junit.Test;
@@ -11,9 +15,12 @@ import org.junit.Test;
 public class LayoutAtomTest {
 	
 	@Test
-	public void testConstructor() {
+	public void testConstructor() throws FileNotFoundException, IOException {
 		
-		MineState state = new MineState(0);
+		// create a state
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		MineState state = new MineState(0, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(), 1.1);
 		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(), 1.1);
@@ -32,13 +39,16 @@ public class LayoutAtomTest {
 	}
 	
 	@Test
-	public void testUpdate() {
+	public void testUpdate() throws FileNotFoundException, IOException {
 		
-		MineState oldState = new MineState(0);
-		MineState newState = new MineState(1);
+		// create a two consecutive states
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		MineState oldState = new MineState(0, prop);
+		MineState newState = new MineState(1, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(), 1.0);
-		a.update(new HashSet<Action>(), new Random(), newState);
+		a.update(new HashSet<MicroAction>(), new Random(), newState);
 		
 		Set<MineObject> objects = newState.getObjects();
 		assertEquals("Failed to insert a copy of the LayoutAtom in the new state", 1, objects.size());
@@ -48,9 +58,12 @@ public class LayoutAtomTest {
 	}
 
 	@Test
-	public void testShortestPathTo() {
+	public void testShortestPathTo() throws FileNotFoundException, IOException {
 		
-		MineState state = new MineState(0);
+		// create a state
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		MineState state = new MineState(0, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(), 1.1);
 		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(), 1.1);
