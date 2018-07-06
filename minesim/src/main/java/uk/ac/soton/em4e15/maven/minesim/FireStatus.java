@@ -1,5 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
-
+//
 public class FireStatus {
 	
 	private double strength = 0.2;
