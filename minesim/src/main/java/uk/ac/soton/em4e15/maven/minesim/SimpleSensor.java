@@ -1,7 +1,6 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.Random;
-import java.util.Set;
 
 public class SimpleSensor implements MovingObject {
 	
@@ -69,7 +68,7 @@ public class SimpleSensor implements MovingObject {
 	}
 
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		SimpleSensor sensor = new SimpleSensor(this, next);
 		sensor.updateReading();
 	}

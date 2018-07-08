@@ -14,6 +14,8 @@ public class Mine {
 	private Random layoutRand;
 	private Random updateRand;
 	private MineState state;
+	private MineObjectScheduler scheduler;
+	private Properties prop;
 	
 	Mine(Properties prop, long layoutSeed, long updateSeed) {
 		this.layoutSeed = layoutSeed;
@@ -21,6 +23,8 @@ public class Mine {
 		layoutRand = new Random(layoutSeed);
 		updateRand = new Random(updateSeed);
 		state = new MineState(0, prop);
+		scheduler = new MineObjectScheduler(state, prop);
+		this.prop = prop;
 		
 		createLayout();
 		fillLayout();
@@ -41,14 +45,18 @@ public class Mine {
 		return state;
 	}
 	
-	public void update() { // add user actions
+	public void update(Set<UserAction> actions) {
 		
-		Set<MicroAction> actions = new HashSet<MicroAction>();
-		
+		// new state and new action scheduler
 		MineState next = new MineState(state);
+		scheduler.update(actions, next);
+		
+		// update all the elements
 		for(MineObject obj: state.getObjects())
-			obj.update(actions, updateRand, next); // update all the elements
-		state = next; // overwrite the old state with the new one
+			obj.update(scheduler, updateRand, next);
+		
+		// overwrite the old state with the new one
+		state = next;
 	}
 	
 	private void createLayout() {
@@ -65,19 +73,19 @@ public class Mine {
 	private void fillLayout() {
 		
 		// all of these parameters should go into a configuration file
-		int nPeople = 4;
+		int nMinerPeople = 4;
 		int nFirePeople = 1;
 		
-		// create all the people close to the exit
-		for(int i = 0; i < nPeople; ++i) {
+		// create all the miners close to the exit
+		for(int i = 0; i < nMinerPeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
-			new Person(pos, state, new PersonStatus());
+			new MinerPerson(pos, state, new PersonStatus(prop));
 		}
 		
-		// create all the firepeople close to the exit
+		// create all the firemen close to the exit
 		for(int i = 0; i < nFirePeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
-			new FirePerson(pos, state, new PersonStatus(), new FireExtinguishingSkill());
+			new FirePerson(pos, state, new PersonStatus(prop), new FireExtinguishingSkill());
 		}
 		
 		// create the sensors
@@ -119,22 +127,23 @@ public class Mine {
 		}
 	}
 	
-	private void extendTunnel(Position head, Direction dir, int nSections, int nAtoms, double atomRadius, int nDirChanges) {
+	private boolean extendTunnel(Position head, Direction dir, int nSections, int nAtoms, double atomRadius, int nDirChanges) {
 		
 		// end the recursion
 		if(nSections <= 0 || nAtoms <= 0)
-			return;
+			return false;
 		
 		// add a Tunnel section
 		double atomDistance = atomRadius * 0.8; // slightly larger than 1/sqrt(2) so that diagonal atoms do not overlap 
 		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
 		if(tail.getY() <= 0.0)
-			return; // make sure we stay underground
+			return false; // make sure we stay underground
 		new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), atomRadius);
 		
 		// keep extending in the same direction with {100%, 70%, 40%, 10%} chance
+		boolean continues = false;
 		if(layoutRand.nextDouble() < 1.0 - (double) nDirChanges * 0.30)
-			extendTunnel(tail, dir, nSections - 1, nAtoms, atomRadius, nDirChanges);
+			continues |= extendTunnel(tail, dir, nSections - 1, nAtoms, atomRadius, nDirChanges);
 		
 		// extract the branching factor in [-1,2] so that there is 50% chance of not branching
 		int nBranches = layoutRand.nextInt(4) - 1;
@@ -151,7 +160,13 @@ public class Mine {
 		
 		// branch!
 		for(int i = 0; i < nBranches; ++i)
-			extendTunnel(tail, directions.get(i), nSections - 1, nAtoms - 2, atomRadius, nDirChanges + 1);
+			continues |= extendTunnel(tail, directions.get(i), nSections - 1, nAtoms - 2, atomRadius, nDirChanges + 1);
+		
+		// add mining sites to the end of terminal tunnels
+		if(!continues)
+			new MiningSite(tail, state);
+		
+		return true;
 	}
 	
 	private void placeSensors(LayoutAtom atom, Set<Integer> visited, double prob) {

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class MineTest {
 		Mine mine = new Mine(prop, 1, 0);
 		
 		for(int t = 0; t < 2; ++t)
-			mine.update();
+			mine.update(new HashSet<UserAction>());
 	}
 	
 	@Test

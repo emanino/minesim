@@ -87,8 +87,7 @@ public class Tunnel implements LayoutObject {
 	}
 
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
-		// Tunnel tunnel = new Tunnel(this, next);
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		new Tunnel(this, next);
 		// update tunnel...
 		// - e.g. if an explosion increases its length

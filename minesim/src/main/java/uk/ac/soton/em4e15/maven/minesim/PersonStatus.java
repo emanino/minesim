@@ -1,34 +1,48 @@
 package uk.ac.soton.em4e15.maven.minesim;
-//
+
+import java.util.Properties;
+
 public class PersonStatus {
 	
-	private double distance = 1.3;
+	private double timeStep;
+	private double personSpeed;
+	private double RestTimeThreshold;
+	private double currRestBar;
+	
 	private double health = 1.0; // temporary
 	
-	PersonStatus() {}
-	
-	PersonStatus(double distance, double health) {
-		this.distance = distance;
-		this.health = health;
+	PersonStatus(Properties prop) {
+		timeStep = Double.parseDouble(prop.getProperty("timeStep"));
+		personSpeed = Double.parseDouble(prop.getProperty("personSpeed"));
+		RestTimeThreshold = Double.parseDouble(prop.getProperty("personRestTime"));
+		currRestBar = RestTimeThreshold;
 	}
 	
 	public double getDistance() {
-		return distance * health; // people get slower when unhealthy
+		return personSpeed * timeStep * health; // people get slower when unhealthy
 	}
 	
 	public double getHealth() {
 		return health;
 	}
 	
-	public void update(LayoutAtomStatus status) {
-		this.CO2Damage(status.getCO2());
-		this.TempDamage(status.getTemp());
+	public boolean isRested() {
+		return currRestBar >= RestTimeThreshold;
 	}
 	
-	public void recoverHealth() {
+	public void restAndRecover() {
 		health += 0.05;
 		if(health > 1.0)
 			health = 1.0;
+		
+		currRestBar += timeStep / 2; // cheeky hack: the rest bar recovers twice as slow as it gets depleted
+	}
+	
+	public void workAndSuffer(LayoutAtomStatus status) {
+		this.CO2Damage(status.getCO2());
+		this.TempDamage(status.getTemp());
+		
+		currRestBar -= timeStep;
 	}
 	
 	private void CO2Damage(double co2) {

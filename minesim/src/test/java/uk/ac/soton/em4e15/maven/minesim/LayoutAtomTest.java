@@ -46,9 +46,10 @@ public class LayoutAtomTest {
 		prop.load(new FileInputStream("minesim.properties"));
 		MineState oldState = new MineState(0, prop);
 		MineState newState = new MineState(1, prop);
+		MineObjectScheduler scheduler = new MineObjectScheduler(oldState, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(), 1.0);
-		a.update(new HashSet<MicroAction>(), new Random(), newState);
+		a.update(scheduler, new Random(), newState);
 		
 		Set<MineObject> objects = newState.getObjects();
 		assertEquals("Failed to insert a copy of the LayoutAtom in the new state", 1, objects.size());

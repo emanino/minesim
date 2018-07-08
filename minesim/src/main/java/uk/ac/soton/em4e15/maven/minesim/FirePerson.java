@@ -1,5 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
-//
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -23,40 +23,32 @@ public class FirePerson extends Person {
 	}
 	
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		FirePerson person = new FirePerson(this, next);
-		
-		// find the subset of Actions that pertain this FirePerson
-		Set<MicroAction> myActions = new HashSet<MicroAction>();
-		for(MicroAction act: actions)
-			if(act.getRecipientIds().contains(this.getId()))
-				myActions.add(act);
 		
 		// find the current LayoutAtom
 		LayoutAtom currAtom = this.getState().getClosestLayoutAtom(this.getPosition());
 		
-		// NO DAMAGE FOR FIREPEOPLE
+		// NO DAMAGE OR REST FOR FIREPEOPLE (FOR NOW)
 		
 		// MOVE AROUND:
 		// FirePeople do not care about evacuated atoms
-		// thus just move toward the target atom(s)
-			
-		// find the target(s)
-		Set<Integer> targets = new HashSet<Integer>();
-		for(MicroAction act: myActions)
-			if(act instanceof MoveMicroAction)
-				targets.add(((MoveMicroAction) act).getTargetId());
+		// thus just move toward the target atoms
 		
-		// move along the shortest path to the targets
-		if(targets.size() > 0) {
-			Path path = currAtom.shortestPathTo(targets, new HashSet<Integer>());
+		// move along the shortest path to any target
+		Integer layoutId = scheduler.getLayoutObject(this);
+		if(layoutId != null) {
+			LayoutObject obj = this.getState().getObject(LayoutObject.class, layoutId);
+			Path path = currAtom.shortestPathTo(obj.getAtoms(), new HashSet<Integer>());
 			Position newPos = this.moveAlongPath(path, currAtom);
 			person.setPosition(newPos);
 		}
 		
+		// TO DO: actively go around the LayoutObject looking for more Fires to smother
+		
 		// start extinguishing fires when stationary
 		if(this.getPosition().getXYZ().equals(person.getPosition().getXYZ()))
-			person.extinguishFires(); 
+			person.extinguishFires();
 	}
 	
 	private void extinguishFires() {

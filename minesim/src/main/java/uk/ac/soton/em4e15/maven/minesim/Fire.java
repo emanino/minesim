@@ -1,7 +1,6 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.Random;
-import java.util.Set;
 
 public class Fire implements AtomObject {
 	
@@ -43,7 +42,7 @@ public class Fire implements AtomObject {
 	}
 
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		Fire fire = new Fire(this, next);
 		fire.getStatus().increaseStrength(); // gradually increase the strength of the fire
 		// create another fire in a certain radius with a certain probability

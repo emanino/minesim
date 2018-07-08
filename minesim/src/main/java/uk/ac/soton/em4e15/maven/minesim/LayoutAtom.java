@@ -87,7 +87,7 @@ public class LayoutAtom implements AtomObject {
 	}
 
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
 		
 		// compute the damage caused by Fires
@@ -115,8 +115,10 @@ public class LayoutAtom implements AtomObject {
 		for(Integer atomId: neighbours)
 			if(!block.contains(atomId)) {
 				Path candidate = state.getObject(LayoutAtom.class, atomId).shortestPathTo(targets, block);
-				if(candidate.betterThan(subpath))
+				if(candidate.betterThan(subpath)) {
 					subpath = candidate;
+					break; // ONLY FOR DEBUG PURPOSES: remove to have true shortest paths.
+				}
 			}
 		
 		subpath.prependAtomId(id);

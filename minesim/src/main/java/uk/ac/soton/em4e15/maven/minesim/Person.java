@@ -75,64 +75,9 @@ public class Person implements MovingObject {
 	}
 
 	@Override
-	public void update(Set<MicroAction> actions, Random rand, MineState next) {
-		Person person = new Person(this, next);
-		
-		// find the subset of Actions that pertain this Person
-		Set<MicroAction> myActions = new HashSet<MicroAction>();
-		for(MicroAction act: actions)
-			if(act.getRecipientIds().contains(id))
-				myActions.add(act);
-		
-		// find the current LayoutAtom
-		LayoutAtom currAtom = state.getClosestLayoutAtom(pos);
-		
-		// TAKE DAMAGE:
-		// high temperatures
-		// high CO2
-		person.getStatus().update(currAtom.getStatus());
-		
-		// SLOWLY RECOVER
-		// if close to the exit
-		if(pos.distanceTo(new Position(0.0, 0.0, 0.0)) < 0.1)
-			person.getStatus().recoverHealth();
-		
-		// MOVE AROUND:
-		// extract the atoms we need to evacuate (if any)
-		// if we need to evacuate the atom we are on, do so
-		// else try to reach the target atom (if any)
-		// while avoiding the atoms to be evacuated
-		
-		// find all the LayoutAtoms to be evacuated
-		Set<Integer> evacuate = new HashSet<Integer>();
-		for(MicroAction act: myActions)
-			if(act instanceof EvacuateMicroAction)
-				evacuate.addAll(((EvacuateMicroAction) act).getAtomIds());
-		
-		// run away (if need be)!
-		Path path = null;
-		if(evacuate.contains(currAtom.getId())) {
-			path = currAtom.shortestPathOut(evacuate);
-			
-		// find the target(s)
-		} else {
-			Set<Integer> targets = new HashSet<Integer>();
-			for(MicroAction act: myActions)
-				if(act instanceof MoveMicroAction)
-					targets.add(((MoveMicroAction) act).getTargetId());
-			
-			// shortest path to the target(s)
-			if(targets.size() > 0)
-				path = currAtom.shortestPathTo(targets, evacuate);
-		}
-		
-		// make a move
-		if(path != null) {
-			Position newPos = this.moveAlongPath(path, currAtom);
-			person.setPosition(newPos);
-		}
-		
-		// DO OTHER STUFF
+	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
+		new Person(this, next);
+		// so far simple people have nothing to do in our beloved mine
 	}
 	
 	protected Position moveAlongPath(Path path, LayoutAtom currAtom) {
