@@ -28,6 +28,7 @@ public class SimpleSensor implements MovingObject {
 		pos = sensor.getPosition();
 		state = next;
 		type = sensor.getType();
+		sensor.updateReading();
 		reading = sensor.getReading();
 		state.addOld(this);
 	}
@@ -70,7 +71,7 @@ public class SimpleSensor implements MovingObject {
 	@Override
 	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
 		SimpleSensor sensor = new SimpleSensor(this, next);
-		sensor.updateReading();
+		//sensor.updateReading();
 	}
 	
 	@Override
