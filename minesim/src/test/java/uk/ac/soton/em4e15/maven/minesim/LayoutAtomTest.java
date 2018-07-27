@@ -59,6 +59,12 @@ public class LayoutAtomTest {
 	}
 
 	@Test
+	// Layout schema:
+	//  0 1 2 3
+	//0 a b c
+	//1 i   d
+	//2 g f e
+	//3 h
 	public void testShortestPathTo() throws FileNotFoundException, IOException {
 		
 		// create a state
@@ -83,5 +89,61 @@ public class LayoutAtomTest {
 		assertEquals("Failed to find the shortest path", Arrays.asList(b.getId(), a.getId(), i.getId(), g.getId(), h.getId()), path1.getAtomIds());
 		assertEquals("Failed to find the alternative path", Arrays.asList(b.getId(), c.getId(), d.getId(), e.getId(), f.getId(), g.getId(), h.getId()), path2.getAtomIds());
 		assertEquals("Failed to spot that the target is unreachable", null, path3.getAtomIds());
+	}
+
+	@Test
+	// Layout schema:
+	//  0 1 2 3 4 5
+	//0       a   o
+	//1       b   h
+	//2 s r q c p m
+	//3   z   d   l
+	//4 t u v e   k
+	//5   y   f   j
+	//6   x w g h i
+	public void testShortestPathTo2() throws FileNotFoundException, IOException {
+		
+		// create a state
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("minesim.properties"));
+		MineState state = new MineState(0, prop);
+		
+		LayoutAtom a = new LayoutAtom(0, new Position(3, 0, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom b = new LayoutAtom(0, new Position(3, 1, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom c = new LayoutAtom(0, new Position(3, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom d = new LayoutAtom(0, new Position(3, 3, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom e = new LayoutAtom(0, new Position(3, 4, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom f = new LayoutAtom(0, new Position(3, 5, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom g = new LayoutAtom(0, new Position(3, 6, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom h = new LayoutAtom(0, new Position(4, 6, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom i = new LayoutAtom(0, new Position(5, 6, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom j = new LayoutAtom(0, new Position(5, 5, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom k = new LayoutAtom(0, new Position(5, 4, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom l = new LayoutAtom(0, new Position(5, 3, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom m = new LayoutAtom(0, new Position(5, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom n = new LayoutAtom(0, new Position(5, 1, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom o = new LayoutAtom(0, new Position(5, 0, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom p = new LayoutAtom(0, new Position(4, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom q = new LayoutAtom(0, new Position(2, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom r = new LayoutAtom(0, new Position(1, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom s = new LayoutAtom(0, new Position(0, 2, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom t = new LayoutAtom(0, new Position(0, 4, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom u = new LayoutAtom(0, new Position(1, 4, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom v = new LayoutAtom(0, new Position(2, 4, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom w = new LayoutAtom(0, new Position(2, 6, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom x = new LayoutAtom(0, new Position(1, 6, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom y = new LayoutAtom(0, new Position(1, 5, 0), state, new LayoutAtomStatus(), 1.1);
+		LayoutAtom z = new LayoutAtom(0, new Position(1, 3, 0), state, new LayoutAtomStatus(), 1.1);
+		
+		Path path1 = z.shortestPathTo(new HashSet<Integer>(Arrays.asList(a.getId(), o.getId())), new HashSet<Integer>());
+		Path path2 = z.shortestPathTo(new HashSet<Integer>(Arrays.asList(a.getId(), o.getId())), new HashSet<Integer>(Arrays.asList(c.getId(), e.getId())));
+		//Path path2 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(i.getId())));
+		//Path path3 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(g.getId())));
+		
+		assertEquals("Failed to find the shortest path", Arrays.asList(z.getId(), r.getId(), q.getId(), c.getId(), b.getId(), a.getId()), path1.getAtomIds());
+		assertEquals("Failed to find the shortest path", Arrays.asList(z.getId(), u.getId(), y.getId(), x.getId(), w.getId(), g.getId(), h.getId(), i.getId(), 
+				j.getId(), k.getId(), l.getId(), m.getId(), n.getId(), o.getId()), path2.getAtomIds());
+		//assertEquals("Failed to find the alternative path", Arrays.asList(b.getId(), c.getId(), d.getId(), e.getId(), f.getId(), g.getId(), h.getId()), path2.getAtomIds());
+		//assertEquals("Failed to spot that the target is unreachable", null, path3.getAtomIds());
 	}
 }
