@@ -106,13 +106,48 @@ public class LayoutAtom implements AtomObject {
 		atom.getStatus().recover();
 	}
 	
-	//Dijkstra version of the shortest path
 	public Path shortestPathTo(Set<Integer> targets, Set<Integer> block) {
+		return shortestPathToDijkstra(targets, block);
+	}
+	
+	//Dijkstra version of the shortest path
+	public Path shortestPathToDijkstra(Set<Integer> targets, Set<Integer> block) {
 		Map<Integer, Double> tentativeDistances = new HashMap<Integer, Double>();
 		Map<Integer,Integer> shortestTree = new HashMap<Integer,Integer>();
 		tentativeDistances.put(this.id, new Double(0));
 		Set<Integer> visitedAtoms = new HashSet<Integer>();
-		this.shortestPathToHelper(targets, block, tentativeDistances, visitedAtoms, shortestTree);
+		boolean moreAtomsToVisit = true;
+		Set<Integer> visitableAtoms = new HashSet<Integer>();
+		visitableAtoms.add(this.id);
+		while (moreAtomsToVisit) {
+			// find atom with the minimum distance
+			Integer currentAtom = null;
+			Double currentDistance = null;
+			for(Integer atomId: visitableAtoms) {
+				if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
+					if(currentDistance == null || tentativeDistances.get(atomId).compareTo(currentDistance) < 0) {
+						currentAtom = atomId;
+						currentDistance = tentativeDistances.get(atomId);
+					}
+				}
+			}
+			if(currentAtom == null) moreAtomsToVisit = false;
+			else {
+				LayoutAtom currentAtomObject = state.getObject(LayoutAtom.class, currentAtom);
+				// consider all the unvisited and unblocked neighbours and update their distances
+				for(Integer atomId: currentAtomObject.neighbours)
+					if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
+						visitableAtoms.add(atomId);
+						Double distance = new Double(tentativeDistances.get(currentAtomObject.id).doubleValue() + currentAtomObject.pos.distanceTo(state.getObject(LayoutAtom.class, atomId).pos));
+						if( (!tentativeDistances.containsKey(atomId)) || tentativeDistances.get(atomId).compareTo(distance) > 0) {
+							tentativeDistances.put(atomId, distance);
+							shortestTree.put(atomId, currentAtomObject.id);
+						}
+					}	
+				visitedAtoms.add(currentAtom);
+				
+			}
+		}
 		//find the closest target atom, if any:
 		Integer closest = null;
 		Double distance = null;
@@ -135,24 +170,6 @@ public class LayoutAtom implements AtomObject {
 		return path;
 	}
 	
-	public void shortestPathToHelper(Set<Integer> targets, Set<Integer> block, Map<Integer, Double> tentativeDistances, Set<Integer> visitedAtoms, Map<Integer,Integer> shortestTree) {
-		// consider all the unvisited and unblocked neighbours and update their distances
-		for(Integer atomId: neighbours)
-			if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
-				// +1 should be actually changed to the actual distance between atoms
-				Double distance = new Double(tentativeDistances.get(this.id).doubleValue() + 1);
-				if(!tentativeDistances.containsKey(atomId) || tentativeDistances.get(atomId).compareTo(distance) > 0) {
-					tentativeDistances.put(atomId, distance);
-					shortestTree.put(atomId, this.id);
-				}
-			}
-		visitedAtoms.add(this.id);
-		for(Integer atomId: neighbours)
-			if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
-				state.getObject(LayoutAtom.class, atomId).shortestPathToHelper(targets, block, tentativeDistances, visitedAtoms, shortestTree);
-			}
-		
-	}
 	
 	public Path shortestPathToNaive(Set<Integer> targets, Set<Integer> block) {
 		
