@@ -1,4 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
+import java.util.LinkedList;
 //
 import java.util.List;
 
@@ -19,13 +20,15 @@ public class Path {
 	}
 	
 	public void appendAtomId(Integer atomId) {
-		if(atoms != null)
-			atoms.add(atomId);
+		if(atoms == null)
+			atoms = new LinkedList<Integer>();
+		atoms.add(atomId);
 	}
 	
 	public void prependAtomId(Integer atomId) {
-		if(atoms != null)
-			atoms.add(0, atomId);
+		if(atoms == null)
+			atoms = new LinkedList<Integer>();
+		atoms.add(0, atomId);
 	}
 	
 	public double getCost() {

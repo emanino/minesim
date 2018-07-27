@@ -1,8 +1,10 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -104,7 +106,55 @@ public class LayoutAtom implements AtomObject {
 		atom.getStatus().recover();
 	}
 	
+	//Dijkstra version of the shortest path
 	public Path shortestPathTo(Set<Integer> targets, Set<Integer> block) {
+		Map<Integer, Double> tentativeDistances = new HashMap<Integer, Double>();
+		Map<Integer,Integer> shortestTree = new HashMap<Integer,Integer>();
+		tentativeDistances.put(this.id, new Double(0));
+		Set<Integer> visitedAtoms = new HashSet<Integer>();
+		this.shortestPathToHelper(targets, block, tentativeDistances, visitedAtoms, shortestTree);
+		//find the closest target atom, if any:
+		Integer closest = null;
+		Double distance = null;
+		for(Integer atomId: targets) {
+			if(tentativeDistances.containsKey(atomId) && 
+					(distance == null || tentativeDistances.get(atomId).compareTo(distance) < 0)) {
+				closest = atomId;
+				distance = tentativeDistances.get(atomId);
+			}
+		}
+		Path path = new Path();
+		if (closest != null) {
+			Integer atomId = closest;
+			while(atomId != id) {
+				path.prependAtomId(atomId);
+				atomId = shortestTree.get(atomId);
+			}
+			path.prependAtomId(this.id);
+		}
+		return path;
+	}
+	
+	public void shortestPathToHelper(Set<Integer> targets, Set<Integer> block, Map<Integer, Double> tentativeDistances, Set<Integer> visitedAtoms, Map<Integer,Integer> shortestTree) {
+		// consider all the unvisited and unblocked neighbours and update their distances
+		for(Integer atomId: neighbours)
+			if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
+				// +1 should be actually changed to the actual distance between atoms
+				Double distance = new Double(tentativeDistances.get(this.id).doubleValue() + 1);
+				if(!tentativeDistances.containsKey(atomId) || tentativeDistances.get(atomId).compareTo(distance) > 0) {
+					tentativeDistances.put(atomId, distance);
+					shortestTree.put(atomId, this.id);
+				}
+			}
+		visitedAtoms.add(this.id);
+		for(Integer atomId: neighbours)
+			if(!block.contains(atomId) && !visitedAtoms.contains(atomId)) {
+				state.getObject(LayoutAtom.class, atomId).shortestPathToHelper(targets, block, tentativeDistances, visitedAtoms, shortestTree);
+			}
+		
+	}
+	
+	public Path shortestPathToNaive(Set<Integer> targets, Set<Integer> block) {
 		
 		if(targets.contains(id))
 			return new Path(new LinkedList<Integer>(Arrays.asList(id)), 0.0);
