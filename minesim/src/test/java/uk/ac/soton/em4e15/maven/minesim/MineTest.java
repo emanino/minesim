@@ -6,10 +6,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Properties;
 
+
 import org.junit.Test;
+
+
 
 public class MineTest {
 
@@ -19,7 +23,7 @@ public class MineTest {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 3; j++) {
 				Properties prop = new Properties();
-				prop.load(new FileInputStream("minesim.properties"));
+				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 				Mine mine = new Mine(prop, i, j);
 				
 				// count the number of LayoutAtoms
@@ -36,14 +40,14 @@ public class MineTest {
 	
 	@Test
 	public void testUpdate() throws FileNotFoundException, IOException {
-		for(int i = 0; i < 50; i++) {
+		for(int i = 0; i < 20; i++) {
 			for(int j = 0; j < 4; j++) {
 				// create a mine
 				Properties prop = new Properties();
-				prop.load(new FileInputStream("minesim.properties"));
+				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 				Mine mine = new Mine(prop, i, j);
 				
-				for(int t = 0; t < 100; ++t) {		
+				for(int t = 0; t < 50; ++t) {		
 					mine.update(new HashSet<UserAction>());
 				}
 			}
@@ -57,7 +61,7 @@ public class MineTest {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 3; j++) {
 				Properties prop = new Properties();
-				prop.load(new FileInputStream("minesim.properties"));
+				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 				Mine mine = new Mine(prop, i, j);
 				String json = mine.toJsonGui();
 				System.out.println(json);

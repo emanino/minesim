@@ -17,7 +17,7 @@ public class TunnelTest {
 		
 		// create a state
 		Properties prop = new Properties();
-		prop.load(new FileInputStream("minesim.properties"));
+		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
 		Position head = new Position(0, 0, 0);

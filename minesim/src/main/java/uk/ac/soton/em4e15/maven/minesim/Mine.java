@@ -1,4 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
+import java.io.StringReader;
 //
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ public class Mine {
 	private MineObjectScheduler scheduler;
 	private Properties prop;
 	
-	Mine(Properties prop, long layoutSeed, long updateSeed) {
+	public Mine(Properties prop, long layoutSeed, long updateSeed) {
 		this.layoutSeed = layoutSeed;
 		this.updateSeed = updateSeed;
 		layoutRand = new Random(layoutSeed);

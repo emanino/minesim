@@ -19,7 +19,7 @@ public class LayoutAtomTest {
 		
 		// create a state
 		Properties prop = new Properties();
-		prop.load(new FileInputStream("minesim.properties"));
+		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(), 1.1);
@@ -43,7 +43,7 @@ public class LayoutAtomTest {
 		
 		// create a two consecutive states
 		Properties prop = new Properties();
-		prop.load(new FileInputStream("minesim.properties"));
+		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState oldState = new MineState(0, prop);
 		MineState newState = new MineState(1, prop);
 		MineObjectScheduler scheduler = new MineObjectScheduler(oldState, prop);
@@ -69,7 +69,7 @@ public class LayoutAtomTest {
 		
 		// create a state
 		Properties prop = new Properties();
-		prop.load(new FileInputStream("minesim.properties"));
+		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(), 1.1);
@@ -105,7 +105,7 @@ public class LayoutAtomTest {
 		
 		// create a state
 		Properties prop = new Properties();
-		prop.load(new FileInputStream("minesim.properties"));
+		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(3, 0, 0), state, new LayoutAtomStatus(), 1.1); // 0
