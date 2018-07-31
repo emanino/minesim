@@ -2,11 +2,14 @@ package uk.ac.soton.em4e15.maven.minesim;
 import java.io.StringReader;
 //
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Mine {
 	
@@ -17,6 +20,8 @@ public class Mine {
 	private MineState state;
 	private MineObjectScheduler scheduler;
 	private Properties prop;
+
+	private SortedSet<LayoutAtom> layoutAtomtoUpdate;
 	
 	public Mine(Properties prop, long layoutSeed, long updateSeed) {
 		this.layoutSeed = layoutSeed;
@@ -26,9 +31,14 @@ public class Mine {
 		state = new MineState(0, prop);
 		scheduler = new MineObjectScheduler(state, prop);
 		this.prop = prop;
-		
+		layoutAtomtoUpdate = new TreeSet<LayoutAtom>(Comparator.comparing(MineObject::getId));
 		createLayout();
+		for(LayoutAtom las : layoutAtomtoUpdate) {
+			las.initialiseLinks();
+		}
 		fillLayout();
+		layoutAtomtoUpdate = null;
+		state.activateCaching = true;
 	}
 
 	// constructor from file
@@ -139,7 +149,9 @@ public class Mine {
 		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
 		if(tail.getY() <= 0.0)
 			return false; // make sure we stay underground
-		new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), atomRadius);
+		LayoutAtomStatus las = new LayoutAtomStatus();
+		Tunnel t = new Tunnel(state, head, tail, nAtoms, las, atomRadius, layoutAtomtoUpdate);
+		las.setSensorId(t.getId());
 		
 		// keep extending in the same direction with {100%, 70%, 40%, 10%} chance
 		boolean continues = false;

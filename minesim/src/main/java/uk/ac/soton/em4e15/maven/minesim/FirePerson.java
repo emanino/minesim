@@ -3,6 +3,7 @@ package uk.ac.soton.em4e15.maven.minesim;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class FirePerson extends Person {
 	
@@ -54,7 +55,7 @@ public class FirePerson extends Person {
 	private void extinguishFires() {
 		
 		// find the fires around the FirePerson
-		Set<Fire> fires = this.getState().getObjectsInRadius(Fire.class, this.getPosition(), skill.getRadius());
+		SortedSet<Fire> fires = this.getState().getObjectsInRadius(Fire.class, this.getPosition(), skill.getRadius());
 		
 		// smother the fires, remove them when finished
 		for(Fire fire: fires) {

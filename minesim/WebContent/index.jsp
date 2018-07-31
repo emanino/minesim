@@ -8,14 +8,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Mine Simulator - Mine Viewer</title>
 
+<link rel="stylesheet" type="text/css" href="css/mine-style.css" media="screen" />
 <script src="//code.jquery.com/jquery-1.10.2.js"
 	type="text/javascript"></script>
-<script src="js/app-ajax.js" type="text/javascript"></script>
-<script src="js/draw-mine.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/mine-style.css" media="screen" />
-
 <link rel="stylesheet" href="css/jquery-ui.min.css">
 <script src="js/jquery-ui.min.js"></script>
+<script src="js/draw-mine.js" type="text/javascript"></script>
+<script src="js/app-ajax.js" type="text/javascript"></script>
+
 
 </head>
 
@@ -28,11 +28,13 @@
   <div>
     <p>
 	<fieldset>
+		<legend>Seed generation</legend>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButton" >Generate Mine</button>
 		Mine Seed: <input type="text" id="mineSeedForm" value="1"/>
 		Update Seed: <input type="text" id="updateSeedForm" value="1"/>
 	</fieldset>
 	<fieldset>
+		<legend>Random generation</legend>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButtonRandom" >Generate Random Mine</button>
 	</fieldset>
     </p>
@@ -41,9 +43,18 @@
   <div>
     <p>
 	<fieldset>
+		<legend>Perform one action a number of times:</legend>
 		Times: <input type="text" id="updateActionNumber" value="1"/>
 	    <button class="ui-button ui-widget ui-corner-all changeButtons" id="actionBusinessAsUsual" >Business As Usual</button>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionEvacuateMine" >Evacuate the mine</button>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionRefresh" >Refresh</button>
+	</fieldset>
+	<fieldset>
+		<legend>Perform automatic updates / refresh visualisation:</legend>
+		Milliseconds: <input type="text" id="updateActionMilliseconds" value="100"/>
+		<label for="checkboxAutoRun">Automatic Update</label>
+        <input type="checkbox" name="checkboxAutoRun" id="checkboxAutoRun" />
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionRefresh" >Refresh</button>
 	</fieldset>
     </p>
     

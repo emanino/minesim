@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 
 public class MinerPerson extends Person {
 	
@@ -38,7 +39,7 @@ public class MinerPerson extends Person {
 		Path path = null;
 		
 		// run away (if need be)!
-		Set<Integer> evacuate = scheduler.getForbiddenAtoms();
+		SortedSet<Integer> evacuate = scheduler.getForbiddenAtoms();
 		if(evacuate.contains(currAtom.getId())) {
 			path = currAtom.shortestPathOut(evacuate);
 		

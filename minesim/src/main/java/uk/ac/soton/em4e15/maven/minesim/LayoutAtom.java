@@ -1,12 +1,15 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class LayoutAtom implements AtomObject {
 	
@@ -15,24 +18,29 @@ public class LayoutAtom implements AtomObject {
 	private Position pos;
 	private MineState state;
 	private LayoutAtomStatus status;
-	private Set<Integer> neighbours;
+	private SortedSet<Integer> neighbours;
 	private double radius;
 	
 	// create a new LayoutAtom
 	LayoutAtom(Integer superId, Position pos, MineState state, LayoutAtomStatus status, double radius) {
 		id = state.getNextId();
+		status.setSensorId(id);
 		this.superId = superId;
 		this.pos = pos;
 		this.state = state;
 		this.status = status;
-		neighbours = new HashSet<Integer>();
+		neighbours = new TreeSet<Integer>();
 		this.radius = radius;
 		state.addNew(this);
 		
-		// find the neighbours automatically
-		for(LayoutAtom atom: state.getObjectsInRadius(LayoutAtom.class, pos, radius))
-			if(atom.getId() != id)
-				this.linkWith(atom);
+		
+	}
+	
+	public void initialiseLinks() {
+	// find the neighbours automatically
+			for(LayoutAtom atom: state.getObjectsInRadius(LayoutAtom.class, pos, radius))
+				if(atom.getId() != id)
+					this.linkWith(atom);
 	}
 	
 	// copy the LayoutAtom into the next state
@@ -65,7 +73,7 @@ public class LayoutAtom implements AtomObject {
 		return status;
 	}
 	
-	public Set<Integer> getNeighbours() {
+	public SortedSet<Integer> getNeighbours() {
 		return neighbours;
 	}
 	
@@ -97,7 +105,7 @@ public class LayoutAtom implements AtomObject {
 			atom.getStatus().update(fire);
 		
 		// compute the effect of neighbouring LayoutAtoms
-		Set<LayoutAtomStatus> statuses = new HashSet<LayoutAtomStatus>();
+		SortedSet<LayoutAtomStatus> statuses = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getSensorId));
 		for(Integer atomId: neighbours)
 			statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
 		atom.getStatus().update(statuses);
@@ -115,9 +123,9 @@ public class LayoutAtom implements AtomObject {
 		Map<Integer, Double> tentativeDistances = new HashMap<Integer, Double>();
 		Map<Integer,Integer> shortestTree = new HashMap<Integer,Integer>();
 		tentativeDistances.put(this.id, new Double(0));
-		Set<Integer> visitedAtoms = new HashSet<Integer>();
+		SortedSet<Integer> visitedAtoms = new TreeSet<Integer>();
 		boolean moreAtomsToVisit = true;
-		Set<Integer> visitableAtoms = new HashSet<Integer>();
+		SortedSet<Integer> visitableAtoms = new TreeSet<Integer>();
 		visitableAtoms.add(this.id);
 		while (moreAtomsToVisit) {
 			// find atom with the minimum distance

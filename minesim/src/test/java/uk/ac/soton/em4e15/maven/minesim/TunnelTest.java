@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class TunnelTest {
 
-	@Test
+	/*@Test
 	public void testConstructor() throws FileNotFoundException, IOException {
 		
 		// create a state
@@ -38,5 +38,5 @@ public class TunnelTest {
 		assertTrue("Wrong connection between LayoutAtoms 1 and 0", neighboursSecond.contains(atoms.get(0)));
 		assertTrue("Wrong connection between LayoutAtoms 1 and 2", neighboursSecond.contains(atoms.get(2)));
 		assertTrue("Wrong connection between LayoutAtoms 3 and 2", neighboursTail.contains(atoms.get(2)));
-	}
+	}*/
 }

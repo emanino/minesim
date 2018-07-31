@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class MineObjectScheduler {
 	
@@ -13,9 +17,9 @@ public class MineObjectScheduler {
 	private double maxShiftLength; // from properties
 	private double currShiftLength;
 	private double timeStep;
-	private Map<Integer, Integer> minerSitePair;
-	private Map<Integer, Integer> firemanLayoutPair;
-	private Set<Integer> forbiddenAtoms;
+	private SortedMap<Integer, Integer> minerSitePair;
+	private SortedMap<Integer, Integer> firemanLayoutPair;
+	private SortedSet<Integer> forbiddenAtoms;
 	
 	MineObjectScheduler(MineState state, Properties prop) {
 		
@@ -23,9 +27,9 @@ public class MineObjectScheduler {
 		maxShiftLength = (int) (Double.parseDouble(prop.getProperty("shiftLength")) * 60 / Double.parseDouble(prop.getProperty("timeStep")));
 		currShiftLength = maxShiftLength; // force a new shift at the first iteration
 		timeStep = Double.parseDouble(prop.getProperty("timeStep"));
-		minerSitePair = new HashMap<Integer, Integer>();
-		firemanLayoutPair = new HashMap<Integer, Integer>();
-		forbiddenAtoms = new HashSet<Integer>();
+		minerSitePair = new TreeMap<Integer, Integer>();
+		firemanLayoutPair = new TreeMap<Integer, Integer>();
+		forbiddenAtoms = new TreeSet<Integer>();
 	}
 	
 	public Integer getMiningSite(MinerPerson person) {
@@ -36,7 +40,7 @@ public class MineObjectScheduler {
 		return firemanLayoutPair.get(person.getId());
 	}
 	
-	public Set<Integer> getForbiddenAtoms() {
+	public SortedSet<Integer> getForbiddenAtoms() {
 		return forbiddenAtoms;
 	}
 	
@@ -75,7 +79,7 @@ public class MineObjectScheduler {
 		minerSitePair.clear();
 		
 		// identify the mining sites
-		Set<MiningSite> sites = state.getObjects(MiningSite.class);
+		SortedSet<MiningSite> sites = state.getObjects(MiningSite.class);
 		Iterator<MiningSite> it = sites.iterator();
 		
 		// assign well-rested miners to them

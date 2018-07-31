@@ -1,9 +1,11 @@
-$(document).ready(function() {
+$( function() {
 	
 		$("#drawArea").hide();
 		$(".changeButtons").button();
 		//alert($( "#mainaccordion" ));
+		$( "#checkboxAutoRun" ).checkboxradio();
 		$( "#mainaccordion" ).accordion();
+		
 		
 	    $( "#renderButton" ).click( function( event ) {
 	      event.preventDefault();
@@ -40,22 +42,42 @@ $(document).ready(function() {
 					}
 				});
 		    } );
-	    
 	    $( "#actionBusinessAsUsual" ).click( function( event ) {
 	    	disableButtons()
-		      event.preventDefault();
-		      addAction(0,parseInt($('#updateActionNumber').val()),"","Business as usual.");
-		      redrawMine();
+		    event.preventDefault();
+		    addAction(0,parseInt($('#updateActionNumber').val()),"","Business as usual.");
+		    redrawMine();
 	    } );
 	    $( "#actionEvacuateMine" ).click( function( event ) {
 	    	disableButtons()
-		      event.preventDefault();
-		      addAction(1,parseInt($('#updateActionNumber').val()),"","Evacuate the mine.");
-		      redrawMine();
+		    event.preventDefault();
+		    addAction(1,parseInt($('#updateActionNumber').val()),"","Evacuate the mine.");
+		    redrawMine();
 	    } );
-		       
+	    $( "#actionRefresh" ).click( function( event ) {
+	    	disableButtons()
+		    event.preventDefault();
+		    redrawMine();
+	    } ); 
+	    $('#checkboxAutoRun').change(function() {
+	        if(this.checked) {
+		    	disableButtons();
+		    	$("#checkboxAutoRun").button( "option", "disabled", false );
+			    setTimeout(periodicUpdate, $("#updateActionMilliseconds").val());
+	        } else {
+	        	enableButtons()
+	        }   
+	    });
 	
 });
+
+function periodicUpdate(){
+	if($('#checkboxAutoRun').is(':checked')){
+		addAction(0,parseInt($('#updateActionNumber').val()),"","Business as usual.");
+		redrawMine();
+	}
+	
+}
 
 	
 function readActionHistoryValues(){
@@ -130,7 +152,10 @@ function redrawMine(){
 		success : function(responseText) {
 			$("#drawArea").show();
 			drawMine(responseText);
-			enableButtons()
+			if(!$('#checkboxAutoRun').is(':checked'))
+				enableButtons();
+			else
+				setTimeout(periodicUpdate, $("#updateActionMilliseconds").val());
 		}
 	});
 	
@@ -138,10 +163,12 @@ function redrawMine(){
 
 function disableButtons(){
 	$(".changeButtons").button( "option", "disabled", true );
+	$("#checkboxAutoRun").button( "option", "disabled", true );
 	//$(".changeButtons").attr("disabled", "disabled");
 }
 
 function enableButtons(){
+	$("#checkboxAutoRun").button( "option", "disabled", false );
 	$(".changeButtons").button( "option", "disabled", false );
 	//$(".changeButtons").removeAttr("disabled");
 }

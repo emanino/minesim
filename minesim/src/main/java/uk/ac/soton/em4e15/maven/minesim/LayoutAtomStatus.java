@@ -1,22 +1,26 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.Set;
+import java.util.SortedSet;
 
 public class LayoutAtomStatus {
 	
 	private double temp = 20.0;
 	private double co2 = 0.01;
+	private Integer parentId;
 	
 	LayoutAtomStatus() {}
 	
-	LayoutAtomStatus(LayoutAtomStatus status) {
+	LayoutAtomStatus(LayoutAtomStatus status, Integer sensorId) {
 		temp = status.getTemp();
 		co2 = status.getCO2();
+		this.setSensorId(sensorId);
 	}
 	
-	LayoutAtomStatus(double temp, double co2) {
+	LayoutAtomStatus(double temp, double co2, Integer sensorId) {
 		this.temp = temp;
 		this.co2 = co2;
+		this.setSensorId(sensorId);
 	}
 	
 	public double getTemp() {
@@ -37,7 +41,7 @@ public class LayoutAtomStatus {
 		if(co2 >= 1.0) co2 = 1.0;
 	}
 	
-	public void update(Set<LayoutAtomStatus> neighbours) {
+	public void update(SortedSet<LayoutAtomStatus> neighbours) {
 		if(neighbours.contains(this))
 			throw new IllegalArgumentException("You cannot update a LayoutAtomStatus with itself as a neighbour");
 		
@@ -62,5 +66,13 @@ public class LayoutAtomStatus {
 		// small values saturate to default
 		if(temp <= 20.0) temp = 20.0;
 		if(co2 <= 0.01) co2 = 0.01;
+	}
+
+	public Integer getSensorId() {
+		return parentId;
+	}
+
+	public void setSensorId(Integer sensorId) {
+		this.parentId = sensorId;
 	}
 }

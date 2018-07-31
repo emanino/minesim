@@ -1,21 +1,31 @@
 package uk.ac.soton.em4e15.maven.minesim;
 //
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class MineState {
 	
-	private Map<Integer, MineObject> objects;
+	private SortedMap<Integer, MineObject> objects;
 	private int maxId;
 	private Properties prop;
+	// for optimisation purposes:
+	private SortedSet<MineObject> sortedObjectsCache;
+	private Map<Class, SortedSet> sortedObjectsByTypeCache = new HashMap<Class, SortedSet>();
+	public boolean activateCaching = false;
 	
 	MineState(int reserveIds, Properties prop) {
-		objects = new HashMap<Integer, MineObject>();
+		objects = new TreeMap<Integer, MineObject>();
 		maxId = reserveIds;
 		this.prop = prop;
 	}
@@ -44,17 +54,31 @@ public class MineState {
 	}
 	
 	// return all the objects
-	public Set<MineObject> getObjects() {
-		return new HashSet<MineObject>(objects.values());
+	public SortedSet<MineObject> getObjects() {
+		if(sortedObjectsCache == null || !activateCaching) {			
+			sortedObjectsCache = MineUtil.getOrderedSet(objects.values());
+		}
+		return sortedObjectsCache;
 	}
 	
 	// return all the objects of the specified class
-	public <T extends MineObject> Set<T> getObjects(Class<T> cls) {
+	/*public <T extends MineObject> SortedSet<T> getObjects(Class<T> cls) {
 		Set<T> subset = new HashSet<T>();
-		for(MineObject obj: objects.values())
+		for(MineObject obj: getObjects())
 			if(cls.isInstance(obj))
 				subset.add(cls.cast(obj));
-		return subset;
+		return MineUtil.getOrderedSet(subset);
+	}*/
+	public <T extends MineObject> SortedSet<T> getObjects(Class<T> cls) {
+		if(!sortedObjectsByTypeCache.containsKey(cls)) {
+			SortedSet<T> subset = new TreeSet<T>(Comparator.comparing(MineObject::getId));
+			for(MineObject obj: getObjects())
+				if(cls.isInstance(obj))
+					subset.add(cls.cast(obj));
+			
+			sortedObjectsByTypeCache.put(cls, subset);
+		}
+		return (SortedSet<T>) sortedObjectsByTypeCache.get(cls);
 	}
 	
 	// return a specific object
@@ -73,9 +97,9 @@ public class MineState {
 	}
 	
 	// return all objects of the specified class in the specified radius
-	public <T extends AtomObject> Set<T> getObjectsInRadius(Class<T> cls, Position pos, double radius) {
-		Set<T> subset = new HashSet<T>();
-		for(MineObject obj: objects.values())
+	public <T extends AtomObject> SortedSet<T> getObjectsInRadius(Class<T> cls, Position pos, double radius) {
+		SortedSet<T> subset = new TreeSet<T>(Comparator.comparing(MineObject::getId));
+		for(MineObject obj: getObjects())
 			if(cls.isInstance(obj) && ((AtomObject) obj).getPosition().distanceTo(pos) <= radius)
 				subset.add(cls.cast(obj));
 		return subset;
@@ -84,7 +108,7 @@ public class MineState {
 	public LayoutAtom getClosestLayoutAtom(Position pos) {
 		LayoutAtom atom = null;
 		double minDist = Double.MAX_VALUE;
-		for(MineObject obj: objects.values())
+		for(MineObject obj: getObjects())
 			if(obj instanceof LayoutAtom) {
 				double distance = ((LayoutAtom) obj).getPosition().distanceTo(pos);
 				if(distance < minDist) {
