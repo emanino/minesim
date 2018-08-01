@@ -84,6 +84,9 @@ public class Person implements MovingObject {
 	}
 	
 	protected Position moveAlongPath(Path path, LayoutAtom currAtom) {
+		// if no path, stay put
+		if(path == null || path.getAtomIds() == null || path.getAtomIds().isEmpty())
+			return this.getPosition();
 		
 		if(path.getAtomIds().get(0) != currAtom.getId())
 			throw new IllegalArgumentException("The current LayoutAtom must be the first LayoutAtom in this Path");
