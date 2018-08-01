@@ -8,7 +8,7 @@ $( function() {
 		//alert($( "#mainaccordion" ));
 		$( "#checkboxAutoRun" ).checkboxradio();
 		$( "#mainaccordion" ).accordion();
-		
+		$( "#actionEvacuateTunnelSelection" ).selectmenu().selectmenu( "menuWidget" ).addClass( "overflow" );
 		
 	    $( "#renderButton" ).click( function( event ) {
 	      event.preventDefault();
@@ -22,6 +22,8 @@ $( function() {
 				success : function(responseText) {
 					$("#drawArea").show();
 					drawMine(responseText);
+					completeFields(responseText);
+					$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
 					enableButtons()
 				}
 			});
@@ -41,7 +43,8 @@ $( function() {
 					success : function(responseText) {
 						$("#drawArea").show();
 						drawMine(responseText);
-						enableButtons()
+						completeFields(responseText);
+						enableButtons();
 					}
 				});
 		    } );
@@ -57,6 +60,14 @@ $( function() {
 		    addAction(1,parseInt($('#updateActionNumber').val()),"","Evacuate the mine.");
 		    redrawMine();
 	    } );
+	    $( "#actionEvacuateTunnel" ).click( function( event ) {
+	    	disableButtons()
+		    event.preventDefault();
+	    	var tunnelnum = $( "#actionEvacuateTunnelSelection" ).find('option:selected').val().substr(1);
+		    addAction(2,parseInt($('#updateActionNumber').val()),tunnelnum,"Evacuate tunel T"+tunnelnum+".");
+		    redrawMine();
+	    } );
+	    
 	    $( "#actionRefresh" ).click( function( event ) {
 	    	disableButtons()
 		    event.preventDefault();
@@ -154,6 +165,20 @@ function addAction(code, times, params, text){
 	}
 }
 
+function completeFields(jsonMineText){
+	addTunnelsToMenus(jsonMineText);
+}
+function addTunnelsToMenus(jsonMine) {
+	var objArray = jsonMine.mineObjects;
+	$("#actionEvacuateTunnelSelection").empty();
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "tunnel"){
+			$("#actionEvacuateTunnelSelection").append("<option val=\""+(objArray[i].name.substr(1))+"\">"+objArray[i].name+"</option>");
+		}
+	//$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
+}
+
+
 function redrawMine(){
 	startDate = new Date();
 	$("#statRequestTime").html(""+startDate);
@@ -179,6 +204,7 @@ function redrawMine(){
 			$("#statTotMillisecondsPerUpdateunrounded").html(""+millisecondsPerUpdate);
 			$("#drawArea").show();
 			drawMine(responseText);
+			completeFields(responseText);
 			if(!$('#checkboxAutoRun').is(':checked'))
 				enableButtons();
 			else

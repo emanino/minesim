@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import uk.ac.soton.em4e15.maven.minesim.Mine;
 import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 /**
@@ -62,6 +63,11 @@ public class GetMineUpdatedServlet extends HttpServlet {
 				} else if (code == 1) {
 					HashSet<UserAction> actions = new HashSet<UserAction>();
 					actions.add(new FullEvacuateUserAction());
+					mine.update(actions);
+				} else if (code == 2) {
+					Integer tunnelId = Integer.parseInt(params);
+					HashSet<UserAction> actions = new HashSet<UserAction>();
+					actions.add(new PartialEvacuateUserAction(tunnelId));
 					mine.update(actions);
 				}
 			}

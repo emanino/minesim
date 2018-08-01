@@ -46,7 +46,15 @@
 		<legend>Perform one action a number of times:</legend>
 		Times: <input type="text" id="updateActionNumber" value="1"/>
 	    <button class="ui-button ui-widget ui-corner-all changeButtons" id="actionBusinessAsUsual" >Business As Usual</button>
-		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionEvacuateMine" >Evacuate the mine</button>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionEvacuateMine" >Evacuate All the Mine</button>
+		
+		<br>
+		
+		<label for="actionEvacuateTunnelSelection">Select a Tunnel</label>
+		<select name="actionEvacuateTunnelSelection" id="actionEvacuateTunnelSelection">
+			<option disabled selected>Tunnel...</option>
+	    </select>
+	    <button class="ui-button ui-widget ui-corner-all changeButtons" id="actionEvacuateTunnel" >Evacuate Tunnel</button>
 	</fieldset>
 	<fieldset>
 		<legend>Perform automatic updates / refresh visualisation:</legend>

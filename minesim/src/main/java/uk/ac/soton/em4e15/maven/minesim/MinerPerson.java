@@ -53,7 +53,8 @@ public class MinerPerson extends Person {
 		// If there is an evacuate user action, go outside the mine.
 		// This takes priority over other activities
 		if(actions.size() == 1 && actions.iterator().next().getClass() == FullEvacuateUserAction.class) {
-			path = goOut(currAtom, evacuate);
+			if(!outsideMine)
+				path = goOut(currAtom, evacuate);
 		} else {
 			//If there is no evacuation, then do other activities:
 			

@@ -2,6 +2,7 @@
 
 table { 
     display: block; /* mandatory because scroll only works on block elements */
+    border: 1px solid black;
 }
 
 tbody { 
@@ -17,4 +18,8 @@ tbody.scrollable {
 
 th, td {
     border-bottom: 1px solid #ddd;
+}
+
+.overflow { 
+	height: 150px; 
 }

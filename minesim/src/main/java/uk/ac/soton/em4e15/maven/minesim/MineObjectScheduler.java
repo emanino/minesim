@@ -48,7 +48,6 @@ public class MineObjectScheduler {
 	}
 	
 	public void update(Set<UserAction> actions, MineState next) {
-		
 		// end of the current shift
 		if(currShiftLength >= maxShiftLength) {
 			currShiftLength = currShiftLength-maxShiftLength;
@@ -58,7 +57,7 @@ public class MineObjectScheduler {
 		}
 		
 		// evacuate user action
-		forbiddenAtoms.clear();
+		//forbiddenAtoms.clear();
 		for(UserAction action: actions)
 			if(action instanceof PartialEvacuateUserAction)
 				evacuateLayoutObject(state.getObject(LayoutObject.class, ((PartialEvacuateUserAction) action).getLayoutId()));
@@ -110,6 +109,6 @@ public class MineObjectScheduler {
 	}*/
 	
 	private void evacuateLayoutObject(LayoutObject obj) {
-		forbiddenAtoms.addAll(obj.getAtoms());
+		forbiddenAtoms.addAll(obj.getAtoms());		
 	}
 }
