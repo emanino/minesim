@@ -6,6 +6,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class MinerPerson extends Person {
 	
 	MinerPerson(Position pos, MineState state, PersonStatus status) {
@@ -17,7 +20,7 @@ public class MinerPerson extends Person {
 	}
 	
 	@Override
-	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
+	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		MinerPerson person = new MinerPerson(this, next);
 		
 		// find the current LayoutAtom
@@ -45,49 +48,49 @@ public class MinerPerson extends Person {
 		// while avoiding the atoms to be evacuated
 		
 		Path path = null;
-		
-		// run away (if need be)!
 		SortedSet<Integer> evacuate = scheduler.getForbiddenAtoms();
-		if(evacuate.contains(currAtom.getId())) {
-			path = currAtom.shortestPathOut(evacuate);
 		
-		} else if(getStatus().getRestBar() <= 0){
-			// if tired go out of the mine
-			Set<Integer> exitIds =  new HashSet<Integer>();
-			for(Position exit : this.getState().getExits()) {
-				exitIds.add(this.getState().getClosestLayoutAtom(exit).getId());
-			}
-			path = currAtom.shortestPathTo(exitIds, evacuate);
-		}else {
-			// find the target
-			Integer siteId = scheduler.getMiningSite(this);
+		// If there is an evacuate user action, go outside the mine.
+		// This takes priority over other activities
+		if(actions.size() == 1 && actions.iterator().next().getClass() == FullEvacuateUserAction.class) {
+			path = goOut(currAtom, evacuate);
+		} else {
+			//If there is no evacuation, then do other activities:
 			
-			// shortest path to the target
-			if(siteId != null) {
-				Position sitePos = this.getState().getObject(MiningSite.class, siteId).getPosition();
-				if(sitePos.distanceTo(this.getPosition()) > 0.01) {					
-					// if the miner is still far from the position, move to the position
-					Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
-					path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
+			// run away (if need be)!
+			if(evacuate.contains(currAtom.getId())) {
+				path = currAtom.shortestPathOut(evacuate);
+				
+			} else if(getStatus().getRestBar() <= 0){
+				// if tired go out of the mine
+				path = goOut(currAtom, evacuate);
+			}else {
+				// find the target
+				Integer siteId = scheduler.getMiningSite(this);
+				
+				// shortest path to the target
+				if(siteId != null) {
+					Position sitePos = this.getState().getObject(MiningSite.class, siteId).getPosition();
+					if(sitePos.distanceTo(this.getPosition()) > 0.01) {					
+						// if the miner is still far from the position, move to the position
+						Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
+						path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
+					}
 				}
 			}
+			
+			if(path == null && outsideMine) {
+				// if the miner has no target, leave the mine
+				path = goOut(currAtom, evacuate);
+			}	
 		}
-		
-		if(path == null && outsideMine) {
-			// if the miner has no target, leave the mine
-			Set<Integer> exitIds =  new HashSet<Integer>();
-			for(Position exit : this.getState().getExits()) {
-				exitIds.add(this.getState().getClosestLayoutAtom(exit).getId());
-			}
-			path = currAtom.shortestPathTo(exitIds, evacuate);
-		}	
 		// make a move
 		if(path != null) {
 			Position newPos = this.moveAlongPath(path, currAtom);
 			person.setPosition(newPos);
 		}
-		
 		// DO OTHER STUFF (e.g. mining coal)
+		
 	}
 	
 	@Override

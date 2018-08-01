@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
+
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class Person implements MovingObject {
 	
@@ -75,7 +78,7 @@ public class Person implements MovingObject {
 	}
 
 	@Override
-	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
+	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		new Person(this, next);
 		// so far simple people have nothing to do in our beloved mine
 	}
@@ -106,6 +109,14 @@ public class Person implements MovingObject {
 		}
 		
 		return newPos;
+	}
+	
+	Path goOut(LayoutAtom currAtom, SortedSet<Integer> evacuate) {
+		Set<Integer> exitIds =  new HashSet<Integer>();
+		for(Position exit : this.getState().getExits()) {
+			exitIds.add(this.getState().getClosestLayoutAtom(exit).getId());
+		}
+		return currAtom.shortestPathTo(exitIds, evacuate);
 	}
 	
 	@Override

@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class Tunnel implements LayoutObject {
 	
 	private Integer id;
@@ -90,7 +92,7 @@ public class Tunnel implements LayoutObject {
 	}
 
 	@Override
-	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
+	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		new Tunnel(this, next);
 		// update tunnel...
 		// - e.g. if an explosion increases its length

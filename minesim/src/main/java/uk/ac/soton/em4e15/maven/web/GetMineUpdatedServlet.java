@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import uk.ac.soton.em4e15.maven.minesim.Mine;
-import uk.ac.soton.em4e15.maven.minesim.UserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 /**
  * Servlet implementation class GetMineUpdatedServlet
@@ -46,7 +47,7 @@ public class GetMineUpdatedServlet extends HttpServlet {
 		Properties prop = new Properties();
 		prop.load(getServletContext().getResourceAsStream("/WEB-INF/minesim.properties"));
 		//prop.load(new FileInputStream(new File(resourceUrl.toString())));
-		Mine mine = new Mine(prop, mineSeed, updateSeed);
+		Mine mine = new Mine(prop, mineSeed, updateSeed, 0);
 		
 		int i = 1;
 		JsonObject jobjcurrent = jobj.getJsonObject(""+i);
@@ -54,12 +55,14 @@ public class GetMineUpdatedServlet extends HttpServlet {
 			int code = Integer.parseInt(jobjcurrent.getString("code"));
 			int times = Integer.parseInt(jobjcurrent.getString("times"));
 			String params = jobjcurrent.getString("params");
-			for(int j = 0; j < times; j++) {				
+			for(int j = 0; j < times; j++) {
 				if(code == 0) {
 					// code 0 = Business as Usual
 					mine.update(new HashSet<UserAction>());
 				} else if (code == 1) {
-					// code 1 = Evacuate the mine
+					HashSet<UserAction> actions = new HashSet<UserAction>();
+					actions.add(new FullEvacuateUserAction());
+					mine.update(actions);
 				}
 			}
 			i++;

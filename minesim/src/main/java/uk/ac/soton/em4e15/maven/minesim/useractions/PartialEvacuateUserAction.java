@@ -1,10 +1,10 @@
-package uk.ac.soton.em4e15.maven.minesim;
+package uk.ac.soton.em4e15.maven.minesim.useractions;
 
 public class PartialEvacuateUserAction implements UserAction {
 	
 	private Integer layoutId;
 	
-	PartialEvacuateUserAction(Integer layoutId) {
+	public PartialEvacuateUserAction(Integer layoutId) {
 		this.layoutId = layoutId;
 	}
 	

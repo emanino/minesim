@@ -29,7 +29,7 @@ public class GetMineServlet extends HttpServlet {
 		Properties prop = new Properties();
 		prop.load(getServletContext().getResourceAsStream("/WEB-INF/minesim.properties"));
 		//prop.load(new FileInputStream(new File(resourceUrl.toString())));
-		Mine mine = new Mine(prop, mineSeed, updateSeed);
+		Mine mine = new Mine(prop, mineSeed, updateSeed, 0);
 		String json = mine.toJsonGui();
 		
 		response.setContentType("application/json");

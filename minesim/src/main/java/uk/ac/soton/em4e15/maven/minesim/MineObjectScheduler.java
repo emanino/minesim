@@ -11,6 +11,10 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class MineObjectScheduler {
 	
 	private MineState state;
@@ -58,8 +62,8 @@ public class MineObjectScheduler {
 		for(UserAction action: actions)
 			if(action instanceof PartialEvacuateUserAction)
 				evacuateLayoutObject(state.getObject(LayoutObject.class, ((PartialEvacuateUserAction) action).getLayoutId()));
-			else if(action instanceof FullEvacuateUserAction)
-				evacuateMine();
+			//else if(action instanceof FullEvacuateUserAction)
+			//	evacuateMine();
 		
 		// send fire team user action
 		for(UserAction action: actions)
@@ -96,14 +100,14 @@ public class MineObjectScheduler {
 				firemanLayoutPair.put(person.getId(), target.getId());
 	}
 	
-	// very hacky! improve it by:
+	/*// very hacky! improve it by:
 	// identifying ALL the exits
 	private void evacuateMine() {
 		LayoutAtom exit = state.getClosestLayoutAtom(new Position(0.0, 0.0, 0.0));
 		for(LayoutAtom atom: state.getObjects(LayoutAtom.class))
 				forbiddenAtoms.add(atom.getId());
 		forbiddenAtoms.remove(exit.getId());
-	}
+	}*/
 	
 	private void evacuateLayoutObject(LayoutObject obj) {
 		forbiddenAtoms.addAll(obj.getAtoms());

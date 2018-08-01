@@ -13,6 +13,8 @@ import java.util.Properties;
 
 import org.junit.Test;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 
 
 public class MineTest {
@@ -24,7 +26,7 @@ public class MineTest {
 			for(int j = 0; j < 3; j++) {
 				Properties prop = new Properties();
 				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
-				Mine mine = new Mine(prop, i, j);
+				Mine mine = new Mine(prop, i, j, 0);
 				
 				// count the number of LayoutAtoms
 				MineState state = mine.getState();
@@ -45,7 +47,7 @@ public class MineTest {
 				// create a mine
 				Properties prop = new Properties();
 				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
-				Mine mine = new Mine(prop, i, j);
+				Mine mine = new Mine(prop, i, j, 0);
 				
 				for(int t = 0; t < 50; ++t) {		
 					mine.update(new HashSet<UserAction>());
@@ -62,7 +64,7 @@ public class MineTest {
 			for(int j = 0; j < 3; j++) {
 				Properties prop = new Properties();
 				prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
-				Mine mine = new Mine(prop, i, j);
+				Mine mine = new Mine(prop, i, j, 0);
 				String json = mine.toJsonGui();
 				System.out.println(json);
 				//PrintWriter out = new PrintWriter("mine"+i+".json");

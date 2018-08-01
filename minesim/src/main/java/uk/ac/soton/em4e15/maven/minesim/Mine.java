@@ -11,23 +11,27 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class Mine {
 	
 	private long layoutSeed;
 	private long updateSeed;
 	private Random layoutRand;
-	private Random updateRand;
+	private long updateRand;
+	private long previousUpdates;
 	private MineState state;
 	private MineObjectScheduler scheduler;
 	private Properties prop;
 
 	private SortedSet<LayoutAtom> layoutAtomtoUpdate;
 	
-	public Mine(Properties prop, long layoutSeed, long updateSeed) {
+	public Mine(Properties prop, long layoutSeed, long updateSeed, long previousUpdates) {
+		previousUpdates = 0;
 		this.layoutSeed = layoutSeed;
 		this.updateSeed = updateSeed;
 		layoutRand = new Random(layoutSeed);
-		updateRand = new Random(updateSeed);
+		updateRand = updateSeed;
 		state = new MineState(0, prop);
 		scheduler = new MineObjectScheduler(state, prop);
 		this.prop = prop;
@@ -64,9 +68,10 @@ public class Mine {
 		
 		// update all the elements
 		for(MineObject obj: state.getObjectsSorted())
-			obj.update(scheduler, updateRand, next);
+			obj.update(actions, scheduler, new Random(updateRand+previousUpdates), next);
 		
 		// overwrite the old state with the new one
+		previousUpdates++;
 		state = next;
 	}
 	

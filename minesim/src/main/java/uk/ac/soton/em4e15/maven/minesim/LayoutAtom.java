@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class LayoutAtom implements AtomObject {
 	
 	private Integer id;
@@ -97,7 +99,7 @@ public class LayoutAtom implements AtomObject {
 	}
 
 	@Override
-	public void update(MineObjectScheduler scheduler, Random rand, MineState next) {
+	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
 		
 		// compute the damage caused by Fires

@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Set;
 import org.junit.Test;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class LayoutAtomTest {
 	
 	@Test
@@ -50,7 +52,7 @@ public class LayoutAtomTest {
 		MineObjectScheduler scheduler = new MineObjectScheduler(oldState, prop);
 		
 		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(), 1.0);
-		a.update(scheduler, new Random(), newState);
+		a.update(new HashSet<UserAction>(), scheduler, new Random(), newState);
 		
 		Collection<MineObject> objects = newState.getObjects();
 		assertEquals("Failed to insert a copy of the LayoutAtom in the new state", 1, objects.size());
