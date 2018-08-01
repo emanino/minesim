@@ -15,16 +15,15 @@ public class MineObjectScheduler {
 	
 	private MineState state;
 	private double maxShiftLength; // from properties
-	private double currShiftLength;
+	private Double currShiftLength;
 	private double timeStep;
 	private SortedMap<Integer, Integer> minerSitePair;
 	private SortedMap<Integer, Integer> firemanLayoutPair;
 	private SortedSet<Integer> forbiddenAtoms;
 	
 	MineObjectScheduler(MineState state, Properties prop) {
-		
 		this.state = state;
-		maxShiftLength = (int) (Double.parseDouble(prop.getProperty("shiftLength")) * 60 / Double.parseDouble(prop.getProperty("timeStep")));
+		maxShiftLength = (int) (Double.parseDouble(prop.getProperty("shiftLength")) / Double.parseDouble(prop.getProperty("timeStep")));
 		currShiftLength = maxShiftLength; // force a new shift at the first iteration
 		timeStep = Double.parseDouble(prop.getProperty("timeStep"));
 		minerSitePair = new TreeMap<Integer, Integer>();
@@ -48,10 +47,11 @@ public class MineObjectScheduler {
 		
 		// end of the current shift
 		if(currShiftLength >= maxShiftLength) {
+			currShiftLength = currShiftLength-maxShiftLength;
 			refreshMinerSitePair();
-			currShiftLength = 0.0;
-		} else
+		} else {			
 			currShiftLength += timeStep;
+		}
 		
 		// evacuate user action
 		forbiddenAtoms.clear();
@@ -74,7 +74,6 @@ public class MineObjectScheduler {
 	}
 	
 	private void refreshMinerSitePair() {
-		
 		// remove the previous shift
 		minerSitePair.clear();
 		
@@ -83,9 +82,10 @@ public class MineObjectScheduler {
 		Iterator<MiningSite> it = sites.iterator();
 		
 		// assign well-rested miners to them
-		for(MinerPerson person: state.getObjects(MinerPerson.class))
+		for(MinerPerson person: state.getObjects(MinerPerson.class)) {			
 			if(person.getStatus().isRested() && it.hasNext())
 				minerSitePair.put(person.getId(), it.next().getId());
+		}
 	}
 	
 	private void assignFirePersonToTarget(LayoutObject target) {

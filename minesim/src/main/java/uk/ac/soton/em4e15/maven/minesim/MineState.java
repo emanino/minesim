@@ -23,6 +23,7 @@ public class MineState {
 	private SortedSet<MineObject> sortedObjectsCache;
 	private Map<Class, SortedSet> sortedObjectsByTypeCache = new HashMap<Class, SortedSet>();
 	public boolean activateCaching = false;
+	private SortedSet<Position> exits = new TreeSet<Position>(Comparator.comparing(Position::toJsonGui));
 	
 	MineState(int reserveIds, Properties prop) {
 		objects = new TreeMap<Integer, MineObject>();
@@ -30,8 +31,13 @@ public class MineState {
 		this.prop = prop;
 	}
 	
+	MineState(int reserveIds, Properties prop, SortedSet<Position> exits) {
+		this(reserveIds, prop);
+		this.exits = exits;
+	}
+	
 	MineState(MineState old) {
-		this(old.getNextId(), old.getProp());
+		this(old.getNextId(), old.getProp(), old.getExits());
 	}
 	
 	// use this if the object existed in a previous state already
@@ -136,5 +142,13 @@ public class MineState {
 		for(Map.Entry<Integer, MineObject> entry: objects.entrySet())
 			strings.add(entry.getValue().toJsonGui());
 		return "{\"mineObjects\":[" + String.join(",", strings) + "]}";
+	}
+
+	public SortedSet<Position> getExits() {
+		return exits;
+	}
+
+	public void setExits(SortedSet<Position> exits) {
+		this.exits = exits;
 	}
 }

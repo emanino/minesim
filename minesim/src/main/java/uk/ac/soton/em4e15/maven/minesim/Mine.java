@@ -73,24 +73,26 @@ public class Mine {
 	private void createLayout() {
 		
 		// all of these parameters should go into a configuration file
-		int maxSections = 5;
-		int maxAtoms = 10;
+		int maxSections = Integer.parseInt(prop.getProperty("maxSections"));;
+		int maxAtoms = Integer.parseInt(prop.getProperty("maxAtoms"));;
 		double atomRadius = 1.0;
 		
 		Position exit = new Position(0.0, 0.0, 0.0); // convention: the exit is always the origin
+		state.getExits().add(exit);
 		extendTunnel(exit, Direction.SOUTH, maxSections, maxAtoms, atomRadius, 0);
 	}
 	
 	private void fillLayout() {
 		
 		// all of these parameters should go into a configuration file
-		int nMinerPeople = 4;
-		int nFirePeople = 1;
+		int nMinerPeople = Integer.parseInt(prop.getProperty("nMinerPeople"));
+		int nFirePeople = Integer.parseInt(prop.getProperty("nFirePeople"));
 		
 		// create all the miners close to the exit
 		for(int i = 0; i < nMinerPeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
-			new MinerPerson(pos, state, new PersonStatus(prop));
+			MinerPerson miner = new MinerPerson(pos, state, new PersonStatus(prop));
+			//miner.getStatus().setRestBar(Math.round(updateRand.nextDouble()*Double.parseDouble(prop.getProperty("personRestTime"))/10));
 		}
 		
 		// create all the firemen close to the exit

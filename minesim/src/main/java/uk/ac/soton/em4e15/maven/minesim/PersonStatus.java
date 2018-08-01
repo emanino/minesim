@@ -8,6 +8,7 @@ public class PersonStatus {
 	private double personSpeed;
 	private double RestTimeThreshold;
 	private double currRestBar;
+	private boolean instantHealth;
 	
 	private double health = 1.0; // temporary
 	
@@ -16,6 +17,7 @@ public class PersonStatus {
 		personSpeed = Double.parseDouble(prop.getProperty("personSpeed"));
 		RestTimeThreshold = Double.parseDouble(prop.getProperty("personRestTime"));
 		currRestBar = RestTimeThreshold;
+		instantHealth = Integer.parseInt(prop.getProperty("personRest")) != 1;
 	}
 	
 	public double getDistance() {
@@ -26,19 +28,34 @@ public class PersonStatus {
 		return health;
 	}
 	
+	public double getRestBar() {
+		return currRestBar;
+	}
+	
+	public void setRestBar(double currRestBar) {
+		this.currRestBar = currRestBar;
+	}
+	
 	public boolean isRested() {
 		return currRestBar >= RestTimeThreshold;
 	}
 	
 	public void restAndRecover() {
-		health += 0.05;
-		if(health > 1.0)
+		if(instantHealth){
 			health = 1.0;
-		
-		currRestBar += timeStep / 2; // cheeky hack: the rest bar recovers twice as slow as it gets depleted
+			currRestBar = RestTimeThreshold;
+			
+		} else {				
+			health += 0.05;
+			if(health > 1.0)
+				health = 1.0;
+			currRestBar += timeStep;
+			if(currRestBar > RestTimeThreshold)
+				currRestBar = RestTimeThreshold;
+		}
 	}
 	
-	public void workAndSuffer(LayoutAtomStatus status) {
+	public void workAndTire(LayoutAtomStatus status) {
 		this.CO2Damage(status.getCO2());
 		this.TempDamage(status.getTemp());
 		

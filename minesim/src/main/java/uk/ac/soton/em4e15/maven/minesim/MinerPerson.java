@@ -23,12 +23,20 @@ public class MinerPerson extends Person {
 		// find the current LayoutAtom
 		LayoutAtom currAtom = this.getState().getClosestLayoutAtom(this.getPosition());
 		
-		// TAKE DAMAGE FROM THE ENVIRONMENT
-		person.getStatus().workAndSuffer(currAtom.getStatus());
+		boolean outsideMine = false;
+		for(Position exit : getState().getExits()) {
+			if(!outsideMine && getPosition().distanceTo(exit) < Double.parseDouble(getState().getProp().getProperty("exitRadius")))
+				outsideMine = true;
+		}
 		
-		// SLOWLY RECOVER WHEN OUTSIDE
-		if(person.getPosition().getY() <= 0.1) // temporary definition of "outside"
+		if(outsideMine) {
+			// RECOVER WHEN OUTSIDE
 			person.getStatus().restAndRecover();
+		} else {
+			// TAKE DAMAGE FROM THE ENVIRONMENT
+			person.getStatus().workAndTire(currAtom.getStatus());
+		}
+		
 			
 		// MOVE AROUND:
 		// extract the atoms we need to evacuate (if any)
@@ -43,18 +51,36 @@ public class MinerPerson extends Person {
 		if(evacuate.contains(currAtom.getId())) {
 			path = currAtom.shortestPathOut(evacuate);
 		
-		// find the target
-		} else {
+		} else if(getStatus().getRestBar() <= 0){
+			// if tired go out of the mine
+			Set<Integer> exitIds =  new HashSet<Integer>();
+			for(Position exit : this.getState().getExits()) {
+				exitIds.add(this.getState().getClosestLayoutAtom(exit).getId());
+			}
+			path = currAtom.shortestPathTo(exitIds, evacuate);
+		}else {
+			// find the target
 			Integer siteId = scheduler.getMiningSite(this);
 			
 			// shortest path to the target
 			if(siteId != null) {
 				Position sitePos = this.getState().getObject(MiningSite.class, siteId).getPosition();
-				Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
-				path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
+				if(sitePos.distanceTo(this.getPosition()) > 0.01) {					
+					// if the miner is still far from the position, move to the position
+					Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
+					path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
+				}
 			}
 		}
 		
+		if(path == null && outsideMine) {
+			// if the miner has no target, leave the mine
+			Set<Integer> exitIds =  new HashSet<Integer>();
+			for(Position exit : this.getState().getExits()) {
+				exitIds.add(this.getState().getClosestLayoutAtom(exit).getId());
+			}
+			path = currAtom.shortestPathTo(exitIds, evacuate);
+		}	
 		// make a move
 		if(path != null) {
 			Position newPos = this.moveAlongPath(path, currAtom);
