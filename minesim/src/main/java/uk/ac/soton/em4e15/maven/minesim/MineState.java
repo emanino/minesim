@@ -54,7 +54,11 @@ public class MineState {
 	}
 	
 	// return all the objects
-	public SortedSet<MineObject> getObjects() {
+	public Collection<MineObject> getObjects() {
+		return objects.values();
+	}
+	
+	public SortedSet<MineObject> getObjectsSorted() {
 		if(sortedObjectsCache == null || !activateCaching) {			
 			sortedObjectsCache = MineUtil.getOrderedSet(objects.values());
 		}

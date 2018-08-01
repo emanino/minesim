@@ -63,7 +63,7 @@ public class Mine {
 		scheduler.update(actions, next);
 		
 		// update all the elements
-		for(MineObject obj: state.getObjects())
+		for(MineObject obj: state.getObjectsSorted())
 			obj.update(scheduler, updateRand, next);
 		
 		// overwrite the old state with the new one

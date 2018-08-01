@@ -47,17 +47,25 @@
 		Times: <input type="text" id="updateActionNumber" value="1"/>
 	    <button class="ui-button ui-widget ui-corner-all changeButtons" id="actionBusinessAsUsual" >Business As Usual</button>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionEvacuateMine" >Evacuate the mine</button>
-		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionRefresh" >Refresh</button>
 	</fieldset>
 	<fieldset>
 		<legend>Perform automatic updates / refresh visualisation:</legend>
-		Milliseconds: <input type="text" id="updateActionMilliseconds" value="100"/>
+		Milliseconds: <input type="text" id="updateActionMilliseconds" value="1"/>
 		<label for="checkboxAutoRun">Automatic Update</label>
         <input type="checkbox" name="checkboxAutoRun" id="checkboxAutoRun" />
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="actionRefresh" >Refresh</button>
 	</fieldset>
     </p>
-    
+    <p>
+    Statistics:
+    <ul>
+    <li>Request time : (<span id="statRequestTimeMilliseconds"></span>) <span id="statRequestTime"></span></li>
+    <li>Response time: (<span id="statResponseTimeMilliseconds"></span>) <span id="statResponseTime"></span></li>
+    <li>Updates                : (<span id="statTotUpdates"></span>)</li>
+    <li>Milliseconds           : (<span id="statTotMilliseconds"></span>)</li>
+    <li>Milliseconds per update: (<span id="statTotMillisecondsPerUpdate"></span>), not rounded: (<span id="statTotMillisecondsPerUpdateunrounded"></span>)</li>
+    </ul>
+    </p>
     <p>
     Action history:
 	<table id="actionHistoryTable">
@@ -66,32 +74,8 @@
 	    </tbody>
 	</table>
 	</p>
-
   </div>
 </div>    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-	
-
-	
-
-	
 	<div id="drawArea">
 	<strong>Current state of the mine:</strong>:
 	<div id="ajaxGetUserServletResponse"></div>

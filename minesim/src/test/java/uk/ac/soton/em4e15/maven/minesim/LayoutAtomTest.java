@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Random;
@@ -51,7 +52,7 @@ public class LayoutAtomTest {
 		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(), 1.0);
 		a.update(scheduler, new Random(), newState);
 		
-		Set<MineObject> objects = newState.getObjects();
+		Collection<MineObject> objects = newState.getObjects();
 		assertEquals("Failed to insert a copy of the LayoutAtom in the new state", 1, objects.size());
 		
 		MineObject b = newState.getObject(a.getId());

@@ -1,3 +1,6 @@
+
+
+var startDate;
 $( function() {
 	
 		$("#drawArea").hide();
@@ -79,7 +82,17 @@ function periodicUpdate(){
 	
 }
 
-	
+var numUpdates = 0;	
+function getActionHistoryNumUpdates(){
+	var table = $("#actionHistoryTable");
+	numUpdates = 0
+	table.find('tr').each(function (i, el) {
+		var $tds = $(this).find('td');
+    	numUpdates = numUpdates+parseInt($tds.eq(1).text());
+    });
+	return numUpdates;
+}
+
 function readActionHistoryValues(){
 	var table = $("#actionHistoryTable");
 	var objects = {};
@@ -142,6 +155,10 @@ function addAction(code, times, params, text){
 }
 
 function redrawMine(){
+	startDate = new Date();
+	$("#statRequestTime").html(""+startDate);
+	$("#statRequestTimeMilliseconds").html(""+startDate.getTime());
+	numUpdates = 
 	$.ajax({
 		url : 'GetMineUpdatedServlet',
 		data : {
@@ -150,6 +167,16 @@ function redrawMine(){
 			jsonData : JSON.stringify(readActionHistoryValues())
 		},
 		success : function(responseText) {
+			var currentDate = new Date();
+			$("#statResponseTime").html(""+currentDate);
+			$("#statResponseTimeMilliseconds").html(""+currentDate.getTime());
+			var milliseconds = currentDate.getTime() - startDate.getTime();
+			var updatesNum = getActionHistoryNumUpdates();
+			var millisecondsPerUpdate = milliseconds/parseFloat(updatesNum);
+			$("#statTotUpdates").html(""+updatesNum);
+			$("#statTotMilliseconds").html(""+milliseconds);
+			$("#statTotMillisecondsPerUpdate").html(""+Math.round(millisecondsPerUpdate));
+			$("#statTotMillisecondsPerUpdateunrounded").html(""+millisecondsPerUpdate);
 			$("#drawArea").show();
 			drawMine(responseText);
 			if(!$('#checkboxAutoRun').is(':checked'))

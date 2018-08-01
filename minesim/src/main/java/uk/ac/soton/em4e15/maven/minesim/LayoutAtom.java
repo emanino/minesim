@@ -123,9 +123,9 @@ public class LayoutAtom implements AtomObject {
 		Map<Integer, Double> tentativeDistances = new HashMap<Integer, Double>();
 		Map<Integer,Integer> shortestTree = new HashMap<Integer,Integer>();
 		tentativeDistances.put(this.id, new Double(0));
-		SortedSet<Integer> visitedAtoms = new TreeSet<Integer>();
+		Set<Integer> visitedAtoms = new HashSet<Integer>();
 		boolean moreAtomsToVisit = true;
-		SortedSet<Integer> visitableAtoms = new TreeSet<Integer>();
+		Set<Integer> visitableAtoms = new HashSet<Integer>();
 		visitableAtoms.add(this.id);
 		while (moreAtomsToVisit) {
 			// find atom with the minimum distance
@@ -189,7 +189,7 @@ public class LayoutAtom implements AtomObject {
 		
 		for(Integer atomId: neighbours)
 			if(!block.contains(atomId)) {
-				Path candidate = state.getObject(LayoutAtom.class, atomId).shortestPathTo(targets, block);
+				Path candidate = state.getObject(LayoutAtom.class, atomId).shortestPathToNaive(targets, block);
 				if(candidate.betterThan(subpath)) {
 					subpath = candidate;
 					break; // ONLY FOR DEBUG PURPOSES: remove to have true shortest paths.
