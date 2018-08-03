@@ -23,3 +23,47 @@ th, td {
 .overflow { 
 	height: 150px; 
 }
+
+.gridLayout {
+	display: grid;
+}
+
+#outer{
+	position: relative;
+    width: 1200px;
+    height: 600px;
+    float: left;
+    transform-origin: left top;
+}
+
+#inner{
+	transform-origin: left top;
+	position: relative;
+    width: 1200px;
+    height: 600px;
+}
+
+#displayGrid {
+
+	
+	
+	
+	border-style: inset;
+	grid-template-areas:
+    'gheader gheader gheader gheader gheader gheader gheader'
+    'gdraw   gdraw   gdraw   gdraw   gtable  gtable  gtable';
+      grid-gap: 10px;
+  background-color: #b4cbde;
+  padding: 10px;
+}
+
+#displayGrid > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 24px;
+}
+
+.gheader { grid-area: gheader; }
+.gdraw { grid-area: gdraw; }
+.gtable { grid-area: gtable; }

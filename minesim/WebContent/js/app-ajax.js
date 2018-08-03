@@ -1,14 +1,59 @@
-
-
 var startDate;
+
 $( function() {
 	
 		$("#drawArea").hide();
 		$(".changeButtons").button();
-		//alert($( "#mainaccordion" ));
 		$( "#checkboxAutoRun" ).checkboxradio();
 		$( "#mainaccordion" ).accordion();
 		$( "#actionEvacuateTunnelSelection" ).selectmenu().selectmenu( "menuWidget" ).addClass( "overflow" );
+		
+		var maxWidth  = $('#inner').width();
+		var maxHeight = $('#inner').height();
+		$(window).resize(function(evt) {
+		    var $window = $(window);
+		    var width = $window.width();
+		    var height = $window.height();
+		    var scale;
+
+		    // early exit
+		    if(width >= maxWidth && height >= maxHeight) {
+		        $('#inner').css({'-webkit-transform': ''});
+		        $('#outer').css({ width: '', height: '' });
+		        return;
+		    }
+		    
+		    scale = Math.min(width/maxWidth, height/maxHeight);
+		    
+		    $('#inner').css({'-webkit-transform': 'scale(' + scale + ')'});
+		    $('#outer').css({ width: maxWidth * scale, height: maxHeight * scale });
+		});
+		
+		/*function doResize(event, ui) {
+			var $el = $("#displayGrid");
+			var elHeight = $el.outerHeight();
+			var elWidth = $el.outerWidth();
+			  var scale, origin;
+			    
+			  scale = Math.min(
+			    ui.size.width / elWidth,    
+			    ui.size.height / elHeight
+			  );
+		  $el.css({
+		    transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
+		  });	  
+			}
+		$("#scaleable-wrapper").resizable({
+			  resize: doResize
+			});
+		var starterData = { 
+		  size: {
+		    width: $("#scaleable-wrapper").width(),
+		    height: $("#scaleable-wrapper").height()
+		  }
+		}
+		doResize(null, starterData);*/
+		
 		
 	    $( "#renderButton" ).click( function( event ) {
 	      event.preventDefault();
