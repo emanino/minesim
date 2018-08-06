@@ -77,7 +77,7 @@
     <p>
     Action history:
 	<table id="actionHistoryTable">
-	    <tbody class='scrollable'>
+	    <tbody class='scrollable hoverTable'>
       
 	    </tbody>
 	</table>
@@ -90,7 +90,9 @@
 <div class= "gridLayout" id="displayGrid">
 	<div class="gheader">Mine Visualisation</div>
 	
-	<div class="gtable">Mine Information:
+	<div class="gtable" id="gtablediv">Mine Information:
+		<div id="tableArea">
+		</div>
 	</div>     
 	
 	<div id="drawArea" class="gdraw">

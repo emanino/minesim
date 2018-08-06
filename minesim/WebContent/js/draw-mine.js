@@ -185,6 +185,22 @@ function addSensor(svg, object, scale) {
 	svg.setAttribute("viewBox", newViewBox);
 }
 
+function addInfoPredicate(svg, object, scale){
+	var predicateName = object.predicateName;
+	var nameCode = predicateName.replace(/\s/g,'');
+	var data = object.data;
+	if($("#"+nameCode).length == 0){
+		$("#tableArea").append("<h3>"+predicateName+"</h3><div>" +
+				"<table id=\""+nameCode+"\" class=\"dataInfoTable hoverTable scrollable\"></table>" +
+				"</div>");
+	}
+	var tableRow = "<tr>";
+	for (var i = 0; i < data.length; i++) {
+		tableRow = tableRow+"<td>"+data[i].value+"</td>";
+	}
+	$("#"+nameCode).append(tableRow+"</tr>");
+}
+
 function drawMine(jsonMine) {
 	
 	var objArray = jsonMine.mineObjects;
@@ -225,6 +241,14 @@ function drawMine(jsonMine) {
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "fire")
 			addFire(svg, objArray[i], scale);
+	
+	// create all the infoPredicateTables
+	$("#gtablediv").html("<div id=\"tableArea\"></div>");
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "infoPredicate")
+			addInfoPredicate(svg, objArray[i], scale);
+	$("#tableArea").accordion();
+	
 	
 	// fit the background to the viewBox
 	var tokens = svg.getAttribute("viewBox").split(" ");

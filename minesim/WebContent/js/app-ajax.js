@@ -8,22 +8,24 @@ $( function() {
 		$( "#mainaccordion" ).accordion();
 		$( "#actionEvacuateTunnelSelection" ).selectmenu().selectmenu( "menuWidget" ).addClass( "overflow" );
 		
-		var maxWidth  = $('#inner').width();
-		var maxHeight = $('#inner').height();
+		
+		
 		$(window).resize(function(evt) {
-		    var $window = $(window);
+			var maxWidth  = $('#inner').width();
+			var maxHeight = $('#inner').height();
+			var $window = $(window);
 		    var width = $window.width();
-		    var height = $window.height();
+		    var height = $window.height();    
 		    var scale;
 
 		    // early exit
-		    if(width >= maxWidth && height >= maxHeight) {
+		    /*if(width >= maxWidth && height >= maxHeight) {
 		        $('#inner').css({'-webkit-transform': ''});
 		        $('#outer').css({ width: '', height: '' });
 		        return;
-		    }
+		    }*/
 		    
-		    scale = Math.min(width/maxWidth, height/maxHeight);
+		    scale = width/maxWidth;
 		    
 		    $('#inner').css({'-webkit-transform': 'scale(' + scale + ')'});
 		    $('#outer').css({ width: maxWidth * scale, height: maxHeight * scale });

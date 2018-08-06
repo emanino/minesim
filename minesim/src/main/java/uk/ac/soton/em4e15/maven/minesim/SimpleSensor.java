@@ -80,6 +80,19 @@ public class SimpleSensor implements MovingObject {
 	@Override
 	public String toJsonGui() {
 		// add field with Sensor Type
-		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + reading + "}";
+		String name = null;
+		switch(type) {
+		case TEMP:
+			name = "Temperature";
+			break;
+		case CO2:
+			name = "Carbon Monoxide";
+			break;
+		}
+		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading() + "}, "
+				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+name+"\", \"data\": ["
+					+ "{\"value\": \""+id+"\", \"type\": \"sensor\"}, "
+					+ "{\"value\": \""+getReading()+"\", \"type\": \"reading\"} "
+				+ "] }";
 	}
 }

@@ -30,8 +30,8 @@ th, td {
 
 #outer{
 	position: relative;
-    width: 1200px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
     float: left;
     transform-origin: left top;
 }
@@ -39,8 +39,8 @@ th, td {
 #inner{
 	transform-origin: left top;
 	position: relative;
-    width: 1200px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
 }
 
 #displayGrid {
@@ -50,8 +50,8 @@ th, td {
 	
 	border-style: inset;
 	grid-template-areas:
-    'gheader gheader gheader gheader gheader gheader gheader'
-    'gdraw   gdraw   gdraw   gdraw   gtable  gtable  gtable';
+    'gheader gheader gheader gheader gheader gheader'
+    'gdraw   gdraw   gdraw   gtable  gtable  gtable';
       grid-gap: 10px;
   background-color: #b4cbde;
   padding: 10px;
@@ -66,4 +66,27 @@ th, td {
 
 .gheader { grid-area: gheader; }
 .gdraw { grid-area: gdraw; }
-.gtable { grid-area: gtable; }
+.gtable { grid-area: gtable; overflow-x: scroll; }
+
+
+
+ .hoverTable{
+	width:100%; 
+	border-collapse:collapse; 
+}
+.hoverTable td{ 
+	padding:7px; border:#4e95f4 1px solid;
+}
+/* Define the default color for all the table rows */
+.hoverTable tr{
+	background: #b8d1f3;
+}
+/* Define the hover highlight color for the table row */
+  .hoverTable tr:hover {
+        background-color: #ffff99;
+  }
+  
+#mineSvg {
+	width: 100%;
+}
+
