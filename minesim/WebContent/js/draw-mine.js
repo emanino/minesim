@@ -201,6 +201,29 @@ function addInfoPredicate(svg, object, scale){
 	$("#"+nameCode).append(tableRow+"</tr>");
 }
 
+function addMiningSite(svg, object, scale) {
+	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++)
+		object.c[i] *= scale;
+	
+	// fires are images
+	var newSite = document.createElementNS("http://www.w3.org/2000/svg", 'image');
+	newSite.setAttribute("x", object.c[0] - 10);
+	newSite.setAttribute("y", object.c[1] - 10);
+	newSite.setAttribute("width", 20);
+	newSite.setAttribute("height", 20);
+	newSite.setAttribute("href", "icons/miningsite_icon.svg");
+	
+	// add everything to the parent element
+	svg.appendChild(newSite);
+	
+	// adjust the size of the SVG viewBox
+	var newViewBox = svg.getAttribute("viewBox");
+	newViewBox = adjustViewBox(newViewBox, object.c);
+	svg.setAttribute("viewBox", newViewBox);
+}
+
 function drawMine(jsonMine) {
 	
 	var objArray = jsonMine.mineObjects;
@@ -221,23 +244,28 @@ function drawMine(jsonMine) {
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "tunnel")
 			addTunnel(svg, objArray[i], scale);
+				
+	// create all the miningSites
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "site")
+			addMiningSite(svg, objArray[i], scale);
 	
-	// create all the tunnels
+	// create all the sensors
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "sensor")
 			addSensor(svg, objArray[i], scale);
 	
-	// create all the tunnels
+	// create all the minerPeople
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "minerperson")
 			addPerson(svg, objArray[i], scale);
 	
-	// create all the tunnels
+	// create all the firePeople
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "fireperson")
 			addFirePerson(svg, objArray[i], scale);
 	
-	// create all the tunnels
+	// create all the fires
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "fire")
 			addFire(svg, objArray[i], scale);

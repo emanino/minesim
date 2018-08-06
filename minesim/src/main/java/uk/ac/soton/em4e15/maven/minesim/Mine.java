@@ -77,14 +77,72 @@ public class Mine {
 	
 	private void createLayout() {
 		
-		// all of these parameters should go into a configuration file
-		int maxSections = Integer.parseInt(prop.getProperty("maxSections"));;
-		int maxAtoms = Integer.parseInt(prop.getProperty("maxAtoms"));;
-		double atomRadius = 1.0;
+		// read the layout parameters
+		double atomRadius = Double.parseDouble(prop.getProperty("atomRadius"));
+		int nSectionsMainTunnel = Integer.parseInt(prop.getProperty("nSectionsMainTunnel"));
+		int nSectionsEscapeTunnel = Integer.parseInt(prop.getProperty("nSectionsEscapeTunnel"));
+		int maxNSectionsSideTunnel = Integer.parseInt(prop.getProperty("maxNSectionsSideTunnel"));
+		double mainToEscapeTunnelDistance = Double.parseDouble(prop.getProperty("mainToEscapeTunnelDistance"));
+		int maxNRightSecondaryTunnels = Integer.parseInt(prop.getProperty("maxNRightSecondaryTunnels"));
+		int maxNLeftSecondaryTunnels = Integer.parseInt(prop.getProperty("maxNLeftSecondaryTunnels"));
+		double maxTunnelLength = Double.parseDouble(prop.getProperty("maxTunnelLength"));
+		double southBoundary = Double.parseDouble(prop.getProperty("southBoundary"));
 		
-		Position exit = new Position(0.0, 0.0, 0.0); // convention: the exit is always the origin
-		state.getExits().add(exit);
-		extendTunnel(exit, Direction.SOUTH, maxSections, maxAtoms, atomRadius, 0);
+		// derive the corresponding number of atoms
+		double atomDistance = atomRadius * 0.8; // slightly larger than 1/sqrt(2) so that diagonal atoms do not overlap 
+		int nAtoms = (int) (maxTunnelLength / atomDistance) + 1;
+		int nAtomsConnect = (int) (mainToEscapeTunnelDistance / atomDistance) + 1;
+		
+		// extract the position of the secondary tunnels on the right
+		Set<Integer> rightSideJunctions = new HashSet<Integer>();
+		while(maxNRightSecondaryTunnels > 0) {
+			rightSideJunctions.add(layoutRand.nextInt(nSectionsMainTunnel));
+			--maxNRightSecondaryTunnels;
+		}
+		
+		// extract the position of the secondary tunnels on the left
+		Set<Integer> leftSideJunctions = new HashSet<Integer>();
+		while(maxNLeftSecondaryTunnels > 0) {
+			leftSideJunctions.add(layoutRand.nextInt(nSectionsMainTunnel));
+			--maxNLeftSecondaryTunnels;
+		}
+		
+		// create the exits
+		Position mainExit = new Position(0.0, 0.0, 0.0); // convention: the exit is always the origin
+		Position emergencyExit = new Position(-mainToEscapeTunnelDistance, 0.0, 0.0); // convention: the escape tunnel is always on the left
+		state.getExits().add(mainExit);
+		state.getExits().add(emergencyExit);
+		
+		// create the main tunnel and the escape tunnel
+		Position head = mainExit;
+		Position head_bis = emergencyExit;
+		for(int i = 0; i < nSectionsMainTunnel; ++i) {
+			
+			// main tunnel
+			Position tail = head.plus(Direction.SOUTH.getVector().times(atomDistance * (double) nAtoms));
+			if(tail.getY() > southBoundary) break; // hard boundary
+			new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
+			
+			// escape tunnel and connection
+			Position tail_bis = tail;
+			if(i < nSectionsEscapeTunnel) {
+				tail_bis = tail.plus(emergencyExit); // hack: emergencyExit is also the distance between the tunnels :-)
+				new Tunnel(state, head_bis, tail_bis, nAtoms, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
+				new Tunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
+			}
+			
+			// extract secondary tunnels on the right
+			if(rightSideJunctions.contains(i))
+				extendTunnel(tail, Direction.EAST, maxNSectionsSideTunnel, nAtoms - 2, atomRadius, 1);
+			
+			// extract secondary tunnels on the left
+			if(leftSideJunctions.contains(i))
+				extendTunnel(tail, Direction.WEST, maxNSectionsSideTunnel, nAtoms - 2, atomRadius, 1);
+			
+			// next
+			head = tail;
+			head_bis = tail_bis;
+		}
 	}
 	
 	private void fillLayout() {
@@ -151,11 +209,17 @@ public class Mine {
 		if(nSections <= 0 || nAtoms <= 0)
 			return false;
 		
+		// read boundaries
+		double westBoundary = Double.parseDouble(prop.getProperty("westBoundary"));
+		double eastBoundary = Double.parseDouble(prop.getProperty("eastBoundary"));
+		double southBoundary = Double.parseDouble(prop.getProperty("southBoundary"));
+		double northBoundary = Double.parseDouble(prop.getProperty("northBoundary"));
+		
 		// add a Tunnel section
 		double atomDistance = atomRadius * 0.8; // slightly larger than 1/sqrt(2) so that diagonal atoms do not overlap 
 		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
-		if(tail.getY() <= 0.0)
-			return false; // make sure we stay underground
+		if(tail.getY() < northBoundary || tail.getY() > southBoundary || tail.getX() > westBoundary || tail.getX() < eastBoundary)
+			return false; // make sure we stay underground and in the boundaries
 		LayoutAtomStatus las = new LayoutAtomStatus();
 		Tunnel t = new Tunnel(state, head, tail, nAtoms, las, atomRadius, layoutAtomtoUpdate);
 		las.setSensorId(t.getId());
@@ -180,7 +244,7 @@ public class Mine {
 		
 		// branch!
 		for(int i = 0; i < nBranches; ++i)
-			continues |= extendTunnel(tail, directions.get(i), nSections - 1, nAtoms - 2, atomRadius, nDirChanges + 1);
+			continues |= extendTunnel(tail, directions.get(i), nSections - 1, nAtoms / 2 + 1, atomRadius, nDirChanges + 1);
 		
 		// add mining sites to the end of terminal tunnels
 		if(!continues)
