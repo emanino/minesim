@@ -154,6 +154,7 @@ function addSensor(svg, object, scale) {
 	
 	// sensors are dots
 	var newSensor = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	newSensor.id = "svgElement"+object.name;
 	newSensor.setAttribute("cx", object.c[0]);
 	newSensor.setAttribute("cy", object.c[1]);
 	newSensor.setAttribute("r", 5);
@@ -196,9 +197,22 @@ function addInfoPredicate(svg, object, scale){
 	}
 	var tableRow = "<tr>";
 	for (var i = 0; i < data.length; i++) {
-		tableRow = tableRow+"<td>"+data[i].value+"</td>";
+		tableRow = tableRow+"<td class=\"tableInfoClass"+data[i].type+"\">"+data[i].value+"</td>";
 	}
 	$("#"+nameCode).append(tableRow+"</tr>");
+}
+
+function highlightSensor(sensorId, turnOn){
+	if(turnOn){
+		$("#svgElement"+sensorId).attr("r", 40);
+		$("#svgElement"+sensorId).attr("fill", "none");
+		$("#svgElement"+sensorId).attr("stroke", "yellow");
+		$("#svgElement"+sensorId).attr("stroke-width", "10");
+	} else {		
+		$("#svgElement"+sensorId).attr("r", 5);
+		$("#svgElement"+sensorId).attr("fill", "#00CED1");
+		$("#svgElement"+sensorId).attr("stroke", "none");
+	}	
 }
 
 function addMiningSite(svg, object, scale) {

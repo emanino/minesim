@@ -2,7 +2,6 @@
 
 table { 
     display: block; /* mandatory because scroll only works on block elements */
-    border: 1px solid black;
 }
 
 tbody { 
@@ -28,40 +27,53 @@ th, td {
 	display: grid;
 }
 
-#outer{
-	position: relative;
-    width: 100%;
-    height: 100%;
-    float: left;
-    transform-origin: left top;
+
+#wrap {
+    position: relative;
+    width: 1500px;
+    height: 800px;
+    background-color: red;
+}
+#outer {
+    position: relative;
+    width: 1500px;
+    height: 800px;
+    -webkit-transform-origin: left top;
 }
 
-#inner{
-	transform-origin: left top;
-	position: relative;
-    width: 100%;
-    height: 100%;
+#inner {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1500px;
+    height: 800px;
+}
+
+#tableArea .ui-accordion-content {
+    max-height: 400px;
+    font-size: 18px;
 }
 
 #displayGrid {
-
-	
-	
-	
+	position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 1500px;
+    height: 800px;
 	border-style: inset;
 	grid-template-areas:
     'gheader gheader gheader gheader gheader gheader'
     'gdraw   gdraw   gdraw   gtable  gtable  gtable';
-      grid-gap: 10px;
-  background-color: #b4cbde;
-  padding: 10px;
+      grid-gap: 5px;
+  	background-color: #b4cbde;
+  	padding: 5px;
 }
 
 #displayGrid > div {
   background-color: rgba(255, 255, 255, 0.8);
   text-align: center;
-  padding: 20px 0;
-  font-size: 24px;
+  padding: 10px 0;
+  font-size: 22px;
 }
 
 .gheader { grid-area: gheader; }
@@ -72,10 +84,11 @@ th, td {
 
  .hoverTable{
 	width:100%; 
-	border-collapse:collapse; 
 }
 .hoverTable td{ 
-	padding:7px; border:#4e95f4 1px solid;
+	padding:3px; 
+	border:#4e95f4 1px solid;
+	font-size: 18px;
 }
 /* Define the default color for all the table rows */
 .hoverTable tr{

@@ -10,7 +10,29 @@ $( function() {
 		
 		
 		
+		var maxWidth  = $('#outer').width()+50;
+		var maxHeight = $('#outer').height()+50;
+
 		$(window).resize(function(evt) {
+		    var $window = $(window);
+		    var width = $window.width();
+		    var height = $window.height();
+		    var scale;
+
+		    // early exit
+		    /*if(width >= maxWidth && height >= maxHeight) {
+		        $('#outer').css({'-webkit-transform': ''});
+		        $('#wrap').css({ width: '', height: '' });
+		        return;
+		    }*/
+		    
+		    scale = Math.min((width)/maxWidth, (height)/maxHeight);
+		    
+		    $('#outer').css({'-webkit-transform': 'scale(' + scale + ')'});
+		    $('#wrap').css({ width: maxWidth * scale, height: maxHeight * scale });
+		});
+		$(window).resize();
+		/*$(window).resize(function(evt) {
 			var maxWidth  = $('#inner').width();
 			var maxHeight = $('#inner').height();
 			var $window = $(window);
@@ -19,17 +41,17 @@ $( function() {
 		    var scale;
 
 		    // early exit
-		    /*if(width >= maxWidth && height >= maxHeight) {
+		    if(width >= maxWidth && height >= maxHeight) {
 		        $('#inner').css({'-webkit-transform': ''});
 		        $('#outer').css({ width: '', height: '' });
 		        return;
-		    }*/
+		    }
 		    
 		    scale = width/maxWidth;
 		    
 		    $('#inner').css({'-webkit-transform': 'scale(' + scale + ')'});
 		    $('#outer').css({ width: maxWidth * scale, height: maxHeight * scale });
-		});
+		});*/
 		
 		/*function doResize(event, ui) {
 			var $el = $("#displayGrid");
@@ -129,6 +151,8 @@ $( function() {
 	        	enableButtons()
 	        }   
 	    });
+	    
+	    
 	
 });
 
@@ -212,8 +236,18 @@ function addAction(code, times, params, text){
 	}
 }
 
+
+
 function completeFields(jsonMineText){
 	addTunnelsToMenus(jsonMineText);
+	
+	$( "#gtablediv .tableInfoClasssensor" ).hover(
+  		  function() {
+  			highlightSensor(parseInt($(this).text()),true);
+  		  }, function() {
+  			highlightSensor(parseInt($(this).text()),false);
+  		  }
+  		);
 }
 function addTunnelsToMenus(jsonMine) {
 	var objArray = jsonMine.mineObjects;

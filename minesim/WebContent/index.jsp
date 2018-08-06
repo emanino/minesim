@@ -83,8 +83,13 @@
 	</table>
 	</p>
   </div>
-</div> 
+  
+  </div>
+</div>
+  
+   
 
+<div id="wrapper">
 <div id="outer">
 <div id="inner">
 <div class= "gridLayout" id="displayGrid">
@@ -99,13 +104,17 @@
 		<strong>Current state of the mine:</strong>
 		<div id="ajaxGetUserServletResponse"></div>
 	
-		<svg id="mineSvg" width="1000" height="1000" viewBox="-40 -50 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+		<svg id="mineSvg" width="750" height="650" viewBox="-40 -50 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" >
 		</svg>
 		<div style="font-size:75%">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 	</div>
 </div>
 </div>
 </div>
-	
+</div>
+
+
+
+
 </body>
 </html>

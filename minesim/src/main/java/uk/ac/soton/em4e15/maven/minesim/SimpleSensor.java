@@ -89,7 +89,7 @@ public class SimpleSensor implements MovingObject {
 			name = "Carbon Monoxide";
 			break;
 		}
-		return "{\"type\":\"sensor\",\"name\":\"S"+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading() + "}, "
+		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading() + "}, "
 				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+name+"\", \"data\": ["
 					+ "{\"value\": \""+id+"\", \"type\": \"sensor\"}, "
 					+ "{\"value\": \""+getReading()+"\", \"type\": \"reading\"} "
