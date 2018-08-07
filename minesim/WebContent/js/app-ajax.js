@@ -252,10 +252,12 @@ function completeFields(jsonMineText){
 function addTunnelsToMenus(jsonMine) {
 	var objArray = jsonMine.mineObjects;
 	$("#actionEvacuateTunnelSelection").empty();
+	$("#actionEvacuateTunnelSelection").append("<option disabled selected>Tunnel...</option>");
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "tunnel"){
 			$("#actionEvacuateTunnelSelection").append("<option val=\""+(objArray[i].name.substr(1))+"\">"+objArray[i].name+"</option>");
 		}
+	$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
 	//$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
 }
 
