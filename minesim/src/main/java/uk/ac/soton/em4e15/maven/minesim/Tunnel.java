@@ -102,4 +102,10 @@ public class Tunnel implements LayoutObject {
 	public String toJsonGui() {
 		return "{\"type\":\"tunnel\",\"name\":\"T"+ id + "\",\"c1\":" + head.toJsonGui() + ",\"c2\":" + tail.toJsonGui() + "}";
 	}
+
+	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		// TODO Auto-generated method stub
+		
+	}
 }

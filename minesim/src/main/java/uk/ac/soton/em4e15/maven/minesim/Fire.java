@@ -55,4 +55,10 @@ public class Fire implements AtomObject {
 	public String toJsonGui() {
 		return "{\"type\":\"fire\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
+
+	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		// TODO Auto-generated method stub
+		
+	}
 }

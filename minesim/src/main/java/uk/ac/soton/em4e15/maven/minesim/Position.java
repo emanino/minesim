@@ -10,13 +10,13 @@ public class Position {
 	private Double y;
 	private Double z;
 	
-	Position(double x, double y, double z) {
+	public Position(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 	
-	Position(List<Double> coordinates) {
+	public Position(List<Double> coordinates) {
 		this(coordinates.get(0), coordinates.get(1), coordinates.get(2));
 	}
 	

@@ -20,6 +20,12 @@ public class MinerPerson extends Person {
 	}
 	
 	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		setCarriedObjectsPosition(this.getPosition());
+	}
+	
+	
+	@Override
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		MinerPerson person = new MinerPerson(this, next);
 		

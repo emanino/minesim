@@ -219,4 +219,10 @@ public class LayoutAtom implements AtomObject {
 	public String toJsonGui() {
 		return "{\"type\":\"atom\",\"name\":\"A"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
+
+	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		// TODO Auto-generated method stub
+		
+	}
 }

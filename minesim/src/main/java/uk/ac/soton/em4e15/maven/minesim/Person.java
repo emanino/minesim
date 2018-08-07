@@ -49,7 +49,9 @@ public class Person implements MovingObject {
 	@Override
 	public void setPosition(Position pos) {
 		this.pos = pos;
-		
+	}
+	
+	public void setCarriedObjectsPosition(Position pos) {
 		// move all the carried objects to the new position
 		for(Integer obId: carried)
 			state.getObject(MovingObject.class, obId).setPosition(pos);
@@ -125,5 +127,11 @@ public class Person implements MovingObject {
 	@Override
 	public String toJsonGui() {
 		return "{\"type\":\"person\",\"name\":\"P"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+	}
+
+	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		// TODO Auto-generated method stub
+		
 	}
 }

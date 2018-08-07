@@ -3,17 +3,20 @@ package uk.ac.soton.em4e15.maven.minesim;
 import java.util.Random;
 import java.util.Set;
 
+import uk.ac.soton.em4e15.maven.minesim.observresult.ObservationValue;
+import uk.ac.soton.em4e15.maven.minesim.observresult.ObservedPosition;
+import uk.ac.soton.em4e15.maven.minesim.observresult.ObservedDouble;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class SimpleSensor implements MovingObject {
 	
-	public enum SensorType {TEMP, CO2}
+	
 
 	private Integer id;
 	private Position pos;
 	private MineState state;
 	private SensorType type;
-	private double reading;
+	private ObservationValue reading;
 	
 	// create a new SimpleSensor
 	SimpleSensor(Position pos, MineState state, SensorType type) {
@@ -55,7 +58,7 @@ public class SimpleSensor implements MovingObject {
 		return type;
 	}
 	
-	public double getReading() {
+	public ObservationValue getReading() {
 		return reading;
 	}
 	
@@ -63,10 +66,13 @@ public class SimpleSensor implements MovingObject {
 		LayoutAtom atom = state.getClosestLayoutAtom(pos);
 		switch(type) {
 			case TEMP:
-				reading = atom.getStatus().getTemp(); // perfect sensor for now
+				reading = new ObservedDouble(atom.getStatus().getTemp()); // perfect sensor for now
 				break;
 			case CO2:
-				reading = atom.getStatus().getCO2(); // perfect sensor for now
+				reading = new ObservedDouble(atom.getStatus().getCO2()); // perfect sensor for now
+				break;
+			case LOCATION:
+				reading = new ObservedPosition(pos); // perfect sensor for now
 				break;
 		}
 	}
@@ -86,13 +92,25 @@ public class SimpleSensor implements MovingObject {
 			name = "Temperature";
 			break;
 		case CO2:
-			name = "Carbon Monoxide";
+			name = "Carbon Monoxide Concentration";
+			break;
+		case LOCATION:
+			name = "Location";
+			break;
+		case WORKERLOCATION:
+			name = "Worker's Location";
 			break;
 		}
-		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading() + "}, "
+		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading().toJsonGui() + "}, "
 				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+name+"\", \"data\": ["
 					+ "{\"value\": \""+id+"\", \"type\": \"sensor\"}, "
-					+ "{\"value\": \""+getReading()+"\", \"type\": \"reading\"} "
+					+ "{\"value\": "+getReading().toJsonGui()+", \"type\": \"reading\"} "
 				+ "] }";
+	}
+
+	@Override
+	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		// TODO Auto-generated method stub
+		
 	}
 }
