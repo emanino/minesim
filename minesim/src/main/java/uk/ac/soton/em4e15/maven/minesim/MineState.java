@@ -137,10 +137,11 @@ public class MineState {
 		return prop;
 	}
 	
-	public String toJsonGui() {
+	public String toJsonGui(MineObjectScheduler scheduler) {
 		List<String> strings = new ArrayList<String>();
 		for(Map.Entry<Integer, MineObject> entry: objects.entrySet())
 			strings.add(entry.getValue().toJsonGui());
+		strings.addAll(scheduler.toJsonGui());		
 		return "{\"mineObjects\":[" + String.join(",", strings) + "]}";
 	}
 

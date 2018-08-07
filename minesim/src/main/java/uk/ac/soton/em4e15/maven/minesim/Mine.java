@@ -279,6 +279,6 @@ public class Mine {
 	}
 	
 	public String toJsonGui() {
-		return state.toJsonGui();
+		return state.toJsonGui(scheduler);
 	}
 }

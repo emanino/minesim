@@ -1,8 +1,10 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -111,4 +113,12 @@ public class MineObjectScheduler {
 	private void evacuateLayoutObject(LayoutObject obj) {
 		forbiddenAtoms.addAll(obj.getAtoms());		
 	}
+	
+	public List<String> toJsonGui() {
+		List<String> strings = new ArrayList<String>();
+		for(int id : forbiddenAtoms) {
+			strings.add("{\"type\":\"geofencedAtom\",\"c\":" + state.getObject(LayoutAtom.class, id).getPosition().toJsonGui() + "}");
+		}
+		return strings;
+		}
 }

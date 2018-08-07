@@ -238,6 +238,32 @@ function addMiningSite(svg, object, scale) {
 	svg.setAttribute("viewBox", newViewBox);
 }
 
+function addGeofencedAtom(svg, object, scale) {
+	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++)
+		object.c[i] *= scale;
+	
+	var len = 3;
+	var line1 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	line1.setAttribute("x1", object.c[0]-len);
+	line1.setAttribute("y1", object.c[1]-len);
+	line1.setAttribute("x2", object.c[0]+len);
+	line1.setAttribute("y2", object.c[1]+len);
+	line1.setAttribute("style", "stroke:#FF0000;stroke-width:2;stroke-linecap:round");
+	var line2 = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	line2.setAttribute("x1", object.c[0]-len);
+	line2.setAttribute("y1", object.c[1]+len);
+	line2.setAttribute("x2", object.c[0]+len);
+	line2.setAttribute("y2", object.c[1]-len);
+	line2.setAttribute("style", "stroke:#FF0000;stroke-width:2;stroke-linecap:round");
+	
+	// add everything to the parent element
+	svg.appendChild(line1);
+	svg.appendChild(line2);
+}
+
+
 function drawMine(jsonMine) {
 	
 	var objArray = jsonMine.mineObjects;
@@ -258,7 +284,12 @@ function drawMine(jsonMine) {
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "tunnel")
 			addTunnel(svg, objArray[i], scale);
-				
+	
+	// create all the geofenced atoms
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "geofencedAtom")
+			addGeofencedAtom(svg, objArray[i], scale);
+	
 	// create all the miningSites
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "site")
