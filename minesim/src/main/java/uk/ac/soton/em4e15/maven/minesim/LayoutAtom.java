@@ -5,11 +5,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.apache.jena.graph.Triple;
 
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -224,5 +227,11 @@ public class LayoutAtom implements AtomObject {
 	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<Triple> getSensorInfoRDF() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

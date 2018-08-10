@@ -37,7 +37,12 @@
 		<legend>Random generation</legend>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButtonRandom" >Generate Random Mine</button>
 	</fieldset>
+	<fieldset>
+		<legend>Get RDF Sensor Data</legend>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="getRDFSensorDataButton" >Get RDF Sensor Data</button>
+	</fieldset>
     </p>
+    <div id="rdfArea"></div>
   </div>
   <h3>Mine Update</h3>
   <div>

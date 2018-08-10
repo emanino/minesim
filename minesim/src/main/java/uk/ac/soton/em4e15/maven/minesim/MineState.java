@@ -1,4 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
+import java.io.ByteArrayOutputStream;
 //
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,11 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.impl.CollectionGraph;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 public class MineState {
 	
@@ -143,6 +149,24 @@ public class MineState {
 			strings.add(entry.getValue().toJsonGui());
 		strings.addAll(scheduler.toJsonGui());		
 		return "{\"mineObjects\":[" + String.join(",", strings) + "]}";
+	}
+	
+	public String toSensorSchemaRDF(MineObjectScheduler scheduler) {
+		return null;
+	}
+	
+	public String getSensorRDF(MineObjectScheduler scheduler) {
+		Set<Triple> triples = new HashSet<Triple>();
+		for(Map.Entry<Integer, MineObject> entry: objects.entrySet()) {
+			Set<Triple> tripleRepresentation = entry.getValue().getSensorInfoRDF();
+			if(tripleRepresentation!=null)
+				triples.addAll(tripleRepresentation);	
+					}
+		CollectionGraph graph = new CollectionGraph(triples);
+		Model model = ModelFactory.createModelForGraph(graph);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		model.write(stream, "TURTLE");
+		return new String(stream.toByteArray());
 	}
 
 	public SortedSet<Position> getExits() {

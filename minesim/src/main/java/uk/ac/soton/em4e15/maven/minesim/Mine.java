@@ -281,4 +281,8 @@ public class Mine {
 	public String toJsonGui() {
 		return state.toJsonGui(scheduler);
 	}
+	
+	public String getSensorRDF() {
+		return state.getSensorRDF(scheduler);
+	}
 }

@@ -1,7 +1,10 @@
 package uk.ac.soton.em4e15.maven.minesim;
+import java.util.List;
 //
 import java.util.Random;
 import java.util.Set;
+
+import org.apache.jena.graph.Triple;
 
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -60,5 +63,11 @@ public class Fire implements AtomObject {
 	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<Triple> getSensorInfoRDF() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

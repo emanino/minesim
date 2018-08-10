@@ -1,7 +1,10 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import org.apache.jena.graph.Triple;
 
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -50,4 +53,13 @@ public class MiningSite implements AtomObject {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Set<Triple> getSensorInfoRDF() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }
