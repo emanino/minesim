@@ -14,5 +14,6 @@ public interface MineObject {
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next);
 	public void postUpdate(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next);
 	public Set<Triple> getSensorInfoRDF();
+	public Set<Triple> getSensorSchemaRDF();
 	public String toJsonGui();
 }

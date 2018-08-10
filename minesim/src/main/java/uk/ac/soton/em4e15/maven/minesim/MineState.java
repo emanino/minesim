@@ -155,6 +155,22 @@ public class MineState {
 		return null;
 	}
 	
+	
+	
+	public String getSensorSchemaRDF(MineObjectScheduler scheduler) {
+		Set<Triple> triples = new HashSet<Triple>();
+		for(Map.Entry<Integer, MineObject> entry: objects.entrySet()) {
+			Set<Triple> tripleRepresentation = entry.getValue().getSensorSchemaRDF();
+			if(tripleRepresentation!=null)
+				triples.addAll(tripleRepresentation);	
+					}
+		CollectionGraph graph = new CollectionGraph(triples);
+		Model model = ModelFactory.createModelForGraph(graph);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		model.write(stream, "TURTLE");
+		return new String(stream.toByteArray());
+	}
+	
 	public String getSensorRDF(MineObjectScheduler scheduler) {
 		Set<Triple> triples = new HashSet<Triple>();
 		for(Map.Entry<Integer, MineObject> entry: objects.entrySet()) {
@@ -165,7 +181,7 @@ public class MineState {
 		CollectionGraph graph = new CollectionGraph(triples);
 		Model model = ModelFactory.createModelForGraph(graph);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		model.write(stream, "TURTLE");
+		model.write(stream, "N3");
 		return new String(stream.toByteArray());
 	}
 

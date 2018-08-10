@@ -114,7 +114,22 @@ $( function() {
 					}
 				});
 		    } );
-	    
+	    $( "#getRDFSensorSchemaButton" ).click( function( event ) {
+		      event.preventDefault();
+		      disableButtons()
+		      $.ajax({
+					url : 'GetMineSensorSchemaRDF',
+					data : {
+						mineSeed : $('#mineSeedForm').val(),
+						updateSeed : $('#updateSeedForm').val()
+					},
+					success : function(responseText) {
+						$("#rdfArea").empty();
+						$("#rdfArea").text(responseText);
+						enableButtons()
+					}
+				});
+		    } );
 	    
 	    $( "#renderButtonRandom" ).click( function( event ) {
 		      event.preventDefault();

@@ -155,4 +155,37 @@ public class SimpleSensor implements MovingObject {
 				ResourceFactory.createTypedLiteral(pos.toJsonGui()).asNode()));
 		return triples;
 	}
+	
+	@Override
+	public Set<Triple> getSensorSchemaRDF() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String lambda = state.getProp().getProperty("lambdaURI");
+		String baseURI = state.getProp().getProperty("baseURI");
+		String observationId = id+(new Date().getTime()+"");
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.w3.org/ns/sosa/madeBySensor"), 
+				NodeFactory.createURI(lambda)));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.w3.org/ns/sosa/observedProperty"), 
+				NodeFactory.createURI(baseURI+type.getCode())));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.w3.org/ns/sosa/resultTime"), 
+				NodeFactory.createURI(lambda)));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.w3.org/ns/sosa/hasSimpleResult"), 
+				NodeFactory.createURI(lambda)));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
+				NodeFactory.createURI(lambda)));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda), 
+				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
+				NodeFactory.createURI(lambda)));
+		return triples;
+	}
 }

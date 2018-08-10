@@ -148,4 +148,15 @@ public class Person implements MovingObject {
 				NodeFactory.createURI(baseURI+"Person")));
 		return triples;
 	}
+
+	@Override
+	public Set<Triple> getSensorSchemaRDF() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String baseURI = state.getProp().getProperty("baseURI");
+		triples.add(new Triple(
+				NodeFactory.createURI(state.getProp().getProperty("lambdaURI")), 
+				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
+				NodeFactory.createURI(baseURI+"Person")));
+		return triples;
+	}
 }

@@ -285,4 +285,8 @@ public class Mine {
 	public String getSensorRDF() {
 		return state.getSensorRDF(scheduler);
 	}
+	
+	public String getSensorSchemaRDF() {
+		return state.getSensorSchemaRDF(scheduler);
+	}
 }

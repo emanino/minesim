@@ -234,4 +234,10 @@ public class LayoutAtom implements AtomObject {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Set<Triple> getSensorSchemaRDF() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

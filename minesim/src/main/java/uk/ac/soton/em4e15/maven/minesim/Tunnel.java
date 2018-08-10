@@ -9,6 +9,7 @@ import java.util.SortedSet;
 
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -120,6 +121,34 @@ public class Tunnel implements LayoutObject {
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"Tunnel")));
+		triples.add(new Triple(
+				NodeFactory.createURI(baseURI+id), 
+				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
+				NodeFactory.createURI(baseURI+"geo"+id)));
+		triples.add(new Triple(
+				NodeFactory.createURI(baseURI+"geo"+id), 
+				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
+				ResourceFactory.createTypedLiteral("{"+head.toJsonGui()+" , "+tail.toJsonGui()+"}").asNode()));
+		return triples;
+	}
+	
+	@Override
+	public Set<Triple> getSensorSchemaRDF() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String lambda = state.getProp().getProperty("lambdaURI");
+		String baseURI = state.getProp().getProperty("baseURI");
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda),
+				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
+				NodeFactory.createURI(baseURI+"Tunnel")));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda),
+				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
+				NodeFactory.createURI(lambda)));
+		triples.add(new Triple(
+				NodeFactory.createURI(lambda),
+				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
+				NodeFactory.createURI(lambda)));
 		return triples;
 	}
 }
