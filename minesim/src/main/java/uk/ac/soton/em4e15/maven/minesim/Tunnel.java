@@ -21,14 +21,17 @@ public class Tunnel implements LayoutObject {
 	private Position tail;
 	private List<Integer> atoms;
 	
+	private boolean allowVehicles;
+	
 	// create a new Tunnel between two given positions
-	Tunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate) {
+	Tunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean allowVehicles) {
 		id = state.getNextId();
 		status.setSensorId(id);
 		this.state = state;
 		this.head = head;
 		this.tail = tail;
 		atoms = new ArrayList<Integer>();
+		this.allowVehicles = allowVehicles;
 		state.addNew(this);
 		
 		// check increment.length inside (radius/2, radius)
@@ -42,7 +45,7 @@ public class Tunnel implements LayoutObject {
 		// create uniform atoms along the length of the Tunnel
 		Position pos = head.plus(increment.times(0.5));
 		for(int i = 0; i < nAtoms; ++i) {
-			LayoutAtom atom = new LayoutAtom(id, pos, state, new LayoutAtomStatus(status,id), radius);
+			LayoutAtom atom = new LayoutAtom(id, pos, state, new LayoutAtomStatus(status,id), radius, allowVehicles);
 			layoutAtomtoUpdate.add(atom);
 			atoms.add(atom.getId());
 			pos = pos.plus(increment);
@@ -56,12 +59,17 @@ public class Tunnel implements LayoutObject {
 		head = tunnel.getHead();
 		tail = tunnel.getTail();
 		atoms = tunnel.getAtomList();
+		allowVehicles = tunnel.areVehiclesAllowed();
 		state.addOld(this);
 	}
 
 	@Override
 	public Integer getId() {
 		return id;
+	}
+	
+	public MineState getState() {
+		return state;
 	}
 	
 	public Position getHead() {
@@ -93,6 +101,10 @@ public class Tunnel implements LayoutObject {
 			return atoms.get(atoms.size() - 1);
 		else
 			return null;
+	}
+	
+	public boolean areVehiclesAllowed() {
+		return allowVehicles;
 	}
 
 	@Override

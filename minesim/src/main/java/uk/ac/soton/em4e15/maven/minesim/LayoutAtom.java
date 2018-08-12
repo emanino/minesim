@@ -25,8 +25,10 @@ public class LayoutAtom implements AtomObject {
 	private SortedSet<Integer> neighbours;
 	private double radius;
 	
+	private boolean allowVehicles;
+	
 	// create a new LayoutAtom
-	LayoutAtom(Integer superId, Position pos, MineState state, LayoutAtomStatus status, double radius) {
+	LayoutAtom(Integer superId, Position pos, MineState state, LayoutAtomStatus status, double radius, boolean allowVehicles) {
 		id = state.getNextId();
 		status.setSensorId(id);
 		this.superId = superId;
@@ -35,6 +37,7 @@ public class LayoutAtom implements AtomObject {
 		this.status = status;
 		neighbours = new TreeSet<Integer>();
 		this.radius = radius;
+		this.allowVehicles = allowVehicles;
 		state.addNew(this);
 		
 		this.initialiseLinks();
@@ -56,6 +59,7 @@ public class LayoutAtom implements AtomObject {
 		status = atom.getStatus();
 		neighbours = atom.getNeighbours();
 		radius = atom.getRadius();
+		allowVehicles = atom.areVehiclesAllowed();
 		state.addOld(this);
 	}
 
@@ -98,6 +102,10 @@ public class LayoutAtom implements AtomObject {
 	
 	public double getRadius() {
 		return radius;
+	}
+	
+	public boolean areVehiclesAllowed() {
+		return allowVehicles;
 	}
 
 	@Override
