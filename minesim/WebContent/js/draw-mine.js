@@ -47,6 +47,74 @@ function addTunnel(svg, object, scale) {
 	var newTunnelName = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 	newTunnelName.setAttribute("x", (object.c1[0] + object.c2[0]) / 2);
 	newTunnelName.setAttribute("y", (object.c1[1] + object.c2[1]) / 2 + 5);
+	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#808080");
+	newTunnelName.textContent = object.name;
+	
+	// add everything to the parent element
+	svg.appendChild(newTunnel);
+	svg.appendChild(newTunnelName);
+	
+	// adjust the size of the SVG viewBox
+	var newViewBox = svg.getAttribute("viewBox");
+	newViewBox = adjustViewBox(newViewBox, object.c1);
+	newViewBox = adjustViewBox(newViewBox, object.c2);
+	svg.setAttribute("viewBox", newViewBox);
+}
+
+function addMainTunnel(svg, object, scale) {
+	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++) {
+		object.c1[i] *= scale;
+		object.c2[i] *= scale;
+	}
+	
+	// tunnels are very thick lines with round edges
+	var newTunnel = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	newTunnel.setAttribute("x1", object.c1[0]);
+	newTunnel.setAttribute("y1", object.c1[1]);
+	newTunnel.setAttribute("x2", object.c2[0]);
+	newTunnel.setAttribute("y2", object.c2[1]);
+	newTunnel.setAttribute("style", "stroke:#C0C0C0;stroke-width:20;stroke-linecap:round");
+	
+	// and a label in their very middle
+	var newTunnelName = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	newTunnelName.setAttribute("x", (object.c1[0] + object.c2[0]) / 2);
+	newTunnelName.setAttribute("y", (object.c1[1] + object.c2[1]) / 2 + 5);
+	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#696969");
+	newTunnelName.textContent = object.name;
+	
+	// add everything to the parent element
+	svg.appendChild(newTunnel);
+	svg.appendChild(newTunnelName);
+	
+	// adjust the size of the SVG viewBox
+	var newViewBox = svg.getAttribute("viewBox");
+	newViewBox = adjustViewBox(newViewBox, object.c1);
+	newViewBox = adjustViewBox(newViewBox, object.c2);
+	svg.setAttribute("viewBox", newViewBox);
+}
+
+function addEscapeTunnel(svg, object, scale) {
+	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++) {
+		object.c1[i] *= scale;
+		object.c2[i] *= scale;
+	}
+	
+	// tunnels are very thick lines with round edges
+	var newTunnel = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+	newTunnel.setAttribute("x1", object.c1[0]);
+	newTunnel.setAttribute("y1", object.c1[1]);
+	newTunnel.setAttribute("x2", object.c2[0]);
+	newTunnel.setAttribute("y2", object.c2[1]);
+	newTunnel.setAttribute("style", "stroke:#C0C0C0;stroke-width:12;stroke-linecap:round");
+	
+	// and a label in their very middle
+	var newTunnelName = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	newTunnelName.setAttribute("x", (object.c1[0] + object.c2[0]) / 2);
+	newTunnelName.setAttribute("y", (object.c1[1] + object.c2[1]) / 2 + 5);
 	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#696969");
 	newTunnelName.textContent = object.name;
 	
@@ -280,10 +348,20 @@ function drawMine(jsonMine) {
 	// scale the coordinates
 	var scale = 20;
 	
+	// create the escape tunnels
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "escapetunnel")
+			addEscapeTunnel(svg, objArray[i], scale);
+	
 	// create all the tunnels
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "tunnel")
 			addTunnel(svg, objArray[i], scale);
+	
+	// create the main tunnels
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "maintunnel")
+			addMainTunnel(svg, objArray[i], scale);
 	
 	// create all the geofenced atoms
 	for(var i = 0; i < objArray.length; i++)
@@ -341,5 +419,5 @@ function drawMine(jsonMine) {
 	exit.setAttribute("height", 30);
 	exit.setAttribute("fill", "#696969");
 	
-	console.log(svg); // debug
+	// console.log(svg);
 }

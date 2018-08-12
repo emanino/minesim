@@ -25,9 +25,9 @@ public class LayoutAtomTest {
 		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
-		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom c = new LayoutAtom(0, new Position(2, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
+		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom c = new LayoutAtom(0, new Position(2, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		
 		Set<Integer> neighboursA = a.getNeighbours();
 		Set<Integer> neighboursB = b.getNeighbours();
@@ -51,7 +51,7 @@ public class LayoutAtomTest {
 		MineState newState = new MineState(1, prop);
 		MineObjectScheduler scheduler = new MineObjectScheduler(oldState, prop);
 		
-		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(prop), 1.0);
+		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(prop), 1.0, true);
 		a.update(new HashSet<UserAction>(), scheduler, new Random(), newState);
 		
 		Collection<MineObject> objects = newState.getObjects();
@@ -75,15 +75,15 @@ public class LayoutAtomTest {
 		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
-		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom c = new LayoutAtom(0, new Position(2, 0, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom d = new LayoutAtom(0, new Position(2, 1, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom e = new LayoutAtom(0, new Position(2, 2, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom f = new LayoutAtom(0, new Position(1, 2, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom g = new LayoutAtom(0, new Position(0, 2, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom h = new LayoutAtom(0, new Position(0, 3, 0), state, new LayoutAtomStatus(prop), 1.1);
-		LayoutAtom i = new LayoutAtom(0, new Position(0, 1, 0), state, new LayoutAtomStatus(prop), 1.1);
+		LayoutAtom a = new LayoutAtom(0, new Position(0, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom c = new LayoutAtom(0, new Position(2, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom d = new LayoutAtom(0, new Position(2, 1, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom e = new LayoutAtom(0, new Position(2, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom f = new LayoutAtom(0, new Position(1, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom g = new LayoutAtom(0, new Position(0, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom h = new LayoutAtom(0, new Position(0, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true);
+		LayoutAtom i = new LayoutAtom(0, new Position(0, 1, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		
 		Path path1 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>());
 		Path path2 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(i.getId())));
@@ -111,32 +111,32 @@ public class LayoutAtomTest {
 		prop.load(new FileInputStream("WebContent/WEB-INF/minesim.properties"));
 		MineState state = new MineState(0, prop);
 		
-		LayoutAtom a = new LayoutAtom(0, new Position(3, 0, 0), state, new LayoutAtomStatus(prop), 1.1); // 0
-		LayoutAtom b = new LayoutAtom(0, new Position(3, 1, 0), state, new LayoutAtomStatus(prop), 1.1); // 1
-		LayoutAtom c = new LayoutAtom(0, new Position(3, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 2
-		LayoutAtom d = new LayoutAtom(0, new Position(3, 3, 0), state, new LayoutAtomStatus(prop), 1.1); // 3
-		LayoutAtom e = new LayoutAtom(0, new Position(3.05, 4, 0), state, new LayoutAtomStatus(prop), 1.1); // 4
-		LayoutAtom f = new LayoutAtom(0, new Position(3, 5, 0), state, new LayoutAtomStatus(prop), 1.1); // 5
-		LayoutAtom g = new LayoutAtom(0, new Position(3, 6, 0), state, new LayoutAtomStatus(prop), 1.1); // 6
-		LayoutAtom h = new LayoutAtom(0, new Position(4, 6, 0), state, new LayoutAtomStatus(prop), 1.1); // 7
-		LayoutAtom i = new LayoutAtom(0, new Position(5, 6, 0), state, new LayoutAtomStatus(prop), 1.1); // 8
-		LayoutAtom j = new LayoutAtom(0, new Position(5, 5, 0), state, new LayoutAtomStatus(prop), 1.1); // 9
-		LayoutAtom k = new LayoutAtom(0, new Position(5, 4, 0), state, new LayoutAtomStatus(prop), 1.1); // 10
-		LayoutAtom l = new LayoutAtom(0, new Position(5, 3, 0), state, new LayoutAtomStatus(prop), 1.1); // 11
-		LayoutAtom m = new LayoutAtom(0, new Position(5, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 12
-		LayoutAtom n = new LayoutAtom(0, new Position(5, 1, 0), state, new LayoutAtomStatus(prop), 1.1); // 13
-		LayoutAtom o = new LayoutAtom(0, new Position(5, 0, 0), state, new LayoutAtomStatus(prop), 1.1); // 14
-		LayoutAtom p = new LayoutAtom(0, new Position(4, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 15
-		LayoutAtom q = new LayoutAtom(0, new Position(2, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 16
-		LayoutAtom r = new LayoutAtom(0, new Position(1, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 17
-		LayoutAtom s = new LayoutAtom(0, new Position(0, 2, 0), state, new LayoutAtomStatus(prop), 1.1); // 18
-		LayoutAtom t = new LayoutAtom(0, new Position(0, 4, 0), state, new LayoutAtomStatus(prop), 1.1); // 19
-		LayoutAtom u = new LayoutAtom(0, new Position(1, 4, 0), state, new LayoutAtomStatus(prop), 1.1); // 20
-		LayoutAtom v = new LayoutAtom(0, new Position(2, 4, 0), state, new LayoutAtomStatus(prop), 1.1); // 21
-		LayoutAtom w = new LayoutAtom(0, new Position(2, 6, 0), state, new LayoutAtomStatus(prop), 1.1); // 22
-		LayoutAtom x = new LayoutAtom(0, new Position(1, 6.02, 0), state, new LayoutAtomStatus(prop), 1.1); // 23
-		LayoutAtom y = new LayoutAtom(0, new Position(1, 5, 0), state, new LayoutAtomStatus(prop), 1.1); // 24
-		LayoutAtom z = new LayoutAtom(0, new Position(1, 3, 0), state, new LayoutAtomStatus(prop), 1.1); // 25
+		LayoutAtom a = new LayoutAtom(0, new Position(3, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 0
+		LayoutAtom b = new LayoutAtom(0, new Position(3, 1, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 1
+		LayoutAtom c = new LayoutAtom(0, new Position(3, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 2
+		LayoutAtom d = new LayoutAtom(0, new Position(3, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 3
+		LayoutAtom e = new LayoutAtom(0, new Position(3.05, 4, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 4
+		LayoutAtom f = new LayoutAtom(0, new Position(3, 5, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 5
+		LayoutAtom g = new LayoutAtom(0, new Position(3, 6, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 6
+		LayoutAtom h = new LayoutAtom(0, new Position(4, 6, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 7
+		LayoutAtom i = new LayoutAtom(0, new Position(5, 6, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 8
+		LayoutAtom j = new LayoutAtom(0, new Position(5, 5, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 9
+		LayoutAtom k = new LayoutAtom(0, new Position(5, 4, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 10
+		LayoutAtom l = new LayoutAtom(0, new Position(5, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 11
+		LayoutAtom m = new LayoutAtom(0, new Position(5, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 12
+		LayoutAtom n = new LayoutAtom(0, new Position(5, 1, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 13
+		LayoutAtom o = new LayoutAtom(0, new Position(5, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 14
+		LayoutAtom p = new LayoutAtom(0, new Position(4, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 15
+		LayoutAtom q = new LayoutAtom(0, new Position(2, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 16
+		LayoutAtom r = new LayoutAtom(0, new Position(1, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 17
+		LayoutAtom s = new LayoutAtom(0, new Position(0, 2, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 18
+		LayoutAtom t = new LayoutAtom(0, new Position(0, 4, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 19
+		LayoutAtom u = new LayoutAtom(0, new Position(1, 4, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 20
+		LayoutAtom v = new LayoutAtom(0, new Position(2, 4, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 21
+		LayoutAtom w = new LayoutAtom(0, new Position(2, 6, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 22
+		LayoutAtom x = new LayoutAtom(0, new Position(1, 6.02, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 23
+		LayoutAtom y = new LayoutAtom(0, new Position(1, 5, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 24
+		LayoutAtom z = new LayoutAtom(0, new Position(1, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 25
 		
 		//  0 1 2 3 4 5
 		//0      [a] [o]
