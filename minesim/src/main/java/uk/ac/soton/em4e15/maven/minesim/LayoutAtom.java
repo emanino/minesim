@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class LayoutAtom implements AtomObject {
 		this.radius = radius;
 		state.addNew(this);
 		
-		
+		this.initialiseLinks();
 	}
 	
 	public void initialiseLinks() {
@@ -105,18 +104,20 @@ public class LayoutAtom implements AtomObject {
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
 		
-		// compute the damage caused by Fires
-		for(Fire fire: state.getObjectsInRadius(Fire.class, pos, radius))
-			atom.getStatus().update(fire);
+		// compute the damage caused by fires, gas leaks and temperature increases
+		SortedSet<EventObject> events = state.getObjectsInRadius(EventObject.class, pos, radius);
+		if(!events.isEmpty())
+			atom.getStatus().eventUpdate(events, rand);
 		
-		// compute the effect of neighbouring LayoutAtoms
-		SortedSet<LayoutAtomStatus> statuses = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getSensorId));
-		for(Integer atomId: neighbours)
-			statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
-		atom.getStatus().update(statuses);
+		// nothing to see here but normal fluctuations
+		else {
+			SortedSet<LayoutAtomStatus> statuses = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getSensorId));
+			for(Integer atomId: neighbours)
+				statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
+			atom.getStatus().normalUpdate(statuses, rand);
+		}
 		
-		// the status slowly recovers on its own
-		atom.getStatus().recover();
+		// to do: add ventilation, et cetera
 	}
 	
 	public Path shortestPathTo(Set<Integer> targets, Set<Integer> block) {

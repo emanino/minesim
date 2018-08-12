@@ -1,35 +1,40 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
+
 import org.apache.jena.graph.Triple;
+
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
-public class Fire implements EventObject {
+public class TemperatureIncrease implements EventObject {
 	
 	private Integer id;
 	private Position pos;
 	private MineState state;
-	private FireStatus status;
+	private TemperatureIncreaseStatus status;
+	private int countdown;
 	
-	// create a new Fire
-	Fire(Position pos, MineState state, FireStatus status) {
+	// create a new GasLeak
+	TemperatureIncrease(Position pos, MineState state, TemperatureIncreaseStatus status, Properties prop) {
 		id = state.getNextId();
 		this.pos = pos;
 		this.state = state;
 		this.status = status;
+		countdown = (int) (Double.parseDouble(prop.getProperty("tempIncreaseDuration")) / Double.parseDouble(prop.getProperty("timeStep")));
 		state.addNew(this);
 	}
 	
-	// copy the Fire into the next state
-	Fire (Fire fire, MineState next) {
-		id = fire.getId();
-		pos = fire.getPosition();
+	// copy the GasLeak into the next state
+	TemperatureIncrease(TemperatureIncrease increase, MineState next) {
+		id = increase.getId();
+		pos = increase.getPosition();
 		state = next;
-		status = fire.getStatus();
+		status = increase.getStatus();
 		state.addOld(this);
 	}
-
+	
 	@Override
 	public Integer getId() {
 		return id;
@@ -39,21 +44,17 @@ public class Fire implements EventObject {
 	public Position getPosition() {
 		return pos;
 	}
-	
-	public FireStatus getStatus() {
+
+	public TemperatureIncreaseStatus getStatus() {
 		return status;
 	}
 
 	@Override
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
-		Fire fire = new Fire(this, next);
-		fire.getStatus().increaseStrength(); // gradually increase the strength of the fire
-		// create another fire in a certain radius with a certain probability
-	}
-	
-	@Override
-	public String toJsonGui() {
-		return "{\"type\":\"fire\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+		if(countdown > 0) {
+			new TemperatureIncrease(this, next);
+			// to do: something more sensible than small/big increases
+		}
 	}
 
 	@Override
@@ -75,7 +76,13 @@ public class Fire implements EventObject {
 	}
 
 	@Override
-	public int remainingTimesteps() {
-		return -1;
+	public String toJsonGui() {
+		return "{\"type\":\"tempincrease\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
+
+	@Override
+	public int remainingTimesteps() {
+		return countdown;
+	}
+
 }

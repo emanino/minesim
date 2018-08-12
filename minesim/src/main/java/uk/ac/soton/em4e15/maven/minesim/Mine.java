@@ -1,6 +1,5 @@
 package uk.ac.soton.em4e15.maven.minesim;
-import java.io.StringReader;
-//
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -23,6 +22,7 @@ public class Mine {
 	private MineState state;
 	private MineObjectScheduler scheduler;
 	private Properties prop;
+	private int eventWait;
 
 	private SortedSet<LayoutAtom> layoutAtomtoUpdate;
 	
@@ -43,6 +43,8 @@ public class Mine {
 		fillLayout();
 		layoutAtomtoUpdate = null;
 		state.activateCaching = true;
+		
+		eventWait = (int) (Double.parseDouble(prop.getProperty("eventTimeGap")) / Double.parseDouble(prop.getProperty("timeStep")));
 	}
 
 	// constructor from file
@@ -74,6 +76,42 @@ public class Mine {
 		// overwrite the old state with the new one
 		previousUpdates++;
 		state = next;
+		
+		// create an event
+		if(eventWait > 0)
+			eventWait--;
+		else {
+			Random rand = new Random(updateRand+previousUpdates);
+			double timeStep = Double.parseDouble(prop.getProperty("timeStep"));
+			double meanTimeBetweenEvents = Double.parseDouble(prop.getProperty("meanTimeBetweenEvents"));
+			double eventTimeGap = Double.parseDouble(prop.getProperty("eventTimeGap"));
+			double eventProb = timeStep / (meanTimeBetweenEvents - eventTimeGap);
+			if(rand.nextDouble() < eventProb) {
+				
+				// extract position
+				Set<LayoutAtom> atoms = state.getObjects(LayoutAtom.class);
+				List<Position> atomPos = new ArrayList<Position>();
+				for(LayoutAtom atom: atoms)
+					atomPos.add(atom.getPosition());
+				Position eventPosition = atomPos.get(rand.nextInt(atomPos.size()));
+				
+				// extract type
+				int eventType = rand.nextInt(3);
+				switch(eventType) {
+				case 0:
+					new Fire(eventPosition, state, new FireStatus(prop));
+					break;
+				case 1:
+					new GasLeak(eventPosition, state, new GasLeakStatus(rand.nextBoolean()), prop);
+					break;
+				case 2:
+					new TemperatureIncrease(eventPosition, state, new TemperatureIncreaseStatus(rand.nextBoolean()), prop);
+					break;
+				}
+				// start the waiting count down again
+				eventWait = (int) (Double.parseDouble(prop.getProperty("eventTimeGap")) / Double.parseDouble(prop.getProperty("timeStep")));
+			}
+		}
 	}
 	
 	private void createLayout() {
@@ -122,14 +160,14 @@ public class Mine {
 			// main tunnel
 			Position tail = head.plus(Direction.SOUTH.getVector().times(atomDistance * (double) nAtoms));
 			if(tail.getY() > southBoundary) break; // hard boundary
-			new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
+			new Tunnel(state, head, tail, nAtoms, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
 			
 			// escape tunnel and connection
 			Position tail_bis = tail;
 			if(i < nSectionsEscapeTunnel) {
 				tail_bis = tail.plus(emergencyExit); // hack: emergencyExit is also the distance between the tunnels :-)
-				new Tunnel(state, head_bis, tail_bis, nAtoms, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
-				new Tunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(), atomRadius, layoutAtomtoUpdate);
+				new Tunnel(state, head_bis, tail_bis, nAtoms, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
+				new Tunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
 			}
 			
 			// extract secondary tunnels on the right
@@ -223,7 +261,7 @@ public class Mine {
 		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
 		if(tail.getY() < northBoundary || tail.getY() > southBoundary || tail.getX() > westBoundary || tail.getX() < eastBoundary)
 			return false; // make sure we stay underground and in the boundaries
-		LayoutAtomStatus las = new LayoutAtomStatus();
+		LayoutAtomStatus las = new LayoutAtomStatus(prop);
 		Tunnel t = new Tunnel(state, head, tail, nAtoms, las, atomRadius, layoutAtomtoUpdate);
 		las.setSensorId(t.getId());
 		
