@@ -51,7 +51,8 @@ public class LayoutAtomTest {
 		MineState newState = new MineState(1, prop);
 		MineObjectScheduler scheduler = new MineObjectScheduler(oldState, prop);
 		
-		LayoutAtom a = new LayoutAtom(0, new Position(1.0, 2.0, 3.0), oldState, new LayoutAtomStatus(prop), 1.0, true);
+		Position pos = new Position(1.0, 2.0, 3.0);
+		LayoutAtom a = new LayoutAtom(0, pos, oldState, new LayoutAtomStatus(prop), 1.0, true);
 		a.update(new HashSet<UserAction>(), scheduler, new Random(), newState);
 		
 		Collection<MineObject> objects = newState.getObjects();
@@ -59,6 +60,13 @@ public class LayoutAtomTest {
 		
 		MineObject b = newState.getObject(a.getId());
 		assertTrue("Mismatching ids between the old and new copy of the LayoutAtom", b != null);
+		
+		MineStatistics stats = new MineStatistics(newState);
+		new Fire(pos, newState, new FireStatus(prop), stats); // put a fire in the previous state
+		a = newState.getObject(LayoutAtom.class, a.getId()); // retrieve the newest version of the LayoutAtom
+		
+		MineState furtherState = new MineState(2, prop);
+		a.update(new HashSet<UserAction>(), scheduler, new Random(), furtherState);
 	}
 
 	@Test

@@ -18,14 +18,16 @@ public class Person implements MovingObject {
 	private MineState state;
 	private PersonStatus status;
 	private Set<Integer> carried;
+	MineStatistics stats;
 	
 	// create a new Person
-	Person(Position pos, MineState state, PersonStatus status) {
+	Person(Position pos, MineState state, PersonStatus status, MineStatistics stats) {
 		id = state.getNextId();
 		this.pos = pos;
 		this.state = state;
 		this.status = status;
 		carried = new HashSet<Integer>();
+		this.stats = stats;
 		state.addNew(this);
 	}
 	
@@ -36,6 +38,7 @@ public class Person implements MovingObject {
 		state = next;
 		status = person.getStatus();
 		carried = person.getCarried();
+		stats = person.getStatistics();
 		state.addOld(this);
 	}
 	
@@ -80,6 +83,10 @@ public class Person implements MovingObject {
 	
 	public void removeCarried(Integer movId) {
 		carried.remove(movId);
+	}
+	
+	public MineStatistics getStatistics() {
+		return stats;
 	}
 
 	@Override

@@ -34,12 +34,17 @@ public class LayoutAtomStatusVariable {
 		return (value > dangerThresh);
 	}
 	
+	public boolean isAboveMaxThreshold() {
+		return (value > normalMax);
+	}
+	
 	public void update(List<Double> neighbourValues, Random rand) {
 		
 		// random fluctuation in the normal range
 		double fluc = (2.0 * rand.nextDouble() - 1.0) * flucRange;
 		change += fluc;
 		value += change;
+		if(value < normalMin) value = normalMin;
 		
 		// linear interpolation:
 		// current atom has weight 4
@@ -56,6 +61,7 @@ public class LayoutAtomStatusVariable {
 	
 	public void forceValueDown() {
 		value -= flucForce;
+		if(value < normalMin) value = normalMin;
 	}
 	
 	public boolean isValueBelow(LayoutAtomStatusVariableLevel level) {

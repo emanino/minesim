@@ -12,8 +12,8 @@ public class FirePerson extends Person {
 	
 	private FireExtinguishingSkill skill;
 	
-	FirePerson(Position pos, MineState state, PersonStatus status, FireExtinguishingSkill skill) {
-		super(pos, state, status);
+	FirePerson(Position pos, MineState state, PersonStatus status, FireExtinguishingSkill skill, MineStatistics stats) {
+		super(pos, state, status, stats);
 		this.skill = skill;
 	}
 

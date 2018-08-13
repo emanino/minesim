@@ -11,14 +11,18 @@ public class Fire implements EventObject {
 	private Position pos;
 	private MineState state;
 	private FireStatus status;
+	private MineStatistics stats;
+	private boolean extinguished = false;
 	
 	// create a new Fire
-	Fire(Position pos, MineState state, FireStatus status) {
+	Fire(Position pos, MineState state, FireStatus status, MineStatistics stats) {
 		id = state.getNextId();
 		this.pos = pos;
 		this.state = state;
 		this.status = status;
+		this.stats = stats;
 		state.addNew(this);
+		stats.recordFireStart(this);
 	}
 	
 	// copy the Fire into the next state
@@ -27,6 +31,7 @@ public class Fire implements EventObject {
 		pos = fire.getPosition();
 		state = next;
 		status = fire.getStatus();
+		stats = fire.getStatistics();
 		state.addOld(this);
 	}
 
@@ -43,12 +48,23 @@ public class Fire implements EventObject {
 	public FireStatus getStatus() {
 		return status;
 	}
+	
+	public MineStatistics getStatistics() {
+		return stats;
+	}
+	
+	public void markAsExtinguished() { // USE THIS WHEN A FIRE GETS EXTINGUISHED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		extinguished = true;
+		stats.recordFireEnds(this);
+	}
 
 	@Override
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
-		Fire fire = new Fire(this, next);
-		fire.getStatus().increaseStrength(); // gradually increase the strength of the fire
-		// create another fire in a certain radius with a certain probability
+		if(!extinguished) {
+			Fire fire = new Fire(this, next);
+			fire.getStatus().increaseStrength(); // gradually increase the strength of the fire
+			// create another fire in a certain radius with a certain probability
+		}
 	}
 	
 	@Override

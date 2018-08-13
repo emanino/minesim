@@ -10,7 +10,9 @@ public class PersonStatus {
 	private double currRestBar;
 	private boolean instantHealth;
 	
-	private double health = 1.0; // temporary
+	private double health = 1.0;
+	private double co2DamageRate;
+	private double tempDamageRate;
 	
 	PersonStatus(Properties prop) {
 		timeStep = Double.parseDouble(prop.getProperty("timeStep"));
@@ -18,6 +20,9 @@ public class PersonStatus {
 		RestTimeThreshold = Double.parseDouble(prop.getProperty("personRestTime"));
 		currRestBar = RestTimeThreshold;
 		instantHealth = Integer.parseInt(prop.getProperty("personRest")) != 1;
+		
+		co2DamageRate = Double.parseDouble(prop.getProperty("co2DamageRate"));
+		tempDamageRate = Double.parseDouble(prop.getProperty("tempDamageRate"));
 	}
 	
 	public double getDistance() {
@@ -56,22 +61,22 @@ public class PersonStatus {
 	}
 	
 	public void workAndTire(LayoutAtomStatus status) {
-		this.CO2Damage(status.getCO2());
-		this.TempDamage(status.getTemp());
 		
+		// health damage
+		this.CO2Damage(status.getVariableCO2());
+		this.TempDamage(status.getVariableTemp());
+		
+		// fatigue
 		currRestBar -= timeStep;
 	}
 	
-	private void CO2Damage(double co2) {
-		if(co2 > 0.02) // safe level
-			health -= 0.1 * co2;
+	private void CO2Damage(LayoutAtomStatusVariable co2) {
+		if(co2.isAboveDangerThreshold())
+			health -= co2DamageRate * co2.getValue(); // CO2 poisoning
 	}
 	
-	private void TempDamage(double temp) {
-		if(temp < 8.0) {
-			health -= 0.01 * (8.0 - temp); // freezing to death
-		} else if(temp > 32.0) {
-			health -= 0.01 * (temp - 32.0); // getting a heatstroke
-		}
+	private void TempDamage(LayoutAtomStatusVariable temp) {
+		if(temp.isAboveDangerThreshold())
+			health -= tempDamageRate * temp.getValue(); // heat stroke
 	}
 }

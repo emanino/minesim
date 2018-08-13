@@ -23,6 +23,7 @@ public class Mine {
 	private MineObjectScheduler scheduler;
 	private Properties prop;
 	private int eventWait;
+	private MineStatistics stats;
 
 	private SortedSet<LayoutAtom> layoutAtomtoUpdate;
 	
@@ -33,6 +34,7 @@ public class Mine {
 		layoutRand = new Random(layoutSeed);
 		updateRand = updateSeed;
 		state = new MineState(0, prop);
+		stats = new MineStatistics(state);
 		scheduler = new MineObjectScheduler(state, prop);
 		this.prop = prop;
 		layoutAtomtoUpdate = new TreeSet<LayoutAtom>(Comparator.comparing(MineObject::getId));
@@ -73,6 +75,8 @@ public class Mine {
 			obj.update(actions, scheduler, new Random(updateRand+previousUpdates), next);
 		for(MineObject obj: next.getObjectsSorted())
 			obj.postUpdate(actions, scheduler, new Random(updateRand+previousUpdates), next);
+		stats.update(next);
+		
 		// overwrite the old state with the new one
 		previousUpdates++;
 		state = next;
@@ -99,7 +103,7 @@ public class Mine {
 				int eventType = rand.nextInt(3);
 				switch(eventType) {
 				case 0:
-					new Fire(eventPosition, state, new FireStatus(prop));
+					new Fire(eventPosition, state, new FireStatus(prop), stats);
 					break;
 				case 1:
 					new GasLeak(eventPosition, state, new GasLeakStatus(rand.nextBoolean()), prop);
@@ -196,7 +200,7 @@ public class Mine {
 		// create all the miners close to the exit
 		for(int i = 0; i < nMinerPeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
-			MinerPerson miner = new MinerPerson(pos, state, new PersonStatus(prop));
+			MinerPerson miner = new MinerPerson(pos, state, new PersonStatus(prop), stats);
 			SimpleSensor portableSensor = new SimpleSensor(miner.getPosition(), state, SensorType.LOCATION);
 			miner.addCarried(portableSensor);
 			//miner.getStatus().setRestBar(Math.round(updateRand.nextDouble()*Double.parseDouble(prop.getProperty("personRestTime"))/10));
@@ -205,7 +209,7 @@ public class Mine {
 		// create all the firemen close to the exit
 		for(int i = 0; i < nFirePeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
-			new FirePerson(pos, state, new PersonStatus(prop), new FireExtinguishingSkill());
+			new FirePerson(pos, state, new PersonStatus(prop), new FireExtinguishingSkill(), stats);
 		}
 		
 		// create the sensors
