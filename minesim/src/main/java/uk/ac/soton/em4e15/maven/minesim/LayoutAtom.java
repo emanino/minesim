@@ -39,8 +39,6 @@ public class LayoutAtom implements AtomObject {
 		this.radius = radius;
 		this.allowVehicles = allowVehicles;
 		state.addNew(this);
-		
-		this.initialiseLinks();
 	}
 	
 	public void initialiseLinks() {

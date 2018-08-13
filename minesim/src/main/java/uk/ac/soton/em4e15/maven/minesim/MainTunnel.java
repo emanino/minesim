@@ -1,6 +1,7 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -8,10 +9,23 @@ import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.ResourceFactory;
 
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+
 public class MainTunnel extends Tunnel {
 
 	MainTunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate) {
 		super(state, head, tail, nAtoms, status, radius, layoutAtomtoUpdate, true); // vehicles are allowed
+	}
+	
+	MainTunnel(MainTunnel tunnel, MineState next) {
+		super(tunnel, next);
+	}
+	
+	@Override
+	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
+		new MainTunnel(this, next);
+		// update tunnel...
+		// - e.g. if an explosion increases its length
 	}
 	
 	@Override

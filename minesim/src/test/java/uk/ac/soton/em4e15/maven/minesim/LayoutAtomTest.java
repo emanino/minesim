@@ -29,6 +29,10 @@ public class LayoutAtomTest {
 		LayoutAtom b = new LayoutAtom(0, new Position(1, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		LayoutAtom c = new LayoutAtom(0, new Position(2, 0, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		
+		a.initialiseLinks();
+		b.initialiseLinks();
+		c.initialiseLinks();
+		
 		Set<Integer> neighboursA = a.getNeighbours();
 		Set<Integer> neighboursB = b.getNeighbours();
 		Set<Integer> neighboursC = c.getNeighbours();
@@ -93,6 +97,16 @@ public class LayoutAtomTest {
 		LayoutAtom h = new LayoutAtom(0, new Position(0, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		LayoutAtom i = new LayoutAtom(0, new Position(0, 1, 0), state, new LayoutAtomStatus(prop), 1.1, true);
 		
+		a.initialiseLinks();
+		b.initialiseLinks();
+		c.initialiseLinks();
+		d.initialiseLinks();
+		e.initialiseLinks();
+		f.initialiseLinks();
+		g.initialiseLinks();
+		h.initialiseLinks();
+		i.initialiseLinks();
+		
 		Path path1 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>());
 		Path path2 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(i.getId())));
 		Path path3 = b.shortestPathTo(new HashSet<Integer>(Arrays.asList(h.getId())), new HashSet<Integer>(Arrays.asList(g.getId())));
@@ -145,6 +159,33 @@ public class LayoutAtomTest {
 		LayoutAtom x = new LayoutAtom(0, new Position(1, 6.02, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 23
 		LayoutAtom y = new LayoutAtom(0, new Position(1, 5, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 24
 		LayoutAtom z = new LayoutAtom(0, new Position(1, 3, 0), state, new LayoutAtomStatus(prop), 1.1, true); // 25
+		
+		a.initialiseLinks();
+		b.initialiseLinks();
+		c.initialiseLinks();
+		d.initialiseLinks();
+		e.initialiseLinks();
+		f.initialiseLinks();
+		g.initialiseLinks();
+		h.initialiseLinks();
+		i.initialiseLinks();
+		j.initialiseLinks();
+		k.initialiseLinks();
+		l.initialiseLinks();
+		m.initialiseLinks();
+		n.initialiseLinks();
+		o.initialiseLinks();
+		p.initialiseLinks();
+		q.initialiseLinks();
+		r.initialiseLinks();
+		s.initialiseLinks();
+		t.initialiseLinks();
+		u.initialiseLinks();
+		v.initialiseLinks();
+		w.initialiseLinks();
+		x.initialiseLinks();
+		y.initialiseLinks();
+		z.initialiseLinks();
 		
 		//  0 1 2 3 4 5
 		//0      [a] [o]

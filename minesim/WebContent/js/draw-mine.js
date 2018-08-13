@@ -420,4 +420,5 @@ function drawMine(jsonMine) {
 	exit.setAttribute("fill", "#696969");
 	
 	// console.log(svg);
+	console.log(objArray);
 }

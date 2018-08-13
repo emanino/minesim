@@ -166,7 +166,7 @@ $( function() {
 	    	disableButtons()
 		    event.preventDefault();
 	    	var tunnelnum = $( "#actionEvacuateTunnelSelection" ).find('option:selected').val().substr(1);
-		    addAction(2,parseInt($('#updateActionNumber').val()),tunnelnum,"Evacuate tunel T"+tunnelnum+".");
+		    addAction(2,parseInt($('#updateActionNumber').val()),tunnelnum,"Evacuate tunnel T"+tunnelnum+".");
 		    redrawMine();
 	    } );
 	    
