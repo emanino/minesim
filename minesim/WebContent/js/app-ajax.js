@@ -91,6 +91,7 @@ $( function() {
 				success : function(responseText) {
 					$("#drawArea").show();
 					drawMine(responseText);
+					drawStatistics(responseText);
 					completeFields(responseText);
 					$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
 					enableButtons()
@@ -145,6 +146,7 @@ $( function() {
 					success : function(responseText) {
 						$("#drawArea").show();
 						drawMine(responseText);
+						drawStatistics(responseText);
 						completeFields(responseText);
 						enableButtons();
 					}
@@ -188,6 +190,14 @@ $( function() {
 	    
 	
 });
+
+function drawStatistics(jsonObject){
+	var jsonStats = jsonObject.mineStats;
+	$("#mineStatsTable tbody").empty();
+	for(var i = 0; i < jsonStats.length; i++){
+		$("#mineStatsTable tbody").append("<tr><td>"+jsonStats[i].name+"</td><td>"+jsonStats[i].value+"</td></tr>");
+	}
+}
 
 function periodicUpdate(){
 	if($('#checkboxAutoRun').is(':checked')){
@@ -320,6 +330,7 @@ function redrawMine(){
 			$("#statTotMillisecondsPerUpdateunrounded").html(""+millisecondsPerUpdate);
 			$("#drawArea").show();
 			drawMine(responseText);
+			drawStatistics(responseText);
 			completeFields(responseText);
 			if(!$('#checkboxAutoRun').is(':checked'))
 				enableButtons();

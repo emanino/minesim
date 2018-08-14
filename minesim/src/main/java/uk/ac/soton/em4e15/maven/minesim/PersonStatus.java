@@ -71,12 +71,12 @@ public class PersonStatus {
 	}
 	
 	private void CO2Damage(LayoutAtomStatusVariable co2) {
-		if(co2.isAboveDangerThreshold())
+		if(co2.isAboveMaxThreshold())
 			health -= co2DamageRate * co2.getValue(); // CO2 poisoning
 	}
 	
 	private void TempDamage(LayoutAtomStatusVariable temp) {
-		if(temp.isAboveDangerThreshold())
+		if(temp.isAboveMaxThreshold())
 			health -= tempDamageRate * temp.getValue(); // heat stroke
 	}
 }

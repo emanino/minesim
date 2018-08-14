@@ -9,7 +9,7 @@ tbody {
 }
 
 tbody.scrollable {
-    height: 75px;       /* Just for the demo          */
+    height: 220px;       /* Just for the demo          */
     overflow-y: auto;    /* Trigger vertical scroll    */
 }
 

@@ -143,12 +143,13 @@ public class MineState {
 		return prop;
 	}
 	
-	public String toJsonGui(MineObjectScheduler scheduler) {
+	public String toJsonGui(MineObjectScheduler scheduler, MineStatistics stats) {
 		List<String> strings = new ArrayList<String>();
 		for(Map.Entry<Integer, MineObject> entry: objects.entrySet())
 			strings.add(entry.getValue().toJsonGui());
 		strings.addAll(scheduler.toJsonGui());		
-		return "{\"mineObjects\":[" + String.join(",", strings) + "]}";
+		List<String> statStrings = stats.toJsonGui();
+		return "{\"mineObjects\":[" + String.join(",", strings) + "], \"mineStats\":[" + String.join(",", statStrings) + "]}";
 	}
 	
 	public String toSensorSchemaRDF(MineObjectScheduler scheduler) {

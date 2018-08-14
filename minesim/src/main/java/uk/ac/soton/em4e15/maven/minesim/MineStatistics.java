@@ -2,8 +2,11 @@ package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MineStatistics {
 	
@@ -11,7 +14,7 @@ public class MineStatistics {
 	private int timeStamp = 0;
 	
 	private double production = 0.0;
-	private int nDeaths = 0;
+	private Set<Integer> deaths;
 	private MineStatisticsHealthTracker temp;
 	private MineStatisticsHealthTracker co2; 
 	private Map<Fire,Integer> activeFires;
@@ -27,6 +30,7 @@ public class MineStatistics {
 		sideFiresLength = new ArrayList<Integer>();
 		mainFiresLength = new ArrayList<Integer>();
 		peopleHealth = new ArrayList<Double>();
+		deaths = new HashSet<Integer>();
 	}
 	
 	public void update(MineState next) {
@@ -39,7 +43,7 @@ public class MineStatistics {
 	}
 	
 	public int getNumberOfDeaths() {
-		return nDeaths;
+		return deaths.size();
 	}
 	
 	public MineStatisticsHealthTracker getTempRiskTracker() {
@@ -63,7 +67,7 @@ public class MineStatistics {
 	}
 	
 	public void recordDeath(Person person) {
-		nDeaths++;
+		deaths.add(person.getId());
 	}
 	
 	public void recordTempRiskEvent(Person person, LayoutAtom atom) {
@@ -105,5 +109,17 @@ public class MineStatistics {
 		temp.recordEndOfShift(person);
 		co2.recordEndOfShift(person);
 		peopleHealth.add(person.getStatus().getHealth());
+	}
+	
+	public List<String> toJsonGui() {
+		List<String> statistics = new LinkedList<String>();
+		statistics.add(createJsonSimpleStat("Production", ""+production));
+		statistics.add(createJsonSimpleStat("Number of Deaths", ""+getNumberOfDeaths()));
+		statistics.add(createJsonSimpleStat("Number of Active Fires", ""+activeFires.size()));
+		return statistics;
+	}
+	
+	private String createJsonSimpleStat(String name, String val) {
+		return "{\"name\": \""+name+"\", \"value\": \""+val+"\"}";
 	}
 }

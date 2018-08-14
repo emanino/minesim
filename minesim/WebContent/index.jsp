@@ -89,6 +89,17 @@
 	</table>
 	</p>
   </div>
+  <h3>Mine Statistics</h3>
+  <div>
+  <p>Statistics:
+  </p>
+  <table id="mineStatsTable">
+	    <tbody class='scrollable hoverTable'>
+      
+	    </tbody>
+  </table>
+  </div>
+  
   
   </div>
 </div>
