@@ -18,13 +18,6 @@ $( function() {
 		    var width = $window.width();
 		    var height = $window.height();
 		    var scale;
-
-		    // early exit
-		    /*if(width >= maxWidth && height >= maxHeight) {
-		        $('#outer').css({'-webkit-transform': ''});
-		        $('#wrap').css({ width: '', height: '' });
-		        return;
-		    }*/
 		    
 		    scale = Math.min((width)/maxWidth, (height)/maxHeight);
 		    
@@ -32,52 +25,6 @@ $( function() {
 		    $('#wrap').css({ width: maxWidth * scale, height: maxHeight * scale });
 		});
 		$(window).resize();
-		/*$(window).resize(function(evt) {
-			var maxWidth  = $('#inner').width();
-			var maxHeight = $('#inner').height();
-			var $window = $(window);
-		    var width = $window.width();
-		    var height = $window.height();    
-		    var scale;
-
-		    // early exit
-		    if(width >= maxWidth && height >= maxHeight) {
-		        $('#inner').css({'-webkit-transform': ''});
-		        $('#outer').css({ width: '', height: '' });
-		        return;
-		    }
-		    
-		    scale = width/maxWidth;
-		    
-		    $('#inner').css({'-webkit-transform': 'scale(' + scale + ')'});
-		    $('#outer').css({ width: maxWidth * scale, height: maxHeight * scale });
-		});*/
-		
-		/*function doResize(event, ui) {
-			var $el = $("#displayGrid");
-			var elHeight = $el.outerHeight();
-			var elWidth = $el.outerWidth();
-			  var scale, origin;
-			    
-			  scale = Math.min(
-			    ui.size.width / elWidth,    
-			    ui.size.height / elHeight
-			  );
-		  $el.css({
-		    transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
-		  });	  
-			}
-		$("#scaleable-wrapper").resizable({
-			  resize: doResize
-			});
-		var starterData = { 
-		  size: {
-		    width: $("#scaleable-wrapper").width(),
-		    height: $("#scaleable-wrapper").height()
-		  }
-		}
-		doResize(null, starterData);*/
-		
 		
 	    $( "#renderButton" ).click( function( event ) {
 	      event.preventDefault();
@@ -152,6 +99,45 @@ $( function() {
 					}
 				});
 		    } );
+	    
+	    $( "#saveMineButton" ).click( function( event ) {
+		      event.preventDefault();
+		      disableButtons();
+		      $.ajax({
+				url : 'GetSaveServlet',
+				data : {
+					mineSeed : $('#mineSeedForm').val(),
+					updateSeed : $('#updateSeedForm').val(),
+					jsonData : JSON.stringify(readActionHistoryValues())
+				},
+				success : function(responseText) {
+					$("#saveLoadTextArea").empty();
+					$("#saveLoadTextArea").val(JSON.stringify(responseText));
+					enableButtons();
+				}
+			});		     
+	    });
+	    
+	    $( "#loadMineButton" ).click( function( event ) {
+		      event.preventDefault();
+		      disableButtons();
+		      $.ajax({
+				url : 'GetLoadServlet',
+				data : {
+					jsonData : JSON.stringify(JSON.parse($("#saveLoadTextArea").val()))
+				},
+				success : function(responseText) {
+					$("#drawArea").show();
+					drawMine(responseText);
+					drawStatistics(responseText);
+					completeFields(responseText);
+					enableButtons();
+				}
+			});		     
+	    });
+	    
+	    
+	    
 	    $( "#actionBusinessAsUsual" ).click( function( event ) {
 	    	disableButtons()
 		    event.preventDefault();
@@ -187,8 +173,6 @@ $( function() {
 	        }   
 	    });
 	    
-	    
-	
 });
 
 function drawStatistics(jsonObject){

@@ -37,6 +37,7 @@
 		<legend>Random generation</legend>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButtonRandom" >Generate Random Mine</button>
 	</fieldset>
+	
 	<fieldset>
 		<legend>Get RDF Data</legend>
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="getRDFSensorDataButton" >Get RDF Sensor Data</button>
@@ -98,6 +99,16 @@
       
 	    </tbody>
   </table>
+  </div>
+  <h3>Save/Load</h3>
+  <div>
+    <fieldset>
+		<legend>Save/Load</legend>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="saveMineButton" >Save Mine</button>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="loadMineButton" >Load Mine</button>
+	</fieldset>
+	<textarea id="saveLoadTextArea">
+	</textarea>
   </div>
   
   

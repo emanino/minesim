@@ -2,14 +2,23 @@ package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
+import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class Mine {
@@ -24,10 +33,12 @@ public class Mine {
 	private Properties prop;
 	private int eventWait;
 	private MineStatistics stats;
+	private List<MutablePair<Set<UserAction>,Integer>> updateHistory;
 
 	private SortedSet<LayoutAtom> layoutAtomtoUpdate;
 	
 	public Mine(Properties prop, long layoutSeed, long updateSeed, long previousUpdates) {
+		updateHistory = new LinkedList<MutablePair<Set<UserAction>,Integer>>();
 		previousUpdates = 0;
 		this.layoutSeed = layoutSeed;
 		this.updateSeed = updateSeed;
@@ -64,8 +75,36 @@ public class Mine {
 		return state;
 	}
 	
+	private void updateUpdateHistory(Set<UserAction> actions) {
+		if(updateHistory.size() > 0) {
+			MutablePair<Set<UserAction>,Integer> last = updateHistory.get(updateHistory.size()-1);
+			if(last.getLeft().equals(actions)) {
+				// add another iteration of a previous action if possible
+				last.setRight(new Integer(last.getRight()+1));
+				return;
+				}	
+		}
+		// otherwise just add a new entry in the update list
+		updateHistory.add(new MutablePair<Set<UserAction>,Integer>(actions, new Integer(1)));
+	}
+	
+	public String saveAsJson() {
+		List<String> updatesAsJson = new LinkedList<String>();
+		for(Pair<Set<UserAction>,Integer> action : updateHistory) {
+			if(action.getLeft().size() > 1) throw new RuntimeException("ERROR: multiple action per update is not currently supported.");
+			String actionJson = null;
+			if(action.getLeft().size() == 0) {
+				actionJson = "{\"code\":0}";
+			} else  {
+				actionJson = action.getLeft().iterator().next().toJson();
+			}
+			updatesAsJson.add("{\"number\":"+action.getRight()+",\"codes\":["+actionJson+"]}");
+		} 
+		return "{\"layoutSeed\":"+layoutSeed+",\"updateSeed\":"+updateSeed+",\"updateActions\":["+ String.join(",", updatesAsJson) + "]}";
+	}
+	
 	public void update(Set<UserAction> actions) {
-		
+		updateUpdateHistory(actions);
 		// new state and new action scheduler
 		MineState next = new MineState(state);
 		scheduler.update(actions, next);

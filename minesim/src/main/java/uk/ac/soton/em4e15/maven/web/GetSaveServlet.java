@@ -25,14 +25,14 @@ import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 /**
  * Servlet implementation class GetMineUpdatedServlet
  */
-@WebServlet("/GetMineUpdatedServlet")
-public class GetMineUpdatedServlet extends HttpServlet {
+@WebServlet("/GetSaveServlet")
+public class GetSaveServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetMineUpdatedServlet() {
+    public GetSaveServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -44,10 +44,7 @@ public class GetMineUpdatedServlet extends HttpServlet {
 		String jsonData = request.getParameter("jsonData").trim();
 		Properties prop = new Properties();
 		prop.load(getServletContext().getResourceAsStream("/WEB-INF/minesim.properties"));
-		//prop.load(new FileInputStream(new File(resourceUrl.toString())));
-		
-		String json =  MineUtil.generateUpdatedMine(mineSeed,updateSeed,jsonData,prop).toJsonGui();
-		
+		String json = MineUtil.generateUpdatedMine(mineSeed,updateSeed,jsonData,prop).saveAsJson();
 		response.setContentType("application/json");
 		response.getWriter().write(json);
 	}
