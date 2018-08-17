@@ -5,16 +5,16 @@ import java.util.Set;
 
 public class MineStatisticsHealthTracker {
 	
-	private Set<Person> riskTracker;
-	private Set<Person> injuryTracker;
+	private Set<Integer> riskTracker;
+	private Set<Integer> injuryTracker;
 	private double shiftRisk = 0.0;
 	private double shiftInjury = 0.0;
 	private double instantRisk = 0.0;
 	private double instantInjury = 0.0;
 	
 	MineStatisticsHealthTracker() {
-		riskTracker = new HashSet<Person>();
-		injuryTracker = new HashSet<Person>();
+		riskTracker = new HashSet<Integer>();
+		injuryTracker = new HashSet<Integer>();
 	}
 	
 	public double getShiftRisk() {
@@ -34,19 +34,19 @@ public class MineStatisticsHealthTracker {
 	}
 	
 	public void recordRiskEvent(Person person) {
-		riskTracker.add(person);
+		riskTracker.add(person.getId());
 		instantRisk += 1.0;
 	}
 	
 	public void recordInjuryEvent(Person person) {
-		injuryTracker.add(person);
+		injuryTracker.add(person.getId());
 		instantInjury += 1.0;
 	}
 	
 	public void recordEndOfShift(Person person) {
-		if(riskTracker.contains(person))
+		if(riskTracker.contains(person.getId()))
 			shiftRisk += 1.0;
-		if(injuryTracker.contains(person))
+		if(injuryTracker.contains(person.getId()))
 			shiftInjury += 1.0;
 	}
 }

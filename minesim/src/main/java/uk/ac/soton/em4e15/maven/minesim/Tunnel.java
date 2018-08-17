@@ -26,7 +26,6 @@ public class Tunnel implements LayoutObject {
 	// create a new Tunnel between two given positions
 	Tunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean allowVehicles) {
 		id = state.getNextId();
-		status.setSensorId(id);
 		this.state = state;
 		this.head = head;
 		this.tail = tail;
@@ -45,7 +44,7 @@ public class Tunnel implements LayoutObject {
 		// create uniform atoms along the length of the Tunnel
 		Position pos = head.plus(increment.times(0.5));
 		for(int i = 0; i < nAtoms; ++i) {
-			LayoutAtom atom = new LayoutAtom(id, pos, state, new LayoutAtomStatus(status,id), radius, allowVehicles);
+			LayoutAtom atom = new LayoutAtom(id, pos, state, status, radius, allowVehicles);
 			layoutAtomtoUpdate.add(atom);
 			atoms.add(atom.getId());
 			pos = pos.plus(increment);

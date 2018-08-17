@@ -203,17 +203,17 @@ public class Mine {
 			// main tunnel
 			Position tail = head.plus(Direction.SOUTH.getVector().times(atomDistance * (double) nAtoms));
 			if(tail.getY() > southBoundary) break; // hard boundary
-			new MainTunnel(state, head, tail, nAtoms, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
+			new MainTunnel(state, head, tail, nAtoms, new LayoutAtomStatus(prop, -1), atomRadius, layoutAtomtoUpdate);
 			
 			// escape tunnel and connection
 			Position tail_bis = tail;
 			if(i < nSectionsEscapeTunnel) {
 				tail_bis = tail.plus(emergencyExit); // hack: emergencyExit is also the distance between the tunnels :-)
-				new EscapeTunnel(state, head_bis, tail_bis, nAtoms, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
+				new EscapeTunnel(state, head_bis, tail_bis, nAtoms, new LayoutAtomStatus(prop, -1), atomRadius, layoutAtomtoUpdate);
 				if(leftSideJunctions.contains(i))
-					new Tunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate, true);
+					new Tunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(prop, -1), atomRadius, layoutAtomtoUpdate, true);
 				else
-					new EscapeTunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(prop), atomRadius, layoutAtomtoUpdate);
+					new EscapeTunnel(state, tail, tail_bis, nAtomsConnect, new LayoutAtomStatus(prop, -1), atomRadius, layoutAtomtoUpdate);
 			}
 			
 			// extract secondary tunnels on the right
@@ -307,9 +307,8 @@ public class Mine {
 		Position tail = head.plus(dir.getVector().times(atomDistance * (double) nAtoms));
 		if(tail.getY() < northBoundary || tail.getY() > southBoundary || tail.getX() > westBoundary || tail.getX() < eastBoundary)
 			return false; // make sure we stay underground and in the boundaries
-		LayoutAtomStatus las = new LayoutAtomStatus(prop);
-		Tunnel t = new Tunnel(state, head, tail, nAtoms, las, atomRadius, layoutAtomtoUpdate, true);
-		las.setSensorId(t.getId());
+		LayoutAtomStatus las = new LayoutAtomStatus(prop, -1);
+		new Tunnel(state, head, tail, nAtoms, las, atomRadius, layoutAtomtoUpdate, true);
 		
 		// keep extending in the same direction with {100%, 70%, 40%, 10%} chance
 		boolean continues = false;

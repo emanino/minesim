@@ -2,6 +2,8 @@ package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.Properties;
 
+import uk.ac.soton.em4e15.maven.minesim.LayoutAtomStatusVariable.LayoutAtomStatusLevel;
+
 public class PersonStatus {
 	
 	private double timeStep;
@@ -71,12 +73,12 @@ public class PersonStatus {
 	}
 	
 	private void CO2Damage(LayoutAtomStatusVariable co2) {
-		if(co2.isAboveMaxThreshold())
+		if(co2.isAboveLevel(LayoutAtomStatusLevel.HIGH))
 			health -= co2DamageRate * co2.getValue(); // CO2 poisoning
 	}
 	
 	private void TempDamage(LayoutAtomStatusVariable temp) {
-		if(temp.isAboveMaxThreshold())
+		if(temp.isAboveLevel(LayoutAtomStatusLevel.HIGH))
 			health -= tempDamageRate * temp.getValue(); // heat stroke
 	}
 }

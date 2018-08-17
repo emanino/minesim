@@ -46,7 +46,7 @@ public class MineUtil {
 	}
 	
 	public static SortedSet<LayoutAtomStatus> getOrderedSetLayoutAtomStatus(Collection<LayoutAtomStatus> objects) {
-		SortedSet<LayoutAtomStatus> orderedSet = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getSensorId));
+		SortedSet<LayoutAtomStatus> orderedSet = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getAtomId));
 		orderedSet.addAll(objects);
 		return orderedSet;
 	}

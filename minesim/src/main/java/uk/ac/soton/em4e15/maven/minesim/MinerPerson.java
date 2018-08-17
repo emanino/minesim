@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import uk.ac.soton.em4e15.maven.minesim.LayoutAtomStatusVariable.LayoutAtomStatusLevel;
 import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -72,15 +73,15 @@ public class MinerPerson extends Person {
 			}
 			
 			// MOAR STATISTICS (temperature)
-			if(currAtom.getStatus().getVariableTemp().isAboveDangerThreshold())
+			if(currAtom.getStatus().getVariableTemp().isAboveLevel(LayoutAtomStatusLevel.DANGER))
 				getStatistics().recordTempRiskEvent(person, currAtom);
-			if(currAtom.getStatus().getVariableTemp().isAboveMaxThreshold())
+			if(currAtom.getStatus().getVariableTemp().isAboveLevel(LayoutAtomStatusLevel.HIGH))
 				getStatistics().recordTempInjuryEvent(person, currAtom);
 			
 			// MOAR STATISTICS (CO2)
-			if(currAtom.getStatus().getVariableCO2().isAboveDangerThreshold())
+			if(currAtom.getStatus().getVariableCO2().isAboveLevel(LayoutAtomStatusLevel.DANGER))
 				getStatistics().recordCO2RiskEvent(person, currAtom);
-			if(currAtom.getStatus().getVariableCO2().isAboveMaxThreshold())
+			if(currAtom.getStatus().getVariableCO2().isAboveLevel(LayoutAtomStatusLevel.HIGH))
 				getStatistics().recordCO2InjuryEvent(person, currAtom);
 				
 			// MOVE AROUND:

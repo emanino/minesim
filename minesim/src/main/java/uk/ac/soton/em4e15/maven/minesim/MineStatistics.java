@@ -17,7 +17,7 @@ public class MineStatistics {
 	private Set<Integer> deaths;
 	private MineStatisticsHealthTracker temp;
 	private MineStatisticsHealthTracker co2; 
-	private Map<Fire,Integer> activeFires;
+	private Map<Integer,Integer> activeFires;
 	private List<Integer> sideFiresLength;
 	private List<Integer> mainFiresLength; // includes secondary escape tunnel
 	private List<Double> peopleHealth;
@@ -26,7 +26,7 @@ public class MineStatistics {
 		this.state = state;
 		temp = new MineStatisticsHealthTracker();
 		co2 = new MineStatisticsHealthTracker();
-		activeFires = new HashMap<Fire,Integer>();
+		activeFires = new HashMap<Integer,Integer>();
 		sideFiresLength = new ArrayList<Integer>();
 		mainFiresLength = new ArrayList<Integer>();
 		peopleHealth = new ArrayList<Double>();
@@ -87,14 +87,14 @@ public class MineStatistics {
 	}
 	
 	public void recordFireStart(Fire fire) {
-		activeFires.put(fire, timeStamp);
+		activeFires.put(fire.getId(), timeStamp);
 	}
 	
 	public void recordFireEnds(Fire fire) {
-		if(!activeFires.containsKey(fire))
+		if(!activeFires.containsKey(fire.getId()))
 			throw new IllegalArgumentException("This fire did not start, or the event was not reported.");
 		
-		Integer start = activeFires.get(fire);
+		Integer start = activeFires.get(fire.getId());
 		int length = timeStamp - start;
 		
 		LayoutAtom atom = state.getClosestLayoutAtom(fire.getPosition());

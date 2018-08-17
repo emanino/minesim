@@ -30,22 +30,24 @@ public class LayoutAtom implements AtomObject {
 	// create a new LayoutAtom
 	LayoutAtom(Integer superId, Position pos, MineState state, LayoutAtomStatus status, double radius, boolean allowVehicles) {
 		id = state.getNextId();
-		status.setSensorId(id);
 		this.superId = superId;
 		this.pos = pos;
 		this.state = state;
-		this.status = status;
+		
+		status.setAtomId(id);
+		this.status = new LayoutAtomStatus(status);
+		
 		neighbours = new TreeSet<Integer>();
 		this.radius = radius;
 		this.allowVehicles = allowVehicles;
 		state.addNew(this);
 	}
 	
-	public void initialiseLinks() {
 	// find the neighbours automatically
-			for(LayoutAtom atom: state.getObjectsInRadius(LayoutAtom.class, pos, radius))
-				if(atom.getId() != id)
-					this.linkWith(atom);
+	public void initialiseLinks() {
+		for(LayoutAtom atom: state.getObjectsInRadius(LayoutAtom.class, pos, radius))
+			if(atom.getId() != id)
+				this.linkWith(atom);
 	}
 	
 	// copy the LayoutAtom into the next state
@@ -54,7 +56,9 @@ public class LayoutAtom implements AtomObject {
 		superId = atom.getSuperId();
 		pos = atom.getPosition();
 		state = next;
-		status = atom.getStatus();
+		
+		status = new LayoutAtomStatus(atom.getStatus());
+		
 		neighbours = atom.getNeighbours();
 		radius = atom.getRadius();
 		allowVehicles = atom.areVehiclesAllowed();
@@ -110,18 +114,14 @@ public class LayoutAtom implements AtomObject {
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		LayoutAtom atom = new LayoutAtom(this, next);
 		
-		// compute the damage caused by fires, gas leaks and temperature increases
+		// find the neighbouring statuses and the nearby fires/gas leaks/temperature increases
+		SortedSet<LayoutAtomStatus> statuses = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getAtomId));
+		for(Integer atomId: neighbours)
+			statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
 		SortedSet<EventObject> events = state.getObjectsInRadius(EventObject.class, pos, radius);
-		if(!events.isEmpty())
-			atom.getStatus().eventUpdate(events, rand);
 		
-		// nothing to see here but normal fluctuations
-		else {
-			SortedSet<LayoutAtomStatus> statuses = new TreeSet<LayoutAtomStatus>(Comparator.comparing(LayoutAtomStatus::getSensorId));
-			for(Integer atomId: neighbours)
-				statuses.add(state.getObject(LayoutAtom.class, atomId).getStatus());
-			atom.getStatus().normalUpdate(statuses, rand);
-		}
+		// update the status
+		atom.getStatus().update(statuses, events, rand);
 		
 		// to do: add ventilation, et cetera
 	}

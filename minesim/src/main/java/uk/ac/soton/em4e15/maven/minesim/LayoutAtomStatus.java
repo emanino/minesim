@@ -4,44 +4,51 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import java.util.SortedSet;
-import uk.ac.soton.em4e15.maven.minesim.LayoutAtomStatusVariable.LayoutAtomStatusVariableLevel;
+import uk.ac.soton.em4e15.maven.minesim.LayoutAtomStatusVariable.LayoutAtomStatusLevel;
 
 public class LayoutAtomStatus {
 	
 	private LayoutAtomStatusVariable temp;
 	private LayoutAtomStatusVariable co2;
-	private Integer parentId;
+	private Integer atomId;
 	
-	LayoutAtomStatus(LayoutAtomStatus status, Integer sensorId) {
-		temp = status.getVariableTemp();
-		co2 = status.getVariableCO2();
-		this.setSensorId(sensorId);
-	}
-	
-	LayoutAtomStatus(Properties prop) {
-		this(prop, -1);
-	}
-	
-	LayoutAtomStatus(Properties prop, Integer sensorId) {
+	LayoutAtomStatus(Properties prop, Integer atomId) {
 		
-		double tempStartValue = Double.parseDouble(prop.getProperty("tempStartValue"));
-		double tempNormalMax = Double.parseDouble(prop.getProperty("tempNormalMax"));
-		double tempNormalMin = Double.parseDouble(prop.getProperty("tempNormalMin"));
-		double tempFlucRange = Double.parseDouble(prop.getProperty("tempFlucRange"));
-		double tempFlucForce = Double.parseDouble(prop.getProperty("tempFlucForce"));
+		double timeStep = Double.parseDouble(prop.getProperty("timeStep"));
+		
+		double tempStart = Double.parseDouble(prop.getProperty("tempStart"));
+		double tempMin = Double.parseDouble(prop.getProperty("tempMin"));
 		double tempDanger = Double.parseDouble(prop.getProperty("tempDanger"));
-		
-		double co2StartValue = Double.parseDouble(prop.getProperty("co2StartValue"));
-		double co2NormalMax = Double.parseDouble(prop.getProperty("co2NormalMax"));
-		double co2NormalMin = Double.parseDouble(prop.getProperty("co2NormalMin"));
-		double co2FlucRange = Double.parseDouble(prop.getProperty("co2FlucRange"));
-		double co2FlucForce = Double.parseDouble(prop.getProperty("co2FlucForce"));
+		double tempHigh = Double.parseDouble(prop.getProperty("tempHigh"));
+		double tempExtreme = Double.parseDouble(prop.getProperty("tempExtreme"));
+		double tempFluc = Double.parseDouble(prop.getProperty("tempFluc")) * timeStep; // depends on the length of the time step
+		double tempInc = Double.parseDouble(prop.getProperty("tempInc")) * timeStep; // depends on the length of the time step
+		double tempCenterW = Double.parseDouble(prop.getProperty("tempCenterW"));
+		double tempNeighW = Double.parseDouble(prop.getProperty("tempNeighW"));
+
+		double co2Start = Double.parseDouble(prop.getProperty("co2Start"));
+		double co2Min = Double.parseDouble(prop.getProperty("co2Min"));
 		double co2Danger = Double.parseDouble(prop.getProperty("co2Danger"));
+		double co2High = Double.parseDouble(prop.getProperty("co2High"));
+		double co2Extreme = Double.parseDouble(prop.getProperty("co2Extreme"));
+		double co2Fluc = Double.parseDouble(prop.getProperty("co2Fluc")) * timeStep; // depends on the length of the time step
+		double co2Inc = Double.parseDouble(prop.getProperty("co2Inc")) * timeStep; // depends on the length of the time step
+		double co2CenterW = Double.parseDouble(prop.getProperty("co2CenterW"));
+		double co2NeighW = Double.parseDouble(prop.getProperty("co2NeighW"));
 		
-		temp = new LayoutAtomStatusVariable(tempStartValue, tempNormalMax, tempNormalMin, tempFlucRange, tempFlucForce, tempDanger);
-		co2 = new LayoutAtomStatusVariable(co2StartValue, co2NormalMax, co2NormalMin, co2FlucRange, co2FlucForce, co2Danger);
-		
-		this.setSensorId(sensorId);
+		temp = new LayoutAtomStatusVariable(tempStart, tempMin, tempDanger, tempHigh, tempExtreme, tempFluc, tempInc, tempCenterW, tempNeighW);
+		co2 = new LayoutAtomStatusVariable(co2Start, co2Min, co2Danger, co2High, co2Extreme, co2Fluc, co2Inc, co2CenterW, co2NeighW);
+		this.atomId = atomId;
+	}
+	
+	LayoutAtomStatus(LayoutAtomStatus status) {
+		try {
+			temp = (LayoutAtomStatusVariable) status.getVariableTemp().clone();
+			co2 = (LayoutAtomStatusVariable) status.getVariableCO2().clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalArgumentException("For some reason I cannot clone any LayoutAtomStatusVariable");
+		}
+		atomId = status.getAtomId();
 	}
 	
 	public LayoutAtomStatusVariable getVariableTemp() {
@@ -60,11 +67,19 @@ public class LayoutAtomStatus {
 		return co2.getValue();
 	}
 	
-	// use this when everything is fine
-	public void normalUpdate(SortedSet<LayoutAtomStatus> neighbours, Random rand) {
+	public Integer getAtomId() {
+		return atomId;
+	}
+
+	public void setAtomId(Integer atomId) {
+		this.atomId = atomId;
+	}
+	
+	public void update(SortedSet<LayoutAtomStatus> neighbours, SortedSet<EventObject> nearbyEvents, Random rand) {
 		if(neighbours.contains(this))
 			throw new IllegalArgumentException("You cannot update a LayoutAtomStatus with itself as a neighbour");
 		
+		// extract the neighbours' temperature and co2
 		ArrayList<Double> neighbourTemp = new ArrayList<Double>();
 		ArrayList<Double> neighbourCO2 = new ArrayList<Double>();
 		for(LayoutAtomStatus status: neighbours) {
@@ -72,81 +87,25 @@ public class LayoutAtomStatus {
 			neighbourCO2.add(status.getCO2());
 		}
 		
+		// standard update
 		temp.update(neighbourTemp, rand);
 		co2.update(neighbourCO2, rand);
 		
-		temp.forceValueInRange(LayoutAtomStatusVariableLevel.MIN, LayoutAtomStatusVariableLevel.MAX);
-		co2.forceValueInRange(LayoutAtomStatusVariableLevel.MIN, LayoutAtomStatusVariableLevel.MAX);
-	}
-	
-	// use this when fires start, gases leak, or similar tragedies happen 
-	public void eventUpdate(SortedSet<EventObject> nearbyEvents, Random rand) {
-		if(nearbyEvents.isEmpty())
-			throw new IllegalArgumentException("No nearby events. You should have used normalUpdate()");
-		
-		// normal update
-		ArrayList<Double> none = new ArrayList<Double>();
-		temp.update(none, rand);
-		co2.update(none, rand);
-		
-		// check fires
+		// Tragedy! A fire/gas leak/temperature increase is happening!
 		for(EventObject e: nearbyEvents)
 			if(e instanceof Fire) {
-				FireStatus status = ((Fire) e).getStatus(); // stronger fires have a larger PROBABILITY of increasing the values
-				if(temp.isValueBelow(LayoutAtomStatusVariableLevel.MAX) && rand.nextDouble() < status.getStrength())
-					temp.forceValueUp();
-				if(temp.isValueAbove(LayoutAtomStatusVariableLevel.EXTREME))
-					temp.forceValueDown();
-				if(co2.isValueBelow(LayoutAtomStatusVariableLevel.MAX) && rand.nextDouble() < status.getStrength())
-					co2.forceValueUp();
-				if(co2.isValueAbove(LayoutAtomStatusVariableLevel.EXTREME))
-					co2.forceValueDown();
+				temp.forceValueUpTowardsLevel(LayoutAtomStatusLevel.EXTREME); // ignore the strength of the fire for now
+				co2.forceValueUpTowardsLevel(LayoutAtomStatusLevel.EXTREME); // ignore the strength of the fire for now
+			} else if(e instanceof GasLeak) {
+				if(((GasLeak) e).getStatus().isBigLeak())
+					co2.forceValueUpTowardsLevel(LayoutAtomStatusLevel.EXTREME); // big gas leak
+				else
+					co2.forceValueUpTowardsLevel(LayoutAtomStatusLevel.HIGH); // small gas leak
+			} else if(e instanceof TemperatureIncrease) {
+				if(((TemperatureIncrease) e).getStatus().isBigIncrease())
+					temp.forceValueUpTowardsLevel(LayoutAtomStatusLevel.EXTREME); // big temperature increase
+				else
+					temp.forceValueUpTowardsLevel(LayoutAtomStatusLevel.HIGH); // small temperature increase
 			}
-		
-		// check gas leaks
-		for(EventObject e: nearbyEvents)
-			if(e instanceof GasLeak)
-				
-				// BIG gas leak
-				if(((GasLeak) e).getStatus().isBigLeak()) {
-					if(co2.isValueBelow(LayoutAtomStatusVariableLevel.MAX))
-						co2.forceValueUp();
-					if(co2.isValueAbove(LayoutAtomStatusVariableLevel.EXTREME))
-						co2.forceValueDown();
-				
-				// small gas leak
-				} else {
-					if(co2.isValueBelow(LayoutAtomStatusVariableLevel.DANGER))
-						co2.forceValueUp();
-					if(co2.isValueAbove(LayoutAtomStatusVariableLevel.MAX))
-						co2.forceValueDown();
-				}
-		
-		// check temperature increases
-		for(EventObject e: nearbyEvents)
-			if(e instanceof TemperatureIncrease)
-				
-				// BIG temperature increase
-				if(((TemperatureIncrease) e).getStatus().isBigIncrease()) {
-					if(temp.isValueBelow(LayoutAtomStatusVariableLevel.MAX))
-						temp.forceValueUp();
-					if(temp.isValueAbove(LayoutAtomStatusVariableLevel.EXTREME))
-						temp.forceValueDown();
-				
-				// small temperature increase
-				} else {
-					if(temp.isValueBelow(LayoutAtomStatusVariableLevel.DANGER))
-						temp.forceValueUp();
-					if(temp.isValueAbove(LayoutAtomStatusVariableLevel.MAX))
-						temp.forceValueDown();
-				}
-	}
-
-	public Integer getSensorId() {
-		return parentId;
-	}
-
-	public void setSensorId(Integer sensorId) {
-		this.parentId = sensorId;
 	}
 }

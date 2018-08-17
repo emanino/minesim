@@ -3,135 +3,92 @@ package uk.ac.soton.em4e15.maven.minesim;
 import java.util.List;
 import java.util.Random;
 
-public class LayoutAtomStatusVariable {
+public class LayoutAtomStatusVariable implements Cloneable {
 	
-	public enum LayoutAtomStatusVariableLevel {
-		MIN, DANGER, MAX, EXTREME;
+	public enum LayoutAtomStatusLevel {
+		MIN, DANGER, HIGH, EXTREME;
 	}
 	
 	private double value;
-	private double change = 0.0;
-	private double normalMax;
-	private double normalMin;
-	private double flucRange;
-	private double flucForce;
-	private double dangerThresh;
+	private double valueMin;
+	private double valueDanger;
+	private double valueHigh;
+	private double valueExtreme;
+	private double fluctuation;
+	private double increase;
+	private double centerWeight;
+	private double neighbourWeight;
 	
-	LayoutAtomStatusVariable(double startValue, double normalMax, double normalMin, double flucRange, double flucForce, double dangerThresh) {
-		value = startValue;
-		this.normalMax = normalMax;
-		this.normalMin = normalMin;
-		this.flucRange = flucRange;
-		this.flucForce = flucForce;
-		this.dangerThresh = dangerThresh;
+	LayoutAtomStatusVariable(double valueStart, double valueMin, double valueDanger, double valueHigh,
+			double valueExtreme, double fluctuation, double increase, double centerWeight, double neighbourWeight) {
+		value = valueStart;
+		this.valueMin = valueMin;
+		this.valueDanger = valueDanger;
+		this.valueHigh = valueHigh;
+		this.valueExtreme = valueExtreme;
+		this.fluctuation = fluctuation;
+		this.increase = increase;
+		this.centerWeight = centerWeight;
+		this.neighbourWeight = neighbourWeight;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 	public double getValue() {
 		return value;
 	}
 	
-	public boolean isAboveDangerThreshold() {
-		return (value > dangerThresh);
+	public double getValueLevel(LayoutAtomStatusLevel level) {
+		switch(level) {
+		case MIN:
+			return valueMin;
+		case DANGER:
+			return valueDanger;
+		case HIGH:
+			return valueHigh;
+		case EXTREME:
+			return valueExtreme;
+		}
+		return 0.0;
 	}
 	
-	public boolean isAboveMaxThreshold() {
-		return (value > normalMax);
+	public boolean isAboveLevel(LayoutAtomStatusLevel level) {
+		return value > getValueLevel(level);
+	}
+	
+	public boolean isBelowLevel(LayoutAtomStatusLevel level) {
+		return value < getValueLevel(level);
 	}
 	
 	public void update(List<Double> neighbourValues, Random rand) {
 		
-		// random fluctuation in the normal range
-		double fluc = (2.0 * rand.nextDouble() - 1.0) * flucRange;
-		change += fluc;
+		// Rademacher fluctuation (trimmed not to exceed the valueMin-valueDanger range)
+		double change;
+		if(rand.nextBoolean()) { // step in the negative direction
+			change = valueMin - value;
+			if(-fluctuation > change)
+				change = -fluctuation;
+		} else {				 // step in the positive direction
+			change = valueDanger - value;
+			if(fluctuation < change)
+				change = fluctuation;
+		}
 		value += change;
-		if(value < normalMin) value = normalMin;
 		
-		// linear interpolation:
-		// current atom has weight 4
-		// surrounding atoms have weight 1
-		value *= 4.0;
+		// linear interpolation with the neighbours
+		value *= centerWeight;
 		for(Double v: neighbourValues)
-			value += v;
-		value /= (4.0 + (double) neighbourValues.size());
+			value += v * neighbourWeight;
+		value /= (centerWeight + neighbourValues.size() * neighbourWeight);
 	}
 	
-	public void forceValueUp() {
-		value += flucForce;
-	}
-	
-	public void forceValueDown() {
-		value -= flucForce;
-		if(value < normalMin) value = normalMin;
-	}
-	
-	public boolean isValueBelow(LayoutAtomStatusVariableLevel level) {
-		switch(level) {
-		case MIN:
-			if(value < normalMin) return true;
-			break;
-		case DANGER:
-			if(value < dangerThresh) return true;
-			break;
-		case MAX:
-			if(value < normalMax) return true;
-			break;
-		case EXTREME:
-			if(value < 2.0 * normalMax) return true;
-			break;
-		}
-		return false;
-	}
-	
-	public boolean isValueAbove(LayoutAtomStatusVariableLevel level) {
-		switch(level) {
-		case MIN:
-			if(value > normalMin) return true;
-			break;
-		case DANGER:
-			if(value > dangerThresh) return true;
-			break;
-		case MAX:
-			if(value > normalMax) return true;
-			break;
-		case EXTREME:
-			if(value > 2.0 * normalMax) return true;
-			break;
-		}
-		return false;
-	}
-	
-	public void forceValueInRange(LayoutAtomStatusVariableLevel levelMin, LayoutAtomStatusVariableLevel levelMax) {
-		
-		// check minimum
-		switch(levelMin) {
-		case MIN:
-			if(value < normalMin) value = normalMin;
-			break;
-		case DANGER:
-			if(value < dangerThresh) value = dangerThresh;
-			break;
-		case MAX:
-			if(value < normalMax) value = normalMax;
-			break;
-		case EXTREME:
-			if(value < 2.0 * normalMax) value = 2.0 * normalMax;
-			break;
-		}
-		
-		// check maximum
-		switch(levelMax) {
-		case MIN:
-			if(value > normalMin) value = normalMin;
-			break;
-		case DANGER:
-			if(value > dangerThresh) value = dangerThresh;
-			break;
-		case MAX:
-			if(value > normalMax) value = normalMax;
-			break;
-		case EXTREME:
-			if(value > 2.0 * normalMax) value = 2.0 * normalMax;
-			break;
-		}
+	public void forceValueUpTowardsLevel(LayoutAtomStatusLevel level) {
+		double target = getValueLevel(level);
+		if(value >= target)
+			return;
+		double distanceToTarget = (target - value) / (target - valueMin);
+		value += increase * distanceToTarget; // slow down as we come closer to the desired level
 	}
 }
