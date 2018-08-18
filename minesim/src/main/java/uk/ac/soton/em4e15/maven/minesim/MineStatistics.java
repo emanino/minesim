@@ -39,6 +39,7 @@ public class MineStatistics {
 	}
 	
 	public double getProduction() {
+		System.out.println("Produce!");
 		return production;
 	}
 	

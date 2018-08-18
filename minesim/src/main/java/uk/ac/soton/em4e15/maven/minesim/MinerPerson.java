@@ -49,36 +49,30 @@ public class MinerPerson extends Person {
 		// ELSE DO STUFF
 		} else {
 			
-			// find the current LayoutAtom
+			// evaluate the current position
 			LayoutAtom currAtom = this.getState().getClosestLayoutAtom(this.getPosition());
+			boolean outsideMine = this.isOutside();
 			
-			boolean outsideMine = false;
-			for(Position exit : getState().getExits()) {
-				if(!outsideMine && getPosition().distanceTo(exit) < Double.parseDouble(getState().getProp().getProperty("exitRadius")))
-					outsideMine = true;
-			}
-			
+			// update the status
 			if(outsideMine) {
-				// RECOVER WHEN OUTSIDE
-				person.getStatus().restAndRecover();
+				person.getStatus().restAndRecover(); // recover when outside
 			} else {
-				// TAKE DAMAGE FROM THE ENVIRONMENT
-				person.getStatus().workAndTire(currAtom.getStatus());
+				person.getStatus().workAndTire(currAtom.getStatus()); // get tired when inside
 			}
 			
-			// the shift has ended
+			// shift has ended, restore the flag
 			if(outsideMine && isTheShiftEnding) {
 				getStatistics().recordEndOfShift(this);
 				person.setTheShiftIsEnding(false);
 			}
 			
-			// MOAR STATISTICS (temperature)
+			// health statistics (temperature)
 			if(currAtom.getStatus().getVariableTemp().isAboveLevel(LayoutAtomStatusLevel.DANGER))
 				getStatistics().recordTempRiskEvent(person, currAtom);
 			if(currAtom.getStatus().getVariableTemp().isAboveLevel(LayoutAtomStatusLevel.HIGH))
 				getStatistics().recordTempInjuryEvent(person, currAtom);
 			
-			// MOAR STATISTICS (CO2)
+			// health statistics (CO2)
 			if(currAtom.getStatus().getVariableCO2().isAboveLevel(LayoutAtomStatusLevel.DANGER))
 				getStatistics().recordCO2RiskEvent(person, currAtom);
 			if(currAtom.getStatus().getVariableCO2().isAboveLevel(LayoutAtomStatusLevel.HIGH))
@@ -100,37 +94,35 @@ public class MinerPerson extends Person {
 					path = goOut(currAtom, evacuate);
 					person.setTheShiftIsEnding(true); // the shift is ending now
 				}
-			} else {
-				//If there is no evacuation, then do other activities:
+			} else { //If there is no evacuation, then do other activities:
 				
 				// run away (if need be)!
 				if(evacuate.contains(currAtom.getId())) {
 					path = currAtom.shortestPathOut(evacuate);
 					
-				} else if(getStatus().getRestBar() <= 0){
-					// if tired go out of the mine
+				} else if(getStatus().getRestBar() <= 0) { // if tired go out of the mine
 					path = goOut(currAtom, evacuate);
 					person.setTheShiftIsEnding(true); // the shift is ending now
-				}else {
-					// find the target
+					
+				} else { // keep going towards/staying at the target
 					Integer siteId = scheduler.getMiningSite(this);
 					
 					// shortest path to the target
 					if(siteId != null) {
 						MiningSite site = this.getState().getObject(MiningSite.class, siteId);
 						Position sitePos = site.getPosition();
-						if(sitePos.distanceTo(this.getPosition()) > 0.01) {					
-							// if the miner is still far from the position, move to the position
-							Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
-							path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
-						} else {
-							getStatistics().recordProduction(person, site); // if the miner is in position, production starts
+						Integer siteAtomId = this.getState().getClosestLayoutAtom(sitePos).getId();
+						path = currAtom.shortestPathTo(new HashSet<Integer>(Arrays.asList(siteAtomId)), evacuate);
+						
+						// if the miner is in position, production starts
+						if(path.getLength() <= 1) {
+							getStatistics().recordProduction(person, site);
 						}
 					}
 				}
 				
+				// if the miner has no target, leave the mine
 				if(path == null && !outsideMine) {
-					// if the miner has no target, leave the mine
 					path = goOut(currAtom, evacuate);
 					person.setTheShiftIsEnding(true); // the shift is ending now
 				}	
@@ -141,6 +133,14 @@ public class MinerPerson extends Person {
 				person.setPosition(newPos);
 			}
 		}
+	}
+	
+	public boolean isOutside() {
+		double exitRadius = Double.parseDouble(getState().getProp().getProperty("exitRadius"));
+		for(Position exit: getState().getExits())
+			if(this.getPosition().distanceTo(exit) < exitRadius)
+				return true;
+		return false;
 	}
 	
 	@Override

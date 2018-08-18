@@ -254,6 +254,50 @@ function addSensor(svg, object, scale) {
 	svg.setAttribute("viewBox", newViewBox);
 }
 
+function addHiddenSensor(svg, object, scale) {
+	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++)
+		object.c[i] *= scale;
+	
+	// sensors are dots
+	var newSensor = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	newSensor.id = "svgElement"+object.name;
+	newSensor.setAttribute("cx", object.c[0]);
+	newSensor.setAttribute("cy", object.c[1]);
+	newSensor.setAttribute("r", 5);
+	newSensor.setAttribute("fill", "#00CED1");
+	
+	// add a value box
+	var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	newSensorBox.id = "svgSensorBox"+object.name;
+	newSensorBox.setAttribute("visibility", "hidden");
+	newSensorBox.setAttribute("x", object.c[0] - 10);
+	newSensorBox.setAttribute("y", object.c[1] + 8);
+	newSensorBox.setAttribute("width", 20);
+	newSensorBox.setAttribute("height", 15);
+	newSensorBox.setAttribute("style", "fill:#FFFFFF;stroke:#000000;stroke-width:1");
+	
+	// add their readings
+	var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	newSensorValue.id = "svgSensorReading"+object.name;
+	newSensorValue.setAttribute("visibility", "hidden");
+	newSensorValue.setAttribute("x", object.c[0]);
+	newSensorValue.setAttribute("y", object.c[1] + 20);
+	newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#000000");
+	newSensorValue.textContent = object.reading;
+	
+	// add everything to the parent element
+	svg.appendChild(newSensor);
+	svg.appendChild(newSensorBox);
+	svg.appendChild(newSensorValue);
+	
+	// adjust the size of the SVG viewBox
+	var newViewBox = svg.getAttribute("viewBox");
+	newViewBox = adjustViewBox(newViewBox, object.c);
+	svg.setAttribute("viewBox", newViewBox);
+}
+
 function addInfoPredicate(svg, object, scale){
 	var predicateName = object.predicateName;
 	var nameCode = predicateName.replace(/\s/g,'');
@@ -276,10 +320,14 @@ function highlightSensor(sensorId, turnOn){
 		$("#svgElement"+sensorId).attr("fill", "none");
 		$("#svgElement"+sensorId).attr("stroke", "yellow");
 		$("#svgElement"+sensorId).attr("stroke-width", "10");
+		$("#svgSensorBox"+sensorId).attr("visibility","visible");
+		$("#svgSensorReading"+sensorId).attr("visibility","visible");
 	} else {		
 		$("#svgElement"+sensorId).attr("r", 5);
 		$("#svgElement"+sensorId).attr("fill", "#00CED1");
 		$("#svgElement"+sensorId).attr("stroke", "none");
+		$("#svgSensorBox"+sensorId).attr("visibility","hidden");
+		$("#svgSensorReading"+sensorId).attr("visibility","hidden");
 	}	
 }
 
@@ -332,7 +380,7 @@ function addGeofencedAtom(svg, object, scale) {
 }
 
 
-function drawMine(jsonMine) {
+function drawMineFull(jsonMine) {
 	
 	var objArray = jsonMine.mineObjects;
 	var svg = document.getElementById("mineSvg");
@@ -408,6 +456,85 @@ function drawMine(jsonMine) {
 	ground.setAttribute("width", tokens[2]);
 	ground.setAttribute("height", tokens[3] - tokens[1]);
 	ground.setAttribute("style", "fill:#A0522D");
+	sky.setAttribute("x", tokens[0]);
+	sky.setAttribute("y", -50);
+	sky.setAttribute("width", tokens[2]);
+	sky.setAttribute("height", 50);
+	sky.setAttribute("style", "fill:#B0C4DE");
+	exit.setAttribute("x", -20);
+	exit.setAttribute("y", -30);
+	exit.setAttribute("width", 40);
+	exit.setAttribute("height", 30);
+	exit.setAttribute("fill", "#696969");
+	
+	// console.log(svg);
+	console.log(objArray);
+}
+
+function drawMine(jsonMine) {
+	
+	var objArray = jsonMine.mineObjects;
+	
+	console.log(objArray);
+	
+	var svg = document.getElementById("mineSvg");
+	$("#mineSvg").empty();
+	// create the background
+	var ground = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	var sky = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	var exit = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	svg.appendChild(ground);
+	svg.appendChild(sky);
+	svg.appendChild(exit);
+	
+	// scale the coordinates
+	var scale = 20;
+	
+	// create the escape tunnels
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "escapetunnel")
+			addEscapeTunnel(svg, objArray[i], scale);
+	
+	// create all the tunnels
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "tunnel")
+			addTunnel(svg, objArray[i], scale);
+	
+	// create the main tunnels
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "maintunnel")
+			addMainTunnel(svg, objArray[i], scale);
+	
+	// create all the geofenced atoms
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "geofencedAtom")
+			addGeofencedAtom(svg, objArray[i], scale);
+	
+	// create all the miningSites
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "site")
+			addMiningSite(svg, objArray[i], scale);
+	
+	// create all the sensors
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "sensor")
+			addHiddenSensor(svg, objArray[i], scale);
+	
+	// create all the infoPredicateTables
+	$("#gtablediv").html("<div id=\"tableArea\"></div>");
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "infoPredicate")
+			addInfoPredicate(svg, objArray[i], scale);
+	$("#tableArea").accordion();
+	
+	
+	// fit the background to the viewBox
+	var tokens = svg.getAttribute("viewBox").split(" ");
+	ground.setAttribute("x", tokens[0]);
+	ground.setAttribute("y", 0);
+	ground.setAttribute("width", tokens[2]);
+	ground.setAttribute("height", tokens[3] - tokens[1]);
+	ground.setAttribute("style", "fill:#BC8F8F");
 	sky.setAttribute("x", tokens[0]);
 	sky.setAttribute("y", -50);
 	sky.setAttribute("width", tokens[2]);
