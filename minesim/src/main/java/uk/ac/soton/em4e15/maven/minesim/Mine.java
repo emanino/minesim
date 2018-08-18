@@ -105,15 +105,17 @@ public class Mine {
 	
 	public void update(Set<UserAction> actions) {
 		updateUpdateHistory(actions);
+		
 		// new state and new action scheduler
 		MineState next = new MineState(state);
 		scheduler.update(actions, next);
 		
 		// update all the elements
+		Random rand = new Random(updateRand+previousUpdates);
 		for(MineObject obj: state.getObjectsSorted())
-			obj.update(actions, scheduler, new Random(updateRand+previousUpdates), next);
+			obj.update(actions, scheduler, rand, next);
 		for(MineObject obj: next.getObjectsSorted())
-			obj.postUpdate(actions, scheduler, new Random(updateRand+previousUpdates), next);
+			obj.postUpdate(actions, scheduler, rand, next);
 		stats.update(next);
 		
 		// overwrite the old state with the new one
@@ -124,7 +126,6 @@ public class Mine {
 		if(eventWait > 0)
 			eventWait--;
 		else {
-			Random rand = new Random(updateRand+previousUpdates);
 			double timeStep = Double.parseDouble(prop.getProperty("timeStep"));
 			double meanTimeBetweenEvents = Double.parseDouble(prop.getProperty("meanTimeBetweenEvents"));
 			double eventTimeGap = Double.parseDouble(prop.getProperty("eventTimeGap"));
