@@ -8,7 +8,9 @@ $( function() {
 		$( "#mainaccordion" ).accordion();
 		$( "#actionEvacuateTunnelSelection" ).selectmenu().selectmenu( "menuWidget" ).addClass( "overflow" );
 		
-		
+		$( function() {
+		    $( "#checkbox-1-hideen-view" ).checkboxradio();
+		  } );
 		
 		var maxWidth  = $('#outer').width()+50;
 		var maxHeight = $('#outer').height()+50;

@@ -472,6 +472,10 @@ function drawMineFull(jsonMine) {
 }
 
 function drawMine(jsonMine) {
+	if($("#checkbox-1-hideen-view").length > 0 && !$("#checkbox-1-hideen-view").prop('checked')){		
+		drawMineFull(jsonMine);
+		return;
+	}
 	
 	var objArray = jsonMine.mineObjects;
 	

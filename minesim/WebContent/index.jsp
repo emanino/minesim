@@ -44,6 +44,10 @@
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="getRDFSensorSchemaButton" >Get RDF Sensor Schema</button>
 	</fieldset>
     </p>
+    <fieldset>
+    	<label for="checkbox-1-hideen-view">Hidden View</label>
+    	<input type="checkbox" name="checkbox-1" id="checkbox-1-hideen-view">
+    </fieldset>
     <div id="rdfArea"></div>
   </div>
   <h3>Mine Update</h3>
