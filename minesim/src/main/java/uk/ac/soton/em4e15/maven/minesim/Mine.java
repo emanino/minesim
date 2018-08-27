@@ -32,6 +32,7 @@ public class Mine {
 	private MineObjectScheduler scheduler;
 	private Properties prop;
 	private int eventWait;
+	private int eventNum;
 	private MineStatistics stats;
 	private List<MutablePair<Set<UserAction>,Integer>> updateHistory;
 
@@ -58,6 +59,7 @@ public class Mine {
 		state.activateCaching = true;
 		
 		eventWait = (int) (Double.parseDouble(prop.getProperty("eventTimeGap")) / Double.parseDouble(prop.getProperty("timeStep")));
+		eventNum = 0;
 	}
 
 	// constructor from file
@@ -103,6 +105,19 @@ public class Mine {
 		return "{\"layoutSeed\":"+layoutSeed+",\"updateSeed\":"+updateSeed+",\"updateActions\":["+ String.join(",", updatesAsJson) + "]}";
 	}
 	
+	public void updateUntilFirstEvent() {
+		updateUntilFirstEvent(0);
+	}
+	// adds a number of delay timesteps to let the event effects manifest themselves
+	public void updateUntilFirstEvent(int delay) {
+		while(eventNum == 0){
+			update(new HashSet<UserAction>());
+		}
+		for(int i = 0; i < delay; i++) {
+			update(new HashSet<UserAction>());
+		}
+	}
+	
 	public void update(Set<UserAction> actions) {
 		updateUpdateHistory(actions);
 		
@@ -111,7 +126,8 @@ public class Mine {
 		scheduler.update(actions, next);
 		
 		// update all the elements
-		Random rand = new Random(updateRand+previousUpdates);
+		Random rand = MineUtil.getRandom(updateRand,previousUpdates);
+		
 		for(MineObject obj: state.getObjectsSorted())
 			obj.update(actions, scheduler, rand, next);
 		for(MineObject obj: next.getObjectsSorted())
@@ -131,7 +147,7 @@ public class Mine {
 			double eventTimeGap = Double.parseDouble(prop.getProperty("eventTimeGap"));
 			double eventProb = timeStep / (meanTimeBetweenEvents - eventTimeGap);
 			if(rand.nextDouble() < eventProb) {
-				
+				eventNum++;
 				// extract position
 				Set<LayoutAtom> atoms = state.getObjects(LayoutAtom.class);
 				List<Position> atomPos = new ArrayList<Position>();
@@ -140,17 +156,27 @@ public class Mine {
 				Position eventPosition = atomPos.get(rand.nextInt(atomPos.size()));
 				
 				// extract type
-				int eventType = rand.nextInt(3);
+				int eventType = rand.nextInt(4);
 				switch(eventType) {
-				case 0:
-					new Fire(eventPosition, state, new FireStatus(prop), stats);
+				case 0:{					
+					Fire e = new Fire(eventPosition, state, new FireStatus(prop), stats);
+					System.out.println("New fire in "+e.getPosition().toJsonGui()+"");
 					break;
-				case 1:
-					new GasLeak(eventPosition, state, new GasLeakStatus(rand.nextBoolean()), prop);
+				}
+				case 1:{					
+					GasLeak e = new GasLeak(eventPosition, state, new GasLeakStatus(rand.nextBoolean()), prop);
+					System.out.println("New gas leak in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigLeak());
 					break;
-				case 2:
-					new TemperatureIncrease(eventPosition, state, new TemperatureIncreaseStatus(rand.nextBoolean()), prop);
+				}
+				case 2:{					
+					TemperatureIncrease e = new TemperatureIncrease(eventPosition, state, new TemperatureIncreaseStatus(rand.nextBoolean()), prop);
+					System.out.println("New temperature increase in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigIncrease());
 					break;
+				}
+				case 3:{					
+					System.out.println("No new event");
+					break;
+				}
 				}
 				// start the waiting count down again
 				eventWait = (int) (Double.parseDouble(prop.getProperty("eventTimeGap")) / Double.parseDouble(prop.getProperty("timeStep")));
@@ -342,6 +368,8 @@ public class Mine {
 	
 	private void placeSensors(LayoutAtom atom, Set<Integer> visited, double prob) {
 		
+		double decreaseInProb = Double.parseDouble(prop.getProperty("sensorDisplacementRate"));
+		
 		// end the recursion
 		if(visited.contains(atom.getId()))
 			return;
@@ -354,7 +382,7 @@ public class Mine {
 		
 			// or decrease the probability of not creating one next
 		} else
-			prob *= 0.98;
+			prob *= decreaseInProb;
 		
 		// recursive visit of the whole graph
 		visited.add(atom.getId());

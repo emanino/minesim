@@ -30,6 +30,7 @@ public class GasLeak implements EventObject {
 		pos = leak.getPosition();
 		state = next;
 		status = leak.getStatus();
+		countdown = leak.countdown-1;
 		state.addOld(this);
 	}
 	
@@ -75,7 +76,7 @@ public class GasLeak implements EventObject {
 
 	@Override
 	public String toJsonGui() {
-		return "{\"type\":\"gasleak\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+		return "{\"type\":\"gasleak\",\"size\":\""+((status.isBigLeak) ? "big" : "small")+"\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
 
 	@Override

@@ -27,21 +27,46 @@ $( function() {
 		    $('#wrap').css({ width: maxWidth * scale, height: maxHeight * scale });
 		});
 		$(window).resize();
+
+		$(".normallyHidden").hide();
 		
-	    $( "#renderButton" ).click( function( event ) {
+		$( "#renderButton" ).click( function( event ) {
+		      event.preventDefault();
+		      disableButtons()
+		      $.ajax({
+					url : 'GetMineServlet',
+					data : {
+						mineSeed : $('#mineSeedForm').val(),
+						updateSeed : $('#updateSeedForm').val()
+					},
+					success : function(responseText) {
+						$("#drawArea").show();
+						drawMine(responseText);
+						drawStatistics(responseText);
+						completeFields(responseText);
+						$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
+						enableButtons()
+					}
+				});
+		    } );
+		
+		
+	    $( "#renderButtonAfterFirstEvent" ).click( function( event ) {
 	      event.preventDefault();
 	      disableButtons()
 	      $.ajax({
-				url : 'GetMineServlet',
+				url : 'GetMineAfterFirstEvent',
 				data : {
 					mineSeed : $('#mineSeedForm').val(),
 					updateSeed : $('#updateSeedForm').val()
 				},
 				success : function(responseText) {
 					$("#drawArea").show();
-					drawMine(responseText);
-					drawStatistics(responseText);
-					completeFields(responseText);
+					drawMine(responseText["minedraw"]);
+					$("#saveLoadTextArea").empty();
+					$("#saveLoadTextArea").val(JSON.stringify(responseText["minesave"]));
+					drawStatistics(responseText["minedraw"]);
+					completeFields(responseText["minedraw"]);
 					$("#actionEvacuateTunnelSelection").selectmenu( "refresh" );
 					enableButtons()
 				}
@@ -277,6 +302,19 @@ function completeFields(jsonMineText){
   			highlightSensor(parseInt($(this).text()),false);
   		  }
   		);
+	$(".clickableObject").click(function() {
+		   //alert(this.getAttribute("clickableObjectText"));  
+		   var suffix = (this.getAttribute("cx").replace(/\./g,'b'))+"a"+(this.getAttribute("cy").toString().replace(/\./g,'b'));
+		   $(".sensorValue"+suffix).show();
+		   $(".sensorBox"+suffix).show();
+	});
+	$(".clickableObject").mouseleave(function() {
+		   //alert(this.getAttribute("clickableObjectText")); 
+		   var suffix = (this.getAttribute("cx").replace(/\./g,'b'))+"a"+(this.getAttribute("cy").toString().replace(/\./g,'b'));
+		   $(".sensorValue"+suffix).hide();
+		   $(".sensorBox"+suffix).hide();
+	});
+	$(".normallyHidden").hide();
 }
 function addTunnelsToMenus(jsonMine) {
 	var objArray = jsonMine.mineObjects;

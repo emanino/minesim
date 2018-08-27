@@ -26,6 +26,26 @@ function adjustViewBox(oldViewBox, objCoordinates) {
 	// pack the coordinates
 	return [minx, miny, width, height].join(" ");
 }
+
+// so far it only trims numbers and arrays of numbers
+function trimNum(num){
+	if(isNaN(num)) {
+		if(num.constructor === Array){
+			var newArray = [];
+			for(elem in num){
+				if(isNaN(num[elem])){
+					return num;
+				} else {
+					newArray.push(trimNum(num[elem]));
+				}			
+				
+			}
+			return newArray;
+		}
+		return num;
+	}
+	return Math.round(num * 1000) / 1000;
+}
 			
 function addTunnel(svg, object, scale) {
 	
@@ -214,8 +234,39 @@ function addFire(svg, object, scale) {
 	svg.setAttribute("viewBox", newViewBox);
 }
 
-function addSensor(svg, object, scale) {
+function addLeak(svg, object, scale, label) {
 	
+	// scale the coordinates
+	for(var i = 0; i < 3; i++)
+		object.c[i] *= scale;
+	
+	// fires are images
+	var newFire = document.createElementNS("http://www.w3.org/2000/svg", 'image');
+	newFire.setAttribute("x", object.c[0] - 10);
+	newFire.setAttribute("y", object.c[1] - 10);
+	newFire.setAttribute("width", 20);
+	newFire.setAttribute("height", 20);
+	newFire.setAttribute("href", "icons/warning_icon.svg");
+	
+	// add the label
+	var textlabel = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	textlabel.setAttribute("x", object.c[0]);
+	textlabel.setAttribute("y", object.c[1] + 20);
+	textlabel.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#8B0000");
+	textlabel.textContent = label+" ("+object.size+")";
+	
+	// add everything to the parent element
+	svg.appendChild(newFire);
+	svg.appendChild(textlabel);
+	
+	// adjust the size of the SVG viewBox
+	var newViewBox = svg.getAttribute("viewBox");
+	newViewBox = adjustViewBox(newViewBox, object.c);
+	svg.setAttribute("viewBox", newViewBox);
+}
+
+function addSensor(svg, object, scale) {
+			
 	// scale the coordinates
 	for(var i = 0; i < 3; i++)
 		object.c[i] *= scale;
@@ -227,26 +278,46 @@ function addSensor(svg, object, scale) {
 	newSensor.setAttribute("cy", object.c[1]);
 	newSensor.setAttribute("r", 5);
 	newSensor.setAttribute("fill", "#00CED1");
+	newSensor.classList.add("clickableObject");
+	//newSensor.setAttribute("clickableObjectText", "Sensor "+object.name+" measured "+object.reading+" ("+object.propertyName+")");
 	
-	// add a value box
-	var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-	newSensorBox.setAttribute("x", object.c[0] - 10);
-	newSensorBox.setAttribute("y", object.c[1] + 8);
-	newSensorBox.setAttribute("width", 20);
-	newSensorBox.setAttribute("height", 15);
-	newSensorBox.setAttribute("style", "fill:#FFFFFF;stroke:#000000;stroke-width:1");
-	
-	// add their readings
-	var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-	newSensorValue.setAttribute("x", object.c[0]);
-	newSensorValue.setAttribute("y", object.c[1] + 20);
-	newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#000000");
-	newSensorValue.textContent = object.reading;
-	
-	// add everything to the parent element
+	var textContent = object.propertyName+": "+trimNum(object.reading);
+	var sensorDisplaySuffix = (object.c[0].toString().replace(/\./g,'b'))+"a"+(object.c[1].toString().replace(/\./g,'b'));
+	if($("."+"sensorValue"+sensorDisplaySuffix).length > 0){
+		$("."+"sensorValue"+sensorDisplaySuffix).text($("."+"sensorValue"+sensorDisplaySuffix).text()+".\r\n "+textContent);
+		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("x", object.c[0] - $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().width/2);
+		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("width", $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().width);
+		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("height", $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().height);
+	} else {
+		// add their readings
+		var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		newSensorValue.id = "svgElement"+object.name+"Reading";
+		newSensorValue.setAttribute("x", object.c[0]);
+		newSensorValue.setAttribute("y", object.c[1] + 20-30);
+		newSensorValue.classList.add("normallyHidden");
+		newSensorValue.classList.add("sensorValue"+sensorDisplaySuffix);
+		newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#000000");
+		//newSensorValue.setAttribute('style', 'white-space: pre-line;');
+		newSensorValue.textContent = textContent;
+		
+		// add a value box
+		var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+		newSensorBox.id = "svgElement"+object.name+"Box";
+		newSensorBox.classList.add("sensorBox"+sensorDisplaySuffix);
+		newSensorBox.setAttribute("y", object.c[1] + 8-30);
+		newSensorBox.classList.add("normallyHidden");
+		newSensorBox.setAttribute("style", "fill:#FFFFFF;stroke:#000000;stroke-width:1");
+
+		// add everything to the parent element
+		svg.appendChild(newSensorBox);
+		svg.appendChild(newSensorValue);
+		newSensorBox.setAttribute("x", object.c[0] - newSensorValue.getBBox().width/2);
+		newSensorBox.setAttribute("width", newSensorValue.getBBox().width);
+		newSensorBox.setAttribute("height", newSensorValue.getBBox().height);
+		
+	}
 	svg.appendChild(newSensor);
-	svg.appendChild(newSensorBox);
-	svg.appendChild(newSensorValue);
+	
 	
 	// adjust the size of the SVG viewBox
 	var newViewBox = svg.getAttribute("viewBox");
@@ -255,8 +326,8 @@ function addSensor(svg, object, scale) {
 }
 
 function addHiddenSensor(svg, object, scale) {
-	
-	// scale the coordinates
+	addSensor(svg, object, scale);
+	/*// scale the coordinates
 	for(var i = 0; i < 3; i++)
 		object.c[i] *= scale;
 	
@@ -267,11 +338,12 @@ function addHiddenSensor(svg, object, scale) {
 	newSensor.setAttribute("cy", object.c[1]);
 	newSensor.setAttribute("r", 5);
 	newSensor.setAttribute("fill", "#00CED1");
+	newSensor.classList.add("clickableObject");
+	newSensor.setAttribute("clickableObjectText", "Sensor "+object.name+" measured "+object.reading+" ("+object.propertyName+")");
 	
 	// add a value box
 	var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 	newSensorBox.id = "svgSensorBox"+object.name;
-	newSensorBox.setAttribute("visibility", "hidden");
 	newSensorBox.setAttribute("x", object.c[0] - 10);
 	newSensorBox.setAttribute("y", object.c[1] + 8);
 	newSensorBox.setAttribute("width", 20);
@@ -281,7 +353,6 @@ function addHiddenSensor(svg, object, scale) {
 	// add their readings
 	var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 	newSensorValue.id = "svgSensorReading"+object.name;
-	newSensorValue.setAttribute("visibility", "hidden");
 	newSensorValue.setAttribute("x", object.c[0]);
 	newSensorValue.setAttribute("y", object.c[1] + 20);
 	newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#000000");
@@ -289,13 +360,13 @@ function addHiddenSensor(svg, object, scale) {
 	
 	// add everything to the parent element
 	svg.appendChild(newSensor);
-	svg.appendChild(newSensorBox);
-	svg.appendChild(newSensorValue);
+	//svg.appendChild(newSensorBox);
+	//svg.appendChild(newSensorValue);
 	
 	// adjust the size of the SVG viewBox
 	var newViewBox = svg.getAttribute("viewBox");
 	newViewBox = adjustViewBox(newViewBox, object.c);
-	svg.setAttribute("viewBox", newViewBox);
+	svg.setAttribute("viewBox", newViewBox);*/
 }
 
 function addInfoPredicate(svg, object, scale){
@@ -309,7 +380,7 @@ function addInfoPredicate(svg, object, scale){
 	}
 	var tableRow = "<tr>";
 	for (var i = 0; i < data.length; i++) {
-		tableRow = tableRow+"<td class=\"tableInfoClass"+data[i].type+"\">"+data[i].value+"</td>";
+		tableRow = tableRow+"<td class=\"tableInfoClass"+data[i].type+"\">"+trimNum(data[i].value)+"</td>";
 	}
 	$("#"+nameCode).append(tableRow+"</tr>");
 }
@@ -440,6 +511,16 @@ function drawMineFull(jsonMine) {
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "fire")
 			addFire(svg, objArray[i], scale);
+	
+	// create all the gasLeaks
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "gasleak")
+			addLeak(svg, objArray[i], scale,"Gas Leak");
+	
+	// create all the temperatureincrease
+	for(var i = 0; i < objArray.length; i++)
+		if(objArray[i].type == "tempincrease")
+			addLeak(svg, objArray[i], scale, "Temperature Increase");
 	
 	// create all the infoPredicateTables
 	$("#gtablediv").html("<div id=\"tableArea\"></div>");

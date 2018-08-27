@@ -32,6 +32,7 @@ public class TemperatureIncrease implements EventObject {
 		pos = increase.getPosition();
 		state = next;
 		status = increase.getStatus();
+		countdown = increase.countdown-1;
 		state.addOld(this);
 	}
 	
@@ -74,10 +75,10 @@ public class TemperatureIncrease implements EventObject {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public String toJsonGui() {
-		return "{\"type\":\"tempincrease\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
+		return "{\"type\":\"tempincrease\",\"size\":\""+((status.isBigIncrease) ? "big" : "small")+"\",\"name\":\"F"+ id + "\",\"c\":" + pos.toJsonGui() + "}";
 	}
 
 	@Override

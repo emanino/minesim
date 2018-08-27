@@ -32,6 +32,7 @@
 		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButton" >Generate Mine</button>
 		Mine Seed: <input type="text" id="mineSeedForm" value="1"/>
 		Update Seed: <input type="text" id="updateSeedForm" value="1"/>
+		<button class="ui-button ui-widget ui-corner-all changeButtons" id="renderButtonAfterFirstEvent" >Generate Mine After First Event</button>
 	</fieldset>
 	<fieldset>
 		<legend>Random generation</legend>

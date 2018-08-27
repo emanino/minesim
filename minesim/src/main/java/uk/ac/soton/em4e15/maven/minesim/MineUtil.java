@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import javax.json.Json;
@@ -107,5 +108,15 @@ public class MineUtil {
 			}
 		}
 		return mine;
+	}
+	
+	public static Random getRandom(long updateseed, long updates) {
+		Random r = new Random(updateseed);
+		for(int i = 0; i < updates; i++) {
+			updateseed = updateseed + r.nextInt();
+			r = new Random(updateseed);
+			if(updates > 99999) updates = updates/10;
+		}
+		return r;
 	}
 }

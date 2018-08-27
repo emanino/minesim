@@ -96,23 +96,23 @@ public class SimpleSensor implements MovingObject {
 	@Override
 	public String toJsonGui() {
 		// add field with Sensor Type
-		String name = null;
+		String propertyName = null;
 		switch(type) {
 		case TEMP:
-			name = "Temperature";
+			propertyName = "Temperature";
 			break;
 		case CO2:
-			name = "Carbon Monoxide Concentration";
+			propertyName = "Carbon Monoxide Concentration";
 			break;
 		case LOCATION:
-			name = "Location";
+			propertyName = "Location";
 			break;
 		case WORKERLOCATION:
-			name = "Worker's Location";
+			propertyName = "Worker's Location";
 			break;
 		}
-		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading().toJsonGui() + "}, "
-				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+name+"\", \"data\": ["
+		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"propertyName\":\""+ propertyName + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading().toJsonGui() + "}, "
+				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+propertyName+"\", \"data\": ["
 					+ "{\"value\": \""+id+"\", \"type\": \"sensor\"}, "
 					+ "{\"value\": "+getReading().toJsonGui()+", \"type\": \"reading\"} "
 				+ "] }";

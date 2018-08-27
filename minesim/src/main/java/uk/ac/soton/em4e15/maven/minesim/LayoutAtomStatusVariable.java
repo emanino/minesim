@@ -51,7 +51,7 @@ public class LayoutAtomStatusVariable implements Cloneable {
 		case EXTREME:
 			return valueExtreme;
 		}
-		return 0.0;
+		throw new RuntimeException("Error, invalid LyoutAtomStatusLevel.");
 	}
 	
 	public boolean isAboveLevel(LayoutAtomStatusLevel level) {
@@ -88,7 +88,8 @@ public class LayoutAtomStatusVariable implements Cloneable {
 		double target = getValueLevel(level);
 		if(value >= target)
 			return;
-		double distanceToTarget = (target - value) / (target - valueMin);
+		double distanceToTarget = target - value;//) / (target - valueMin);
+		System.out.println(value+" / "+(value + increase * distanceToTarget)+" / "+target);
 		value += increase * distanceToTarget; // slow down as we come closer to the desired level
 	}
 }
