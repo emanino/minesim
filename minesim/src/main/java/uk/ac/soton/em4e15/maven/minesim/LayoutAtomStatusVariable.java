@@ -69,11 +69,11 @@ public class LayoutAtomStatusVariable implements Cloneable {
 		if(rand.nextBoolean()) { // step in the negative direction
 			change = valueMin - value;
 			if(-fluctuation > change)
-				change = -fluctuation;
+				change = -rand.nextDouble()*fluctuation;
 		} else {				 // step in the positive direction
 			change = valueDanger - value;
 			if(fluctuation < change)
-				change = fluctuation;
+				change = rand.nextDouble()*fluctuation;
 		}
 		value += change;
 		
@@ -89,7 +89,7 @@ public class LayoutAtomStatusVariable implements Cloneable {
 		if(value >= target)
 			return;
 		double distanceToTarget = target - value;//) / (target - valueMin);
-		System.out.println(value+" / "+(value + increase * distanceToTarget)+" / "+target);
+		//System.out.println(value+" / "+(value + increase * distanceToTarget)+" / "+target);
 		value += increase * distanceToTarget; // slow down as we come closer to the desired level
 	}
 }

@@ -97,15 +97,19 @@ public class SimpleSensor implements MovingObject {
 	public String toJsonGui() {
 		// add field with Sensor Type
 		String propertyName = null;
+		String unitName = null;
 		switch(type) {
 		case TEMP:
 			propertyName = "Temperature";
+			unitName = "degrees celsius";
 			break;
 		case CO2:
 			propertyName = "Carbon Monoxide Concentration";
+			unitName = "ppm";
 			break;
 		case LOCATION:
 			propertyName = "Location";
+			unitName = "coordinates";
 			break;
 		case WORKERLOCATION:
 			propertyName = "Worker's Location";
@@ -113,8 +117,8 @@ public class SimpleSensor implements MovingObject {
 		}
 		return "{\"type\":\"sensor\",\"name\":\""+ id + "\",\"propertyName\":\""+ propertyName + "\",\"c\":" + pos.toJsonGui() + ",\"reading\":" + getReading().toJsonGui() + "}, "
 				+ "{ \"type\": \"infoPredicate\", \"predicateName\": \""+propertyName+"\", \"data\": ["
-					+ "{\"value\": \""+id+"\", \"type\": \"sensor\"}, "
-					+ "{\"value\": "+getReading().toJsonGui()+", \"type\": \"reading\"} "
+					+ "{\"value\": \""+id+"\", \"type\": \"sensor\", \"label\":\"Sensor ID\" }, "
+					+ "{\"value\": "+getReading().toJsonGui()+", \"type\": \"reading\", \"label\":\"Reading ("+unitName+")\"} "
 				+ "] }";
 	}
 

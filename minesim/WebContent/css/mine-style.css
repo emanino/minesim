@@ -92,7 +92,7 @@ th, td {
 }
 /* Define the default color for all the table rows */
 .hoverTable tr{
-	background: #b8d1f3;
+	background: #ffffff;
 }
 /* Define the hover highlight color for the table row */
   .hoverTable tr:hover {
@@ -105,6 +105,14 @@ th, td {
 
 #saveLoadTextArea {
 	width: 100%;
+}
+
+.tableInfoHeader {
+	background: #b8d1f3;
+}
+
+.dataInfoTable {
+	border-spacing: 3px;
 }
 
 

@@ -160,21 +160,21 @@ public class Mine {
 				switch(eventType) {
 				case 0:{					
 					Fire e = new Fire(eventPosition, state, new FireStatus(prop), stats);
-					System.out.println("New fire in "+e.getPosition().toJsonGui()+"");
+					//System.out.println("New fire in "+e.getPosition().toJsonGui()+"");
 					break;
 				}
 				case 1:{					
 					GasLeak e = new GasLeak(eventPosition, state, new GasLeakStatus(rand.nextBoolean()), prop);
-					System.out.println("New gas leak in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigLeak());
+					//System.out.println("New gas leak in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigLeak());
 					break;
 				}
 				case 2:{					
 					TemperatureIncrease e = new TemperatureIncrease(eventPosition, state, new TemperatureIncreaseStatus(rand.nextBoolean()), prop);
-					System.out.println("New temperature increase in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigIncrease());
+					//System.out.println("New temperature increase in "+e.getPosition().toJsonGui()+" Big?: "+e.getStatus().isBigIncrease());
 					break;
 				}
 				case 3:{					
-					System.out.println("No new event");
+					//System.out.println("No new event");
 					break;
 				}
 				}

@@ -377,6 +377,11 @@ function addInfoPredicate(svg, object, scale){
 		$("#tableArea").append("<h3>"+predicateName+"</h3><div>" +
 				"<table id=\""+nameCode+"\" class=\"dataInfoTable hoverTable scrollable\"></table>" +
 				"</div>");
+		var tableRow = "<tr>";
+		for (var i = 0; i < data.length; i++) {
+			tableRow = tableRow+"<td class=\"tableInfoHeader\">"+data[i].label+"</td>";
+		}
+		$("#"+nameCode).append(tableRow+"</tr>");
 	}
 	var tableRow = "<tr>";
 	for (var i = 0; i < data.length; i++) {
