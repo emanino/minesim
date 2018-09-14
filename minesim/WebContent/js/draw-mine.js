@@ -61,6 +61,7 @@ function addTunnel(svg, object, scale) {
 	newTunnel.setAttribute("y1", object.c1[1]);
 	newTunnel.setAttribute("x2", object.c2[0]);
 	newTunnel.setAttribute("y2", object.c2[1]);
+
 	newTunnel.setAttribute("style", "stroke:#FFFFFF;stroke-width:20;stroke-linecap:round");
 	
 	// and a label in their very middle
@@ -79,6 +80,9 @@ function addTunnel(svg, object, scale) {
 	newViewBox = adjustViewBox(newViewBox, object.c1);
 	newViewBox = adjustViewBox(newViewBox, object.c2);
 	svg.setAttribute("viewBox", newViewBox);
+	
+	addClickableLabel("Tunnel: "+object.name,newTunnel, object.name, svg,(object.c1[0] + object.c2[0]) / 2,(object.c1[1] + object.c2[1]) / 2 + 5,
+			object.c1[0]+"n"+object.c2[0], object.c1[1]+"n"+object.c2[1]);
 }
 
 function addMainTunnel(svg, object, scale) {
@@ -101,7 +105,7 @@ function addMainTunnel(svg, object, scale) {
 	var newTunnelName = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 	newTunnelName.setAttribute("x", (object.c1[0] + object.c2[0]) / 2);
 	newTunnelName.setAttribute("y", (object.c1[1] + object.c2[1]) / 2 + 5);
-	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#696969");
+	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#565656");
 	newTunnelName.textContent = object.name;
 	
 	// add everything to the parent element
@@ -113,7 +117,10 @@ function addMainTunnel(svg, object, scale) {
 	newViewBox = adjustViewBox(newViewBox, object.c1);
 	newViewBox = adjustViewBox(newViewBox, object.c2);
 	svg.setAttribute("viewBox", newViewBox);
-}
+	
+	addClickableLabel("Main Tunnel: "+object.name,newTunnel, object.name, svg,(object.c1[0] + object.c2[0]) / 2,(object.c1[1] + object.c2[1]) / 2 + 5,
+			object.c1[0]+"n"+object.c2[0], object.c1[1]+"n"+object.c2[1]);
+	}
 
 function addEscapeTunnel(svg, object, scale) {
 	
@@ -135,7 +142,7 @@ function addEscapeTunnel(svg, object, scale) {
 	var newTunnelName = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 	newTunnelName.setAttribute("x", (object.c1[0] + object.c2[0]) / 2);
 	newTunnelName.setAttribute("y", (object.c1[1] + object.c2[1]) / 2 + 5);
-	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#696969");
+	newTunnelName.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;font-weight:bold;fill:#565656");
 	newTunnelName.textContent = object.name;
 	
 	// add everything to the parent element
@@ -147,6 +154,56 @@ function addEscapeTunnel(svg, object, scale) {
 	newViewBox = adjustViewBox(newViewBox, object.c1);
 	newViewBox = adjustViewBox(newViewBox, object.c2);
 	svg.setAttribute("viewBox", newViewBox);
+	
+	addClickableLabel("Main Tunnel: "+object.name,newTunnel, object.name, svg,(object.c1[0] + object.c2[0]) / 2,(object.c1[1] + object.c2[1]) / 2 + 5,
+			object.c1[0]+"n"+object.c2[0], object.c1[1]+"n"+object.c2[1]);
+}
+
+
+// When the svg 'parentObject', representation of 'object' is clicked, display a box showing 'text'
+// in the 'svg' area at position x,y
+// 'lx' and 'ly' are used to define a unique id for the box.
+function addClickableLabel(text,parentObject, name,svg,x,y,lx,ly){
+	var sensorDisplaySuffix = (lx.toString().replace(/\./g,'b'))+"a"+(ly.toString().replace(/\./g,'b'));
+	parentObject.setAttribute("lx", lx);
+	parentObject.setAttribute("ly", ly);
+	parentObject.id = "svgElement"+name;
+	parentObject.classList.add("clickableObject");
+	
+	if($("."+"labelValue"+sensorDisplaySuffix).length > 0){
+		$("."+"labelValue"+sensorDisplaySuffix).text($("."+"labelValue"+sensorDisplaySuffix).text()+".\r\n "+text);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("x", x - $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().width/2-4);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("width", $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().width+8);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("height", $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().height);
+	} else {	
+		// add the text
+		var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		newSensorValue.id = "svgElement"+name+"Reading";
+		newSensorValue.setAttribute("x", x);
+		newSensorValue.setAttribute("y", y + 20-33-12);
+		newSensorValue.classList.add("normallyHidden");
+		newSensorValue.classList.add("labelValue"+sensorDisplaySuffix);
+		newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:18px;fill:#000000");
+		//newSensorValue.setAttribute('style', 'white-space: pre-line;');
+		newSensorValue.textContent = text;
+		
+		// add a value box
+		var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+		newSensorBox.id = "svgElement"+name+"Box";
+		newSensorBox.classList.add("labelBox"+sensorDisplaySuffix);
+		newSensorBox.setAttribute("y", y + 8-36-12);
+		newSensorBox.classList.add("normallyHidden");
+		newSensorBox.setAttribute("style", "fill:#FFFFFF;stroke:#000000;stroke-width:1");
+		
+		// add everything to the parent element
+		svg.appendChild(newSensorBox);
+		svg.appendChild(newSensorValue);
+		newSensorBox.setAttribute("x", x - newSensorValue.getBBox().width/2-4);
+		newSensorBox.setAttribute("width", newSensorValue.getBBox().width+8);
+		newSensorBox.setAttribute("height", newSensorValue.getBBox().height);
+	}
+	
+	
 }
 
 function addPerson(svg, object, scale) {
@@ -276,18 +333,21 @@ function addSensor(svg, object, scale) {
 	newSensor.id = "svgElement"+object.name;
 	newSensor.setAttribute("cx", object.c[0]);
 	newSensor.setAttribute("cy", object.c[1]);
-	newSensor.setAttribute("r", 5);
+	newSensor.setAttribute("r", 7);
 	newSensor.setAttribute("fill", "#00CED1");
 	newSensor.classList.add("clickableObject");
 	//newSensor.setAttribute("clickableObjectText", "Sensor "+object.name+" measured "+object.reading+" ("+object.propertyName+")");
 	
 	var textContent = object.propertyName+": "+trimNum(object.reading);
-	var sensorDisplaySuffix = (object.c[0].toString().replace(/\./g,'b'))+"a"+(object.c[1].toString().replace(/\./g,'b'));
-	if($("."+"sensorValue"+sensorDisplaySuffix).length > 0){
-		$("."+"sensorValue"+sensorDisplaySuffix).text($("."+"sensorValue"+sensorDisplaySuffix).text()+".\r\n "+textContent);
-		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("x", object.c[0] - $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().width/2);
-		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("width", $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().width);
-		$("."+"sensorBox"+sensorDisplaySuffix)[0].setAttribute("height", $("."+"sensorValue"+sensorDisplaySuffix)[0].getBBox().height);
+	addClickableLabel(textContent, newSensor, object.name, svg,
+			object.c[0],object.c[1],
+			object.c[0],object.c[1]);
+	/*var sensorDisplaySuffix = (object.c[0].toString().replace(/\./g,'b'))+"a"+(object.c[1].toString().replace(/\./g,'b'));
+	if($("."+"labelValue"+sensorDisplaySuffix).length > 0){
+		$("."+"labelValue"+sensorDisplaySuffix).text($("."+"labelValue"+sensorDisplaySuffix).text()+".\r\n "+textContent);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("x", object.c[0] - $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().width/2);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("width", $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().width);
+		$("."+"labelBox"+sensorDisplaySuffix)[0].setAttribute("height", $("."+"labelValue"+sensorDisplaySuffix)[0].getBBox().height);
 	} else {
 		// add their readings
 		var newSensorValue = document.createElementNS("http://www.w3.org/2000/svg", 'text');
@@ -295,7 +355,7 @@ function addSensor(svg, object, scale) {
 		newSensorValue.setAttribute("x", object.c[0]);
 		newSensorValue.setAttribute("y", object.c[1] + 20-30);
 		newSensorValue.classList.add("normallyHidden");
-		newSensorValue.classList.add("sensorValue"+sensorDisplaySuffix);
+		newSensorValue.classList.add("labelValue"+sensorDisplaySuffix);
 		newSensorValue.setAttribute("style", "text-anchor:middle;font-family:arial;font-size:12px;fill:#000000");
 		//newSensorValue.setAttribute('style', 'white-space: pre-line;');
 		newSensorValue.textContent = textContent;
@@ -303,7 +363,7 @@ function addSensor(svg, object, scale) {
 		// add a value box
 		var newSensorBox = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 		newSensorBox.id = "svgElement"+object.name+"Box";
-		newSensorBox.classList.add("sensorBox"+sensorDisplaySuffix);
+		newSensorBox.classList.add("labelBox"+sensorDisplaySuffix);
 		newSensorBox.setAttribute("y", object.c[1] + 8-30);
 		newSensorBox.classList.add("normallyHidden");
 		newSensorBox.setAttribute("style", "fill:#FFFFFF;stroke:#000000;stroke-width:1");
@@ -315,7 +375,7 @@ function addSensor(svg, object, scale) {
 		newSensorBox.setAttribute("width", newSensorValue.getBBox().width);
 		newSensorBox.setAttribute("height", newSensorValue.getBBox().height);
 		
-	}
+	}*/
 	svg.appendChild(newSensor);
 	
 	
@@ -428,6 +488,10 @@ function addMiningSite(svg, object, scale) {
 	var newViewBox = svg.getAttribute("viewBox");
 	newViewBox = adjustViewBox(newViewBox, object.c);
 	svg.setAttribute("viewBox", newViewBox);
+	
+	addClickableLabel("Mineral Deposit", newSite, object.name, svg,
+			object.c[0] - 10,object.c[1] - 10,
+			"m"+(object.c[0] - 10), "m"+(object.c[1] - 10));
 }
 
 function addGeofencedAtom(svg, object, scale) {
@@ -456,21 +520,21 @@ function addGeofencedAtom(svg, object, scale) {
 }
 
 
-function drawMineFull(jsonMine) {
+function drawMineFull(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale) {
 	
 	var objArray = jsonMine.mineObjects;
-	var svg = document.getElementById("mineSvg");
-	$("#mineSvg").empty();
+	var svg = document.getElementById(mineSvgID);
+	$("#"+mineSvgID).empty();
 	// create the background
 	var ground = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 	var sky = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-	var exit = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	
 	svg.appendChild(ground);
 	svg.appendChild(sky);
-	svg.appendChild(exit);
+	
 	
 	// scale the coordinates
-	var scale = 20;
+	var scale = scale;
 	
 	// create the escape tunnels
 	for(var i = 0; i < objArray.length; i++)
@@ -491,6 +555,9 @@ function drawMineFull(jsonMine) {
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "geofencedAtom")
 			addGeofencedAtom(svg, objArray[i], scale);
+	
+	var exit = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	svg.appendChild(exit);
 	
 	// create all the miningSites
 	for(var i = 0; i < objArray.length; i++)
@@ -528,11 +595,11 @@ function drawMineFull(jsonMine) {
 			addLeak(svg, objArray[i], scale, "Temperature Increase");
 	
 	// create all the infoPredicateTables
-	$("#gtablediv").html("<div id=\"tableArea\"></div>");
+	$("#"+gtabledivID).html("<div id=\""+tableAreaID+"\"></div>");
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "infoPredicate")
 			addInfoPredicate(svg, objArray[i], scale);
-	$("#tableArea").accordion();
+	$("#"+tableAreaID).accordion();
 	
 	
 	// fit the background to the viewBox
@@ -546,39 +613,33 @@ function drawMineFull(jsonMine) {
 	sky.setAttribute("y", -50);
 	sky.setAttribute("width", tokens[2]);
 	sky.setAttribute("height", 50);
-	sky.setAttribute("style", "fill:#B0C4DE");
+	sky.setAttribute("style", "fill:#b6d3f9");
 	exit.setAttribute("x", -20);
 	exit.setAttribute("y", -30);
 	exit.setAttribute("width", 40);
 	exit.setAttribute("height", 30);
 	exit.setAttribute("fill", "#696969");
+	addClickableLabel("Mining Building on the Surface", exit, "miningsite", svg,
+			0,0,
+			"ext", "exit");
 	
-	// console.log(svg);
-	console.log(objArray);
 }
 
-function drawMine(jsonMine) {
-	if($("#checkbox-1-hideen-view").length > 0 && !$("#checkbox-1-hideen-view").prop('checked')){		
-		drawMineFull(jsonMine);
-		return;
-	}
-	
+
+function drawMineHidden(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale) {
 	var objArray = jsonMine.mineObjects;
 	
 	console.log(objArray);
 	
-	var svg = document.getElementById("mineSvg");
-	$("#mineSvg").empty();
+	var svg = document.getElementById(mineSvgID);
+	$("#"+mineSvgID).empty();
 	// create the background
 	var ground = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 	var sky = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-	var exit = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	
 	svg.appendChild(ground);
 	svg.appendChild(sky);
-	svg.appendChild(exit);
 	
-	// scale the coordinates
-	var scale = 20;
 	
 	// create the escape tunnels
 	for(var i = 0; i < objArray.length; i++)
@@ -600,6 +661,9 @@ function drawMine(jsonMine) {
 		if(objArray[i].type == "geofencedAtom")
 			addGeofencedAtom(svg, objArray[i], scale);
 	
+	var exit = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	svg.appendChild(exit);
+	
 	// create all the miningSites
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "site")
@@ -611,11 +675,11 @@ function drawMine(jsonMine) {
 			addHiddenSensor(svg, objArray[i], scale);
 	
 	// create all the infoPredicateTables
-	$("#gtablediv").html("<div id=\"tableArea\"></div>");
+	$("#"+gtabledivID).html("<div id=\""+tableAreaID+"\"></div>");
 	for(var i = 0; i < objArray.length; i++)
 		if(objArray[i].type == "infoPredicate")
 			addInfoPredicate(svg, objArray[i], scale);
-	$("#tableArea").accordion();
+	$("#"+tableAreaID).accordion();
 	
 	
 	// fit the background to the viewBox
@@ -629,13 +693,42 @@ function drawMine(jsonMine) {
 	sky.setAttribute("y", -50);
 	sky.setAttribute("width", tokens[2]);
 	sky.setAttribute("height", 50);
-	sky.setAttribute("style", "fill:#B0C4DE");
+	sky.setAttribute("style", "fill:#b6d3f9");
 	exit.setAttribute("x", -20);
 	exit.setAttribute("y", -30);
 	exit.setAttribute("width", 40);
 	exit.setAttribute("height", 30);
 	exit.setAttribute("fill", "#696969");
-	
-	// console.log(svg);
-	console.log(objArray);
+	addClickableLabel("Mining Building on the Surface", exit, "miningsite", svg,
+			0,0,
+			"ext", "exit");
 }
+
+
+
+function drawMine(jsonMine) {
+	drawMineHelper(jsonMine, "mineSvg", "gtablediv", "tableArea", 20);
+}
+
+function drawMineHelper(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale) {
+	if($("#checkbox-1-hideen-view").length > 0 && !$("#checkbox-1-hideen-view").prop('checked')){		
+		drawMineFull(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale);
+	} else {
+		drawMineHidden(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale);
+	}
+}
+function generateMineCanvas(spanID,jsonMine, mineSvgID, gtabledivID, tableAreaID, scale, full, idSuffix){
+	$("#"+spanID).append(
+	'<div id="wrapper'+idSuffix+'" class="wrapper wrapper-expl"><div id="outer'+idSuffix+'" class="outer outer-expl"><div id="inner'+idSuffix+'" class="inner inner-expl">'+
+	'<div class="gdraw"><svg id="'+mineSvgID+'" width="750" height="650" viewBox="-40 -50 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" >'+
+	'</svg>'+
+	//'<div style="font-size:5%; text-align: center">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>'+
+	'</div></div></div></div></div>');
+	if (full) drawMineFull(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale);
+	else drawMineHidden(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale);
+}
+
+
+
+
+

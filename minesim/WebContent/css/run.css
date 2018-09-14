@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+.carousel-caption {
+	top: 50%;
+	transform: translateY(-50%);
+	bottom: initial;
+	text-align: left
+}
+
+.carousel-caption h5{
+	font-size: 1.5rem;
+}
+
+.carousel-caption li{
+	font-size: 1.25rem;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.item {
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+.full-screen {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.leftcol {
+	float:left;
+   width:50%;
+}
+
+.rightcol {
+   float:right;
+   width:50%;
+}

@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/jquery-ui.min.css">
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/draw-mine.js" type="text/javascript"></script>
+<script src="js/index.js" type="text/javascript"></script>
 <script src="js/app-ajax.js" type="text/javascript"></script>
 
 
@@ -115,28 +116,20 @@
 	<textarea id="saveLoadTextArea">
 	</textarea>
   </div>
-  
-  
   </div>
-</div>
-  
-   
+</div>   
 
-<div id="wrapper">
-<div id="outer">
-<div id="inner">
+<div id="wrapper" class="wrapper-demo">
+<div id="outer" class="outer-demo">
+<div id="inner" class="inner-demo">
 <div class= "gridLayout" id="displayGrid">
 	<div class="gheader">Mine Visualisation</div>
-	
 	<div class="gtable" id="gtablediv">Mine Information:
 		<div id="tableArea">
 		</div>
-	</div>     
-	
+	</div>
 	<div id="drawArea" class="gdraw">
 		<strong>Current state of the mine:</strong>
-		<div id="ajaxGetUserServletResponse"></div>
-	
 		<svg id="mineSvg" width="750" height="650" viewBox="-40 -50 80 70" version="1.1" xmlns="http://www.w3.org/2000/svg" >
 		</svg>
 		<div style="font-size:75%">Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
@@ -145,9 +138,6 @@
 </div>
 </div>
 </div>
-
-
-
 
 </body>
 </html>

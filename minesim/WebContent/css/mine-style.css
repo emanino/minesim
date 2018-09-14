@@ -28,26 +28,47 @@ th, td {
 }
 
 
-#wrap {
+.wrap-demo {
     position: relative;
     width: 1500px;
     height: 800px;
     background-color: red;
 }
-#outer {
+.outer-demo {
     position: relative;
     width: 1500px;
     height: 800px;
     -webkit-transform-origin: left top;
 }
-
-#inner {
+.inner-demo {
     position: absolute;
     top: 0px;
     left: 0px;
     width: 1500px;
     height: 800px;
 }
+
+.wrap-expl {
+    position: relative;
+    width: 750px;
+    height: 650px;
+    background-color: red;
+}
+.outer-expl {
+    position: relative;
+    width: 75px;
+    height: 650px;
+    -webkit-transform-origin: left top;
+}
+.inner-expl {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 750px;
+    height: 650px;
+}
+
+
 
 #tableArea .ui-accordion-content {
     max-height: 400px;
@@ -62,8 +83,8 @@ th, td {
     height: 800px;
 	border-style: inset;
 	grid-template-areas:
-    'gheader gheader gheader gheader gheader gheader'
-    'gdraw   gdraw   gdraw   gtable  gtable  gtable';
+    'gheader gheader gheader gheader gheader gheader gheader'
+    'gdraw   gdraw   gdraw   gtable  gtable  gtable gtable';
       grid-gap: 5px;
   	background-color: #b4cbde;
   	padding: 5px;

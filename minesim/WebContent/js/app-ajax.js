@@ -12,10 +12,10 @@ $( function() {
 		    $( "#checkbox-1-hideen-view" ).checkboxradio();
 		  } );
 		
-		var maxWidth  = $('#outer').width()+50;
-		var maxHeight = $('#outer').height()+50;
+		var maxWidth  = $('.outer').width()+50;
+		var maxHeight = $('.outer').height()+50;
 
-		$(window).resize(function(evt) {
+		/*$(window).resize(function(evt) {
 		    var $window = $(window);
 		    var width = $window.width();
 		    var height = $window.height();
@@ -23,10 +23,10 @@ $( function() {
 		    
 		    scale = Math.min((width)/maxWidth, (height)/maxHeight);
 		    
-		    $('#outer').css({'-webkit-transform': 'scale(' + scale + ')'});
-		    $('#wrap').css({ width: maxWidth * scale, height: maxHeight * scale });
+		    $('.outer').css({'-webkit-transform': 'scale(' + scale + ')'});
+		    $('.wrap').css({ width: maxWidth * scale, height: maxHeight * scale });
 		});
-		$(window).resize();
+		$(window).resize();*/
 
 		$(".normallyHidden").hide();
 		
@@ -304,15 +304,18 @@ function completeFields(jsonMineText){
   		);
 	$(".clickableObject").click(function() {
 		   //alert(this.getAttribute("clickableObjectText"));  
-		   var suffix = (this.getAttribute("cx").replace(/\./g,'b'))+"a"+(this.getAttribute("cy").toString().replace(/\./g,'b'));
-		   $(".sensorValue"+suffix).show();
-		   $(".sensorBox"+suffix).show();
+		   var suffix = (this.getAttribute("lx").replace(/\./g,'b'))+"a"+(this.getAttribute("ly").toString().replace(/\./g,'b'));
+		   $(".labelValue"+suffix).show();
+		   $(".labelBox"+suffix).show();
+		   // bring to foreground
+		   $("svg").append($(".labelBox"+suffix));
+		   $("svg").append($(".labelValue"+suffix));
 	});
 	$(".clickableObject").mouseleave(function() {
 		   //alert(this.getAttribute("clickableObjectText")); 
-		   var suffix = (this.getAttribute("cx").replace(/\./g,'b'))+"a"+(this.getAttribute("cy").toString().replace(/\./g,'b'));
-		   $(".sensorValue"+suffix).hide();
-		   $(".sensorBox"+suffix).hide();
+		   var suffix = (this.getAttribute("lx").replace(/\./g,'b'))+"a"+(this.getAttribute("ly").toString().replace(/\./g,'b'));
+		   $(".labelValue"+suffix).hide();
+		   $(".labelBox"+suffix).hide();
 	});
 	$(".normallyHidden").hide();
 }
