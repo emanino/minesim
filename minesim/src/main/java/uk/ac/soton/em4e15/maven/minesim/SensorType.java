@@ -6,13 +6,13 @@ public enum SensorType {
 	public String getCode() {
 		switch(this) {
 		case TEMP:
-			return "TEMP";
+			return "Temperature";
 		case CO2:
-			return "CO2";
+			return "CO2concentration";
 		case LOCATION:
-			return "LOCATION";
+			return "Location";
 		case WORKERLOCATION:
-			return "WORKERLOCATION";
+			return "WorkerLocation";
 		}
 		return null;
 	}

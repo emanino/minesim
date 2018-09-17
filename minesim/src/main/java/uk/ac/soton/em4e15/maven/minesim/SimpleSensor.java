@@ -27,13 +27,15 @@ public class SimpleSensor implements MovingObject {
 	private MineState state;
 	private SensorType type;
 	private ObservationValue reading;
+	private String featureOfInterest;
 	
 	// create a new SimpleSensor
-	SimpleSensor(Position pos, MineState state, SensorType type) {
+	SimpleSensor(Position pos, MineState state, SensorType type, String featureOfInterest) {
 		id = state.getNextId();
 		this.pos = pos;
 		this.state = state;
 		this.type = type;
+		this.featureOfInterest = featureOfInterest;
 		this.updateReading();
 		state.addNew(this);
 	}
@@ -44,6 +46,7 @@ public class SimpleSensor implements MovingObject {
 		pos = sensor.getPosition();
 		state = next;
 		type = sensor.getType();
+		featureOfInterest = sensor.getFeatureOfInterest();
 		sensor.updateReading();
 		reading = sensor.getReading();
 		state.addOld(this);
@@ -66,6 +69,10 @@ public class SimpleSensor implements MovingObject {
 	
 	public SensorType getType() {
 		return type;
+	}
+	
+	public String getFeatureOfInterest() {
+		return featureOfInterest;
 	}
 	
 	public ObservationValue getReading() {
@@ -157,6 +164,12 @@ public class SimpleSensor implements MovingObject {
 				NodeFactory.createURI("geo"+baseURI+observationId), 
 				NodeFactory.createURI("http://www.opengis.net/ont/gml#pos"), 
 				ResourceFactory.createTypedLiteral(pos.toJsonGui()).asNode()));
+		if(featureOfInterest != null) {
+			triples.add(new Triple(
+					NodeFactory.createURI(baseURI+observationId), 
+					NodeFactory.createURI("http://www.w3.org/ns/sosa/hasFeatureOfInterest"), 
+					NodeFactory.createURI(featureOfInterest)));
+		}
 		return triples;
 	}
 	
@@ -190,6 +203,12 @@ public class SimpleSensor implements MovingObject {
 				NodeFactory.createURI(lambda), 
 				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
 				NodeFactory.createURI(lambda)));
+		if(featureOfInterest != null) {
+			triples.add(new Triple(
+					NodeFactory.createURI(lambda), 
+					NodeFactory.createURI("http://www.w3.org/ns/sosa/hasFeatureOfInterest"), 
+					NodeFactory.createURI(lambda)));
+		}
 		return triples;
 	}
 }

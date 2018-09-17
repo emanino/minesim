@@ -267,7 +267,7 @@ public class Mine {
 		for(int i = 0; i < nMinerPeople; ++i) {
 			Position pos = new Position(2.0 * layoutRand.nextDouble() - 1.0, 0.0, 0.0);
 			MinerPerson miner = new MinerPerson(pos, state, new PersonStatus(prop), stats);
-			SimpleSensor portableSensor = new SimpleSensor(miner.getPosition(), state, SensorType.LOCATION);
+			SimpleSensor portableSensor = new SimpleSensor(miner.getPosition(), state, SensorType.LOCATION, state.getProp().getProperty("baseURI")+miner.getId());
 			miner.addCarried(portableSensor);
 			//miner.getStatus().setRestBar(Math.round(updateRand.nextDouble()*Double.parseDouble(prop.getProperty("personRestTime"))/10));
 		}
@@ -376,8 +376,8 @@ public class Mine {
 		
 		// create a new sensor here
 		if(layoutRand.nextDouble() >= prob) {
-			new SimpleSensor(atom.getPosition(), state, SensorType.TEMP);
-			new SimpleSensor(atom.getPosition(), state, SensorType.CO2);
+			new SimpleSensor(atom.getPosition(), state, SensorType.TEMP, state.getProp().getProperty("baseURI")+atom.getSuperId());
+			new SimpleSensor(atom.getPosition(), state, SensorType.CO2, state.getProp().getProperty("baseURI")+atom.getSuperId());
 			prob = 1.0;
 		
 			// or decrease the probability of not creating one next

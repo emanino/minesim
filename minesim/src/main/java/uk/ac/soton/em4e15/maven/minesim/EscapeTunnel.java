@@ -40,7 +40,7 @@ public class EscapeTunnel extends Tunnel {
 		triples.add(new Triple(
 				NodeFactory.createURI(baseURI+this.getId()), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
-				NodeFactory.createURI(baseURI+"EscapeTunnel")));
+				NodeFactory.createURI(baseURI+"MainTunnel")));
 		triples.add(new Triple(
 				NodeFactory.createURI(baseURI+this.getId()), 
 				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
@@ -60,7 +60,7 @@ public class EscapeTunnel extends Tunnel {
 		triples.add(new Triple(
 				NodeFactory.createURI(lambda),
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
-				NodeFactory.createURI(baseURI+"EscapeTunnel")));
+				NodeFactory.createURI(baseURI+"MainTunnel")));
 		triples.add(new Triple(
 				NodeFactory.createURI(lambda),
 				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
