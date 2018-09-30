@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -132,14 +133,42 @@ public class Tunnel implements LayoutObject {
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"Tunnel")));
+		triples.addAll(getSensorInfoRDFPosition());
+		return triples;
+	}
+	
+	public Set<Triple> getSensorInfoRDFPosition() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String baseURI = state.getProp().getProperty("baseURI");
 		triples.add(new Triple(
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
 				NodeFactory.createURI(baseURI+"geo"+id)));
+		double x1 = head.getX();
+		double y1 = head.getY();
+		double x2 = tail.getX();
+		double y2 = tail.getY();
+		double dx = x2-x1;
+		double dy = y2-y1;
+		double angle = Math.atan2(dy, dx);
+		double mindistance = Double.parseDouble(state.getProp().getProperty("atomRadius"));
+		double safedistance = Math.sqrt(2*mindistance*mindistance);
+		double p1x = x1 + safedistance*Math.cos(angle+2.35619);
+		double p1y = y1 + safedistance*Math.sin(angle+2.35619);
+		
+		double p2x = x2 + safedistance*Math.cos(angle+0.785398);
+		double p2y = y2 + safedistance*Math.sin(angle+0.785398);
+		
+		double p3x = x2 + safedistance*Math.cos(angle-0.785398);
+		double p3y = y2 + safedistance*Math.sin(angle-0.785398);
+		
+		double p4x = x1 + safedistance*Math.cos(angle-2.35619);
+		double p4y = y1 + safedistance*Math.sin(angle-2.35619);
+		
 		triples.add(new Triple(
 				NodeFactory.createURI(baseURI+"geo"+id), 
-				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
-				ResourceFactory.createTypedLiteral("{"+head.toJsonGui()+" , "+tail.toJsonGui()+"}").asNode()));
+				NodeFactory.createURI("http://www.opengis.net/ont/geosparql#asWKT"), 
+				ResourceFactory.createTypedLiteral("POLYGON(("+p1x+" "+p1y+", "+p2x+" "+p2y+", "+p3x+" "+p3y+", "+p4x+" "+p4y+", "+p1x+" "+p1y+"))", new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral")).asNode()));
 		return triples;
 	}
 	

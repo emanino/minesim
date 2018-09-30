@@ -608,7 +608,7 @@ function drawMineFull(jsonMine, mineSvgID, gtabledivID, tableAreaID, scale) {
 	ground.setAttribute("y", 0);
 	ground.setAttribute("width", tokens[2]);
 	ground.setAttribute("height", tokens[3] - tokens[1]);
-	ground.setAttribute("style", "fill:#A0522D");
+	ground.setAttribute("style", "fill:#ba7350");
 	sky.setAttribute("x", tokens[0]);
 	sky.setAttribute("y", -50);
 	sky.setAttribute("width", tokens[2]);

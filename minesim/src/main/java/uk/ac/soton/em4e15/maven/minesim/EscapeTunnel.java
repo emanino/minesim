@@ -41,14 +41,7 @@ public class EscapeTunnel extends Tunnel {
 				NodeFactory.createURI(baseURI+this.getId()), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"MainTunnel")));
-		triples.add(new Triple(
-				NodeFactory.createURI(baseURI+this.getId()), 
-				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
-				NodeFactory.createURI(baseURI+"geo"+this.getId())));
-		triples.add(new Triple(
-				NodeFactory.createURI(baseURI+"geo"+this.getId()), 
-				NodeFactory.createURI("http://www.opengis.net/ont/gmlpos"), 
-				ResourceFactory.createTypedLiteral("{"+this.getHead().toJsonGui()+" , "+this.getTail().toJsonGui()+"}").asNode()));
+		triples.addAll(getSensorInfoRDFPosition());
 		return triples;
 	}
 	

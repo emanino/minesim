@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.datatypes.xsd.impl.XSDDateTimeStampType;
@@ -162,8 +163,8 @@ public class SimpleSensor implements MovingObject {
 				NodeFactory.createURI("geo"+baseURI+observationId)));
 		triples.add(new Triple(
 				NodeFactory.createURI("geo"+baseURI+observationId), 
-				NodeFactory.createURI("http://www.opengis.net/ont/gml#pos"), 
-				ResourceFactory.createTypedLiteral(pos.toJsonGui()).asNode()));
+				NodeFactory.createURI("http://www.opengis.net/ont/geosparql#asWKT"), 
+				ResourceFactory.createTypedLiteral("POINT("+pos.getX()+" "+pos.getY()+")", new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral")).asNode()));
 		if(featureOfInterest != null) {
 			triples.add(new Triple(
 					NodeFactory.createURI(baseURI+observationId), 
