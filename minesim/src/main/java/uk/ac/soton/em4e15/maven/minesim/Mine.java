@@ -376,8 +376,11 @@ public class Mine {
 		
 		// create a new sensor here
 		if(layoutRand.nextDouble() >= prob) {
-			new SimpleSensor(atom.getPosition(), state, SensorType.TEMP, state.getProp().getProperty("baseURI")+atom.getSuperId());
-			new SimpleSensor(atom.getPosition(), state, SensorType.CO2, state.getProp().getProperty("baseURI")+atom.getSuperId());
+			String featureOfInterest = null;
+			if(Boolean.parseBoolean((state.getProp().getProperty("sensorsRegisteredWithTunnel"))))
+				featureOfInterest = state.getProp().getProperty("baseURI")+atom.getSuperId();
+			new SimpleSensor(atom.getPosition(), state, SensorType.TEMP, featureOfInterest);
+			new SimpleSensor(atom.getPosition(), state, SensorType.CO2, featureOfInterest);
 			prob = 1.0;
 		
 			// or decrease the probability of not creating one next

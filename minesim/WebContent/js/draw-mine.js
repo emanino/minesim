@@ -1,3 +1,5 @@
+var sensorCircleRadius = 7;
+
 function adjustViewBox(oldViewBox, objCoordinates) {
 				
 	var margin = 30;
@@ -333,7 +335,7 @@ function addSensor(svg, object, scale) {
 	newSensor.id = "svgElement"+object.name;
 	newSensor.setAttribute("cx", object.c[0]);
 	newSensor.setAttribute("cy", object.c[1]);
-	newSensor.setAttribute("r", 7);
+	newSensor.setAttribute("r", sensorCircleRadius);
 	newSensor.setAttribute("fill", "#00CED1");
 	newSensor.classList.add("clickableObject");
 	//newSensor.setAttribute("clickableObjectText", "Sensor "+object.name+" measured "+object.reading+" ("+object.propertyName+")");
@@ -459,7 +461,7 @@ function highlightSensor(sensorId, turnOn){
 		$("#svgSensorBox"+sensorId).attr("visibility","visible");
 		$("#svgSensorReading"+sensorId).attr("visibility","visible");
 	} else {		
-		$("#svgElement"+sensorId).attr("r", 5);
+		$("#svgElement"+sensorId).attr("r", sensorCircleRadius);
 		$("#svgElement"+sensorId).attr("fill", "#00CED1");
 		$("#svgElement"+sensorId).attr("stroke", "none");
 		$("#svgSensorBox"+sensorId).attr("visibility","hidden");

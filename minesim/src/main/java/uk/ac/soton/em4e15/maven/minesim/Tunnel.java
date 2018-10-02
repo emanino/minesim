@@ -144,6 +144,7 @@ public class Tunnel implements LayoutObject {
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
 				NodeFactory.createURI(baseURI+"geo"+id)));
+		//create a bounding box of range 'atomRadius' around the central line define by the head and tail points
 		double x1 = head.getX();
 		double y1 = head.getY();
 		double x2 = tail.getX();
@@ -155,13 +156,10 @@ public class Tunnel implements LayoutObject {
 		double safedistance = Math.sqrt(2*mindistance*mindistance);
 		double p1x = x1 + safedistance*Math.cos(angle+2.35619);
 		double p1y = y1 + safedistance*Math.sin(angle+2.35619);
-		
 		double p2x = x2 + safedistance*Math.cos(angle+0.785398);
 		double p2y = y2 + safedistance*Math.sin(angle+0.785398);
-		
 		double p3x = x2 + safedistance*Math.cos(angle-0.785398);
 		double p3y = y2 + safedistance*Math.sin(angle-0.785398);
-		
 		double p4x = x1 + safedistance*Math.cos(angle-2.35619);
 		double p4y = y1 + safedistance*Math.sin(angle-2.35619);
 		
