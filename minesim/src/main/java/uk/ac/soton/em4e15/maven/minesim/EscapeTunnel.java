@@ -7,8 +7,6 @@ import java.util.SortedSet;
 
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.rdf.model.ResourceFactory;
-
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class EscapeTunnel extends Tunnel {

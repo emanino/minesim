@@ -5,4 +5,6 @@ public interface ObservationValue {
 	public Object getValue();
 	
 	public String toJsonGui();
+	
+	public String getLexicalValue();
 }

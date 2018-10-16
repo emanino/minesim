@@ -20,5 +20,9 @@ public class ObservedDouble implements ObservationValue{
 	public String toJsonGui() {
 		return "\""+result.toString()+"\"";
 	}
+	@Override
+	public String getLexicalValue() {
+		return result.toString();
+	}
 	
 }

@@ -4,9 +4,6 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Map.Entry;
@@ -20,7 +17,6 @@ import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

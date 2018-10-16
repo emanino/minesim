@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+ul.draglist { 
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0; 
+	margin-bottom: 10px; 
+	}
+li.draglist { 
+	margin: 5px; 
+	padding: 5px; 
+	width: 97% !important; 
+	
+	}
+
+#sortable {
+	min-width:500px;
+	min-height:50px;
+}
+
+.alignleft {
+	float: left;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.alignright {
+	float: right;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.border-div {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+#placeholdertext {
+	float: left;
+	height: 0px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.5em;
+	color: #b7b8b9;
+	padding-top: 15px;
+	padding-left: 15px;
+}
+
+#searchfield {
+    margin-bottom: 10px;
+    width: 50%;
+    -webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	padding: 5px;
+}
+
+#searchdiv {
+    text-align:center;
+}
+
+#search-button {
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}
+
+.varoptionc1 {
+	color: red;
+}
+
+.varoptionc2 {
+	color: blue;
+}
+
+.varoptionc3 {
+	color: green;
+}
+
+.varoptionc4 {
+	color: orange;
+}
+
+.varoptionc5 {
+	color: purple;
+}
+
+.varoptionc6 {
+	color: teal;
+}
+
+.varoptionc7 {
+	color: black;
+}
+
+.varoptionc8 {
+	color: maroon;
+}
+
+.varoptionc9 {
+	color: gray;
+}
+
+.varoptionc10 {
+	color: fuchsia;
+}
+
+button, input, select, select > input[type="button"], textarea {
+  -moz-default-color: black;
+}

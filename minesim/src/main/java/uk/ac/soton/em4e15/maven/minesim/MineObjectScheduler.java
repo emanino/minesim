@@ -1,11 +1,8 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
@@ -13,7 +10,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 

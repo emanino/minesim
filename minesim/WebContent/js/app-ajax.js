@@ -73,14 +73,14 @@ $( function() {
 			});
 	    } );
 	    
+	     
 	    $( "#getRDFSensorDataButton" ).click( function( event ) {
 		      event.preventDefault();
 		      disableButtons()
 		      $.ajax({
 					url : 'GetMineSensorDataRDF',
 					data : {
-						mineSeed : $('#mineSeedForm').val(),
-						updateSeed : $('#updateSeedForm').val()
+						jsonData : JSON.stringify(JSON.parse($("#saveLoadTextArea").val()))
 					},
 					success : function(responseText) {
 						$("#rdfArea").empty();

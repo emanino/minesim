@@ -2,23 +2,18 @@ package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import uk.ac.soton.em4e15.maven.minesim.useractions.FullEvacuateUserAction;
-import uk.ac.soton.em4e15.maven.minesim.useractions.PartialEvacuateUserAction;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class Mine {

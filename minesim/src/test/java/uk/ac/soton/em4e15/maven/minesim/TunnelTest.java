@@ -1,14 +1,4 @@
 package uk.ac.soton.em4e15.maven.minesim;
-//
-import static org.junit.Assert.*;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import org.junit.Test;
 
 public class TunnelTest {
 

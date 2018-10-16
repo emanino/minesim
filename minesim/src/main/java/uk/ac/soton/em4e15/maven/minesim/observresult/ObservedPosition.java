@@ -20,4 +20,17 @@ public class ObservedPosition implements ObservationValue {
 	public String toJsonGui() {
 		return pos.toJsonGui();
 	}
+	
+	public String toWKT2D() {
+		return "POINT("+pos.getX()+" "+pos.getY()+")";
+	}
+	
+	public String toWKT3D() {
+		return "POINT("+pos.getX()+" "+pos.getY()+" "+pos.getZ()+")";
+	}
+
+	@Override
+	public String getLexicalValue() {
+		return toWKT3D();
+	}
 }

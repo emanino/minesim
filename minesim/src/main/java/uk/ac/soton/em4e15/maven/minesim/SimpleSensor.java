@@ -6,13 +6,10 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.jena.datatypes.BaseDatatype;
-import org.apache.jena.datatypes.RDFDatatype;
-import org.apache.jena.datatypes.xsd.XSDDateTime;
-import org.apache.jena.datatypes.xsd.impl.XSDDateTimeStampType;
-import org.apache.jena.datatypes.xsd.impl.XSDDateTimeType;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import uk.ac.soton.em4e15.maven.minesim.observresult.ObservationValue;
 import uk.ac.soton.em4e15.maven.minesim.observresult.ObservedPosition;
@@ -138,6 +135,22 @@ public class SimpleSensor implements MovingObject {
 
 	@Override
 	public Set<Triple> getSensorInfoRDF() {
+		BaseDatatype datatype = new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral");
+		switch(type) {
+		case TEMP:
+			datatype = new BaseDatatype(XMLSchema.DECIMAL.stringValue());
+			break;
+		case CO2:
+			datatype = new BaseDatatype(XMLSchema.DECIMAL.stringValue());
+			break;
+		case LOCATION:
+			datatype = new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral");
+			break;
+		case WORKERLOCATION:
+			datatype  = new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral");
+			break;
+		}
+		
 		Set<Triple> triples = new HashSet<Triple>();
 		String baseURI = state.getProp().getProperty("baseURI");
 		String observationId = id+(new Date().getTime()+"");
@@ -153,18 +166,29 @@ public class SimpleSensor implements MovingObject {
 				NodeFactory.createURI(baseURI+observationId), 
 				NodeFactory.createURI("http://www.w3.org/ns/sosa/resultTime"), 
 				ResourceFactory.createTypedLiteral(new Date()).asNode()));
+		/*if(type.equals(SensorType.LOCATION)) {			
+			triples.add(new Triple(
+					NodeFactory.createURI(baseURI+observationId), // this should not be simple result, but the complex one
+					NodeFactory.createURI("http://www.w3.org/ns/sosa/hasSimpleResult"), 
+					ResourceFactory.createTypedLiteral( getReading().toJsonGui() ).asNode()));
+			triples.add(new Triple(
+					NodeFactory.createURI(baseURI+observationId), 
+					NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
+					NodeFactory.createURI(baseURI+"geo"+observationId)));
+			triples.add(new Triple(
+					NodeFactory.createURI(baseURI+"geo"+observationId), 
+					NodeFactory.createURI("http://www.opengis.net/ont/geosparql#asWKT"), 
+					ResourceFactory.createTypedLiteral("POINT("+pos.getX()+" "+pos.getY()+")", new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral")).asNode()));
+		} else {*/
+		String literalValue = getReading().getLexicalValue();
+		if(type.equals(SensorType.LOCATION)) {
+			literalValue = ((ObservedPosition)getReading()).toWKT2D();
+		}
 		triples.add(new Triple(
 				NodeFactory.createURI(baseURI+observationId), 
 				NodeFactory.createURI("http://www.w3.org/ns/sosa/hasSimpleResult"), 
-				ResourceFactory.createTypedLiteral( getReading().toJsonGui() ).asNode()));
-		triples.add(new Triple(
-				NodeFactory.createURI(baseURI+observationId), 
-				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
-				NodeFactory.createURI("geo"+baseURI+observationId)));
-		triples.add(new Triple(
-				NodeFactory.createURI("geo"+baseURI+observationId), 
-				NodeFactory.createURI("http://www.opengis.net/ont/geosparql#asWKT"), 
-				ResourceFactory.createTypedLiteral("POINT("+pos.getX()+" "+pos.getY()+")", new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral")).asNode()));
+				ResourceFactory.createTypedLiteral( literalValue, datatype).asNode()));
+		//}
 		if(featureOfInterest != null) {
 			triples.add(new Triple(
 					NodeFactory.createURI(baseURI+observationId), 

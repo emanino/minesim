@@ -1,7 +1,6 @@
 package uk.ac.soton.em4e15.maven.minesim;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 

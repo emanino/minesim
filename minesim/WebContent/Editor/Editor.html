@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Policy Editor Task</title>
+<link rel="stylesheet" href="css/jquery-ui.min.css">
+<link rel="stylesheet" href="css/Editor.css">
+<script src="//code.jquery.com/jquery-3.3.1.js"
+	type="text/javascript"></script> 
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+	type="text/javascript"></script> 	
+	<script src="js/Editor.js"></script>
+</head>
+<body>
+
+
+
+<div>
+<h3>Describe this policy:</h3>
+<p>"One should not have an employee in a room with a concentration of more than 29 ppm carbon dioxide"</p>
+</div>
+
+<div class="border-div placeholder-area">
+<span id="placeholdertext">Drag the statements you have selected here.</span>
+<ul id="sortable" class="draglist">
+</ul>
+</div>
+
+
+
+<div id="searchdiv">
+<p>Search sentences:</p>
+<input type="text" name="search" id="searchfield" value="person" placeholder="Enter some search keywords here"> <button id="search-button">Button with icon only</button>
+</div>
+
+<p>Search results:</p>
+
+<div class="border-div">
+<ul class="draglist" id="searchlist">
+</ul>
+</div>
+
+
+</body>
+</html>
