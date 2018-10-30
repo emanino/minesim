@@ -57,6 +57,8 @@ li.draglist {
 
 #searchdiv {
     text-align:center;
+    margin-top: 20px;
+    font-size: 1.2em
 }
 
 #search-button {
@@ -180,4 +182,9 @@ button, input, select, select > input[type="button"], textarea {
 
 .form-element {
 	display: block;
+}
+
+.cursivebold {
+	font-style: italic;
+	font-weight: bold;
 }

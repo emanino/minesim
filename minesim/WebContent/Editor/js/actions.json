@@ -1,0 +1,50 @@
+[
+  {
+    "propertyName": "evacuateAll",
+    "propertyVariables": [
+    ],
+    "label": [
+      "evacuate the whole mine"
+    ]
+  },
+  {
+    "propertyName": "turnOnVentilationInTunnel",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "turn on ventilation in tunnel",
+      0
+    ]
+  },
+  {
+    "propertyName": "evacuateTunnel",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "evacuate tunnel",
+      0
+    ]
+  },
+  {
+    "propertyName": "sentFireTeamInTunnel",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "send fire team in tunnel",
+      0
+    ]
+  },
+  {
+    "propertyName": "recallEmployee",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "recall employee",
+      0
+    ]
+  }
+]

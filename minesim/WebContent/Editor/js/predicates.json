@@ -35,7 +35,7 @@
     "propertyName": "GeometryInLocation",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -527,13 +527,13 @@
     "propertyName": "triple",
     "propertyVariables": [
       {
-        "URI": "example:CO2concentration"
+        "URI": "example:COconcentration"
       },
       {
         "URI": "rdfs:label"
       },
       {
-        "lexicalValue": "carbon dioxide CO2 concentration"
+        "lexicalValue": "carbon monoxide CO concentration"
       }
     ],
     "label": [
@@ -628,7 +628,7 @@
     "propertyVariables": [
       0,
       {
-        "URI": "example:CO2concentration"
+        "URI": "example:COconcentration"
       }
     ],
     "label": [
@@ -655,13 +655,13 @@
     ]
   },
   {
-    "propertyName": "CO2concentrationMeasuredInMainTunnel",
+    "propertyName": "COconcentrationMeasuredInMainTunnel",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "measured",
       "in",
       "main tunnel",
@@ -729,7 +729,7 @@
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "main tunnel",
@@ -822,7 +822,7 @@
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "location",
@@ -903,7 +903,7 @@
     "propertyName": "hasLocation",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -949,13 +949,13 @@
     "propertyName": "ObservablePropertyInMainTunnel",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "main tunnel",
@@ -966,7 +966,7 @@
     "propertyName": "GeometryInGeometry",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -998,7 +998,7 @@
     "propertyName": "Geometry",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       }
     ],
     "label": [
@@ -1010,7 +1010,7 @@
     "propertyName": "GeometryInMainTunnel",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -1073,13 +1073,13 @@
     ]
   },
   {
-    "propertyName": "CO2concentrationMeasuredInTunnel",
+    "propertyName": "COconcentrationMeasuredInTunnel",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "measured",
       "in",
       "tunnel",
@@ -1367,7 +1367,7 @@
     "propertyName": "GeometryInTunnel",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -1419,13 +1419,13 @@
     "propertyName": "ObservablePropertyInTunnel",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "tunnel",
@@ -1455,7 +1455,7 @@
     "propertyName": "ObservablePropertyInGeometry",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
@@ -1472,7 +1472,7 @@
     "propertyName": "observableProperty",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       }
     ],
     "label": [
@@ -1487,7 +1487,7 @@
     "propertyName": "observableProperty",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       }
     ],
     "label": [
@@ -1499,13 +1499,13 @@
     ]
   },
   {
-    "propertyName": "CO2concentrationMeasuredInPerson",
+    "propertyName": "COconcentrationMeasuredInPerson",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "measured",
       "in",
       "person",
@@ -1601,13 +1601,13 @@
     "propertyName": "ObservablePropertyInLocation",
     "propertyVariables": [
       {
-        "URI": "e:CO2concentration"
+        "URI": "e:COconcentration"
       },
       0
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "location",
@@ -1615,13 +1615,13 @@
     ]
   },
   {
-    "propertyName": "CO2concentrationMeasuredInLocation",
+    "propertyName": "COconcentrationMeasuredInLocation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "measured",
       "in",
       "location",
@@ -1680,13 +1680,13 @@
     ]
   },
   {
-    "propertyName": "CO2concentrationMeasuredInGeometry",
+    "propertyName": "COconcentrationMeasuredInGeometry",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "measured",
       "in",
       "Geometry",
@@ -1705,7 +1705,7 @@
     ],
     "label": [
       "ObservableProperty",
-      "carbon dioxide CO2 concentration",
+      "carbon monoxide CO concentration",
       "is",
       "in",
       "tunnel",

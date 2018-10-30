@@ -1,7 +1,7 @@
 var jsonData = [];
 
 function jsonLoaded(json){
-	jsonData = json;
+	jsonData = jsonData.concat(json);
 }
 
 
@@ -16,6 +16,9 @@ $( function() {
 	
 	
 	$.getJSON("js/predicates.json", function(json) {
+		jsonLoaded(json); // this will show the info it in firebug console
+	});
+	$.getJSON("js/actions.json", function(json) {
 		jsonLoaded(json); // this will show the info it in firebug console
 	});
 	
@@ -264,6 +267,7 @@ function search(){
 			objs.push({"score": score, "data": index})
 		}
 	}
+	addSpecialPredicates();
 	objs.sort(compareScore);
 	for(objI in objs){
 		addPredicate(jsonData[objs[objI].data], objs[objI].score);		
@@ -327,6 +331,11 @@ function addPredicate(predicate, score){
 		}
 	};
 	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft">'+content+'</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
+}
+
+function addSpecialPredicates(){
+	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft cursivebold">if</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
+	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft cursivebold">then</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
 }
 
 function getVariableSelection(){
