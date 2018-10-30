@@ -9,12 +9,48 @@ function jsonLoaded(json){
  * 
  */
 $( function() {
+	
+	// resolve bootrstrap conflicts with Jquery UI 
+	var bootstrapButton = $.fn.button.noConflict();
+	$.fn.bootstrapBtn = bootstrapButton;
+	
+	
 	$.getJSON("js/predicates.json", function(json) {
 		jsonLoaded(json); // this will show the info it in firebug console
 	});
 	
-  refresh();
-  
+	refresh();
+	var $item = $('.carousel-item'); 
+	var $wHeight = $(window).height();
+	$item.eq(0).addClass('active');
+	$item.height($wHeight); 
+	$item.addClass('full-screen');
+	$('.carousel img').each(function() {
+	  var $src = $(this).attr('src');
+	  $(this).parent().css({
+	    'background-image' : 'url(' + $src + ')',
+	    'background-color' : '#4286f4'
+	  });
+	  $(this).remove();
+	});
+
+	$('.carousel').carousel({
+		interval: false,
+		keyboard: true,
+		wrap: false
+	});
+	$('.carousel-control-prev').hide();
+	$('.carousel').on('slid.bs.carousel', function () {
+		    $('.carousel-control-prev').show();
+		    $('.carousel-control-next').show();
+		  if($('.carousel-indicators li:first').hasClass('active')) {
+		    $('.carousel-control-prev').hide();
+		  } else if($('.carousel-indicators li:last').hasClass('active')) {
+		    $('.carousel-control-prev').hide();
+		    $('.carousel-control-next').hide();
+		  }
+	});
+	
   $( 'body' ).on('click', '.delbutton', function() {
   	$(this).parent().parent().remove();
   });
@@ -22,15 +58,15 @@ $( function() {
   	$(this).addClass('ui-state-highlight');
   	$(this).removeClass('ui-state-default');
   });
+  $( 'body' ).on('mouseout', '.draggable', function() {
+	  $(this).addClass('ui-state-default');
+	  $(this).removeClass('ui-state-highlight');
+  });
   $( 'body' ).on('mouseup', '.draggable', function() {
 	  	if($(this).parent().attr('id') == "sortable"){
 	  		$(this).find("select").prop('disabled', false);
 	  	}
 	  });
-  $( 'body' ).on('mouseout', '.draggable', function() {
-  	$(this).addClass('ui-state-default');
-  	$(this).removeClass('ui-state-highlight');
-  });
   
   $( 'body' ).on('mouseover', '.placeholder-area', function() {
   	if($("#sortable li").length == 0){
@@ -51,7 +87,22 @@ $( function() {
 		  $(this).css('color', "rgb(0, 0, 0)");
 	  else
 		  $(this).css('color', $(this).find(":selected").css('color'));
-	  });
+	  if($(this).val() == "?"){
+		  $(this).val(' ');
+		  $("select").removeClass("selectedselectmenu");
+		  $("entity-span").removeClass("selectedselectmenu");
+		  $(this).addClass("selectedselectmenu");
+		  $( "#dialog-form" ).dialog( "open" );
+		  refreshEntityCreationDialog();
+	  }
+  	});
+  $( 'body' ).on('click', '.entity-span', function() {
+	  $("select").removeClass("selectedselectmenu");
+	  $("entity-span").removeClass("selectedselectmenu");
+	  $(this).addClass("selectedselectmenu");
+	  $( "#dialog-form" ).dialog( "open" );
+	  refreshEntityCreationDialog();
+  });
   $("#search-button").button( {
       icon: "ui-icon-search",
       showLabel: false
@@ -59,6 +110,15 @@ $( function() {
   $("#search-button").click(function() {
   	search();
   });
+  $("#info-button").button({icon: "ui-icon-info"});
+  $("#info-button").click(function() {
+	  	$(".carousel").carousel(0); 
+	  });
+  $("#sub-button").button({icon: "ui-icon-check"});
+  $("#sub-button").click(function() {
+	  	post_submit();
+	  });
+  
   
   $('#searchfield').keypress(function (e) {
   	  if (e.which == 13) {
@@ -67,7 +127,101 @@ $( function() {
   	  }
   	});
   
+  valuefield = $( "#value-field-id" );
+  typefield = $( "#entitytypeselect" );
+  allFields = $( [] ).add( valuefield ).add( typefield );
+  dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 250,
+      width: 350,
+      modal: true,
+      buttons: {
+        "Create": addEntity,
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+      }
+    });
+  form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      addEntity();
+    });
+
+  $("#entitytypeselect").selectmenu({
+	  change: function( event, ui ) {
+		  refreshEntityCreationDialog();
+		  if($("#entitytypeselect").val() == "http://www.w3.org/2001/XMLSchema#decimal" || $("#entitytypeselect").val() == "http://www.w3.org/2001/XMLSchema#string"){
+			  $("#value-field-block").show();
+		  }
+	  }
+  });
+  refreshEntityCreationDialog();
 });
+
+function refreshEntityCreationDialog(){
+  $(".hiddenDialogFields").hide();
+  $("#value-field-id").uitooltip();
+  $("#value-field-id").uitooltip('disable');
+}
+
+function checkSelect() {
+	if($("#entitytypeselect").val().trim().length < 1){
+		$("#entitytypeselect").addClass( "ui-state-error" );
+		return false;
+	} else {
+		$("#entitytypeselect").removeClass( "ui-state-error" );
+		return true;
+	}
+}
+function checkVal() {
+	if(validateType($("#value-field-id").val(),$("#entitytypeselect").val())){			
+		$("#value-field-id").removeClass( "ui-state-error" );
+		return true;
+	}	
+	$("#value-field-id").addClass( "ui-state-error" );
+	return false;
+}
+function validateType(val,type){
+	if($("#value-field-id").val().trim().length <= 0){
+		$('#value-field-id').prop('title', ' ');
+		//$("#value-field-id").uitooltip( "option", "disabled", false );
+		$("#value-field-id").uitooltip({
+			  content: "This field cannot be empty."
+		});
+		$("#value-field-id").uitooltip( "open" );
+		return false;
+	}
+	if(type == "http://www.w3.org/2001/XMLSchema#decimal" && isNaN(val)) {
+		$('#value-field-id').prop('title', ' ');
+		//$("#value-field-id").uitooltip( "option", "disabled", false );
+		$("#value-field-id").uitooltip({
+			  content: "Please enter a valid number."
+		});
+		$("#value-field-id").uitooltip( "open" );
+		return false;
+	}
+	return true;
+}
+function addEntity() {
+    var valid = true;
+    valid = valid && checkSelect();
+    if($("#entitytypeselect").val() == "http://www.w3.org/2001/XMLSchema#decimal" || $("#entitytypeselect").val() == "http://www.w3.org/2001/XMLSchema#string"){
+    	valid = valid && checkVal();
+    }
+    if(valid) {
+    	if($("#entitytypeselect").val() == "variable"){
+    		$(".selectedselectmenu").replaceWith($(getVariableSelectionHelper(false)));
+    	} else {    		
+    		$(".selectedselectmenu").replaceWith($('<span class="entity-span"><span class="entity-span-val">'+$("#value-field-id").val()+'</span><span class="entity-span-type">'+$("#entitytypeselect").val()+"</span></span>"));
+    	}
+    	$( "#dialog-form" ).dialog( "close" );
+    }
+    return valid;
+  }
 
 function refresh(){
   $( "#sortable" ).sortable({
@@ -106,7 +260,7 @@ function search(){
 	objs = []
 	for(index in jsonData){
 		score = scoreSimilarity(keywords, jsonData[index])
-		if(score > 1){
+		if(score >= 1){
 			objs.push({"score": score, "data": index})
 		}
 	}
@@ -176,7 +330,10 @@ function addPredicate(predicate, score){
 }
 
 function getVariableSelection(){
-	return '<select name="vars" class="variableselector" disabled="true">'+
+	return getVariableSelectionHelper(true);
+}
+function getVariableSelectionHelper(disabled){
+	return '<select name="vars" class="variableselector" '+(disabled ? "disabled" : "")+'>'+
 	'<option value=" " class="varoption"> </option>'+
 	'<option value="A" class="varoption varoptionc1">A</option>'+
 	'<option value="B" class="varoption varoptionc2">B</option>'+
@@ -186,6 +343,7 @@ function getVariableSelection(){
 	'<option value="Z" class="varoption varoptionc6">Z</option>'+
 	'<option value="W" class="varoption varoptionc7">W</option>'+
 	'<option value="K" class="varoption varoptionc8">K</option>'+
+	'<option value="?" class="varoption varoptionc0">[...]</option>'+
 	'</select>';
 }
 
