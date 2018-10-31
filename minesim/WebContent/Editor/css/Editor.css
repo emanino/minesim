@@ -120,6 +120,10 @@ button, input, select, select > input[type="button"], textarea {
 
 @charset "UTF-8";
 
+.carousel-inner {
+	overflow-y: auto;
+}
+
 .carousel-caption {
 	top: 50%;
 	transform: translateY(-50%);

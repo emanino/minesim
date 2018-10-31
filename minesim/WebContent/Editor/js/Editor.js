@@ -1,4 +1,5 @@
 var jsonData = [];
+var solution;
 
 function jsonLoaded(json){
 	jsonData = jsonData.concat(json);
@@ -119,7 +120,10 @@ $( function() {
 	  });
   $("#sub-button").button({icon: "ui-icon-check"});
   $("#sub-button").click(function() {
-	  	post_submit();
+	  solution = getJsonResult();
+	  if (solution != null){
+		  post_submit();
+	  }
 	  });
   
   
@@ -327,15 +331,15 @@ function addPredicate(predicate, score){
 		if(isNaN(label)){
 			content += label+" ";
 		} else {
-			content += getVariableSelection()+" ";
+			content += '<span class="block-variable" var-num="'+label+'">'+getVariableSelection()+"</span>";
 		}
 	};
-	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft">'+content+'</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
+	$("#searchlist").append('  <li class="ui-state-default draglist draggable predicate-block" block-data="'+predicate["propertyName"]+'" block-var-num="'+predicate["propertyVariables"].length+'"><p class="alignleft">'+content+'</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
 }
 
 function addSpecialPredicates(){
-	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft cursivebold">if</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
-	$("#searchlist").append('  <li class="ui-state-default draglist draggable"><p class="alignleft cursivebold">then</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
+	$("#searchlist").append('  <li class="ui-state-default draglist draggable connective-block" block-data="if"><p class="alignleft cursivebold">if</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
+	$("#searchlist").append('  <li class="ui-state-default draglist draggable connective-block" block-data="then"><p class="alignleft cursivebold">then</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
 }
 
 function getVariableSelection(){
@@ -356,6 +360,88 @@ function getVariableSelectionHelper(disabled){
 	'</select>';
 }
 
+function display_error(message,entity,delay){
+	entity.prop('title', ' ');
+	entity.addClass("ui-state-error");
+	entity.uitooltip({
+		  content: message
+	});
+	entity.uitooltip( "open" );
+	setTimeout(function(){
+			entity.uitooltip('disable').removeClass("ui-state-error");
+		}, delay);
+}
+
+function getJsonResult(){
+	emptyErrorMessage = "Warning: the solution is empty. Please drag and drop here the blocks that you think make the best solution.";
+	try{
+		if($("#sortable li").length < 1) throw emptyErrorMessage;
+		data = {
+				unassigned: [],
+				if_block: [],
+				then_block: []
+		};
+		scope = "";
+		$("#sortable li").each(function( index ) {
+			item = $(this);
+			blockdata = item.attr('block-data');
+			if(item.hasClass("connective-block")) 
+				scope = blockdata;
+			else if(item.hasClass("predicate-block")) {
+				blockvarnum = item.attr('block-var-num');
+				object = { 
+						name: blockdata,
+						variables: []
+						}
+				item.find(".block-variable").each(function( index ) {
+					variable = $(this);
+					varnumber = variable.attr("var-num");
+					if(variable.has('select').length){
+						// it is a variable field
+						value = variable.find('select').val();
+						if(value.trim().length <= 0) {
+							display_error("Empty field!",$(this),5000);
+							throw "Warning: not all fields have been chosen in your solution. Please choose a variable, or a number/text if required.";
+						}
+						object.variables.push({
+							varnum: varnumber,
+							type: "variable",
+							val: value
+						});
+					} else {
+						// it is a constant field
+						value = variable.find("entity-span-val").text();
+						lit_type = variable.find("entity-span-type").text();
+						if(value.trim().length <= 0) throw "ERROR, not all entities have been initialised in your solution.";
+						object.variables.push({
+							varnum: varnumber,
+							type: lit_type,
+							val: value
+						});
+					}
+				});
+				if(object.variables.length < blockvarnum) throw "Error, a predicate does not have all the required variables.";
+				if(scope == "if"){					
+					if(data.then_block.length > 0) throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
+					data.if_block.push(object);
+				} else if(scope == "then"){
+					if(data.if_block.length < 1) throw "Warning: you have statements after 'then' but there are no 'if' statements. To fix this, add the 'if' block and its conditions.";
+					data.then_block.push(object);
+				} else {
+					data.unassigned.push(object);
+				}
+			}
+		});
+		if(data.if_block.length > 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) 
+			throw "Warning: you have statements after 'if', but there is no statement after 'then'.";
+		if(data.if_block.length <= 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) 
+			throw emptyErrorMessage;
+		return data;
+	} catch(err) {
+		display_error(err,$("#sortable"),10000);
+		return null;
+	}
+}
 
 /*
 Copyright (c) 2011 Andrei Mackenzie
