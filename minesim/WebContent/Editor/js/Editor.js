@@ -26,6 +26,8 @@ $( function() {
 	refresh();
 	var $item = $('.carousel-item'); 
 	var $wHeight = $(window).height();
+	//restrict to 600px
+	var $wHeight = "600px";
 	$item.eq(0).addClass('active');
 	$item.height($wHeight); 
 	$item.addClass('full-screen');
@@ -410,8 +412,8 @@ function getJsonResult(){
 						});
 					} else {
 						// it is a constant field
-						value = variable.find("entity-span-val").text();
-						lit_type = variable.find("entity-span-type").text();
+						value = variable.find(".entity-span-val").text();
+						lit_type = variable.find(".entity-span-type").text();
 						if(value.trim().length <= 0) throw "ERROR, not all entities have been initialised in your solution.";
 						object.variables.push({
 							varnum: varnumber,
@@ -425,7 +427,7 @@ function getJsonResult(){
 					if(data.then_block.length > 0) throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
 					data.if_block.push(object);
 				} else if(scope == "then"){
-					if(data.if_block.length < 1) throw "Warning: you have statements after 'then' but there are no 'if' statements. To fix this, add the 'if' block and its conditions.";
+					if(data.if_block.length < 1) throw "Warning: you have statements after 'then' but there are no 'if' statement before 'then'. To fix this, add the 'if' block and its conditions before 'then'.";
 					data.then_block.push(object);
 				} else {
 					data.unassigned.push(object);

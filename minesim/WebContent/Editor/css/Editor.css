@@ -116,6 +116,9 @@ button, input, select, select > input[type="button"], textarea {
   -moz-default-color: black;
 }
 
+#sortable li.ui-state-default {
+	background: #fdfdfd;
+}
 
 
 @charset "UTF-8";
@@ -164,7 +167,7 @@ button, input, select, select > input[type="button"], textarea {
    width:50%;
 }
 .overflowautosearch {		
-	max-height: 400px;
+	max-height: 255px;
 	overflow: auto;
 }
 
