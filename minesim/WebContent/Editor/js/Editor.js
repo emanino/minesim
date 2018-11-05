@@ -306,7 +306,12 @@ function scoreSimilarity(keywords, predicate){
 	cumulative_num = 0;
 	for(labelI in predicate["label"]){
 		if(isNaN(predicate["label"][labelI])){
-			tokens = predicate["label"][labelI].split(" ");
+			tokens = [];
+			if(typeof predicate["label"][labelI] =='object'){
+				if(predicate["label"][labelI]["isURI"] == false)
+					tokens = predicate["label"][labelI]["value"].split(" ");
+			}
+			else tokens = predicate["label"][labelI].split(" ");
 			for(token in tokens){
 				for(wordI in keywords){
 					if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 ){						
@@ -327,15 +332,38 @@ function scoreSimilarity(keywords, predicate){
 }
 
 function addPredicate(predicate, score){
-	content = "";
+	var content = "";
+	// create the label
 	for (labelI in predicate["label"]){
-		label = predicate["label"][labelI];
+		var label = predicate["label"][labelI];
 		if(isNaN(label)){
 			content += label+" ";
 		} else {
-			content += '<span class="block-variable" var-num="'+label+'">'+getVariableSelection()+"</span>";
+			content += '<span class="block-variable" var-num="'+label+'">'+getVariableSelection()+"</span> ";
 		}
 	};
+	// create the pre-existing fields
+	for (varI in predicate["propertyVariables"]){
+		var varObject = predicate["propertyVariables"][varI];
+		if(isNaN(varObject)){
+			var URI = $(varObject).attr('URI');
+			if (typeof URI !== typeof undefined && URI !== false) {
+			    // it is a URI
+				content += '<span class="pre-initialised-variable" var-type="URI" var-num="'+varI+'"'
+					+ ' value-uri="' + URI + '"'
+					+ '></span> ';
+			} else {
+				// it is a literal
+				content += '<span class="pre-initialised-variable" var-type="literal" var-num="'+varI+'"'
+					+ ' value-literal="' + $(varObject).attr('lexicalValue') + '"'
+					+ ' value-literal-type="' + $(varObject).attr('datatype') + '"'
+					+ '></span> ';
+			}
+		} else {
+			content += '<span class="block-variable" var-num="'+label+'">'+getVariableSelection()+"</span> ";
+		}
+	};
+	
 	$("#searchlist").append('  <li class="ui-state-default draglist draggable predicate-block" block-data="'+predicate["propertyName"]+'" block-var-num="'+predicate["propertyVariables"].length+'"><p class="alignleft">'+content+'</p><p class="alignright"><span class="ui-icon ui-icon-trash delbutton"></span></p><div style="clear: both;"></div></li>');
 }
 
@@ -422,7 +450,29 @@ function getJsonResult(){
 						});
 					}
 				});
-				if(object.variables.length < blockvarnum) throw "Error, a predicate does not have all the required variables.";
+				// get the pre-existing variable bindings
+				item.find(".pre-initialised-variable").each(function( index ) {
+					variable = $(this);
+					vartype = variable.attr("var-type");
+					varnumber = variable.attr("var-num");
+					if(vartype == "URI"){
+						object.variables.push({
+							varnum: varnumber,
+							type: "URI",
+							val: variable.attr("value-uri")
+						});	
+					} else if(vartype == "literal"){
+						object.variables.push({
+							varnum: varnumber,
+							type: variable.attr("value-literal-type"),
+							val: variable.attr("value-literal")
+						});	
+					}
+				});
+				
+				
+				if(object.variables.length < blockvarnum) 
+					throw "Error, a predicate does not have all the required variables.";
 				if(scope == "if"){					
 					if(data.then_block.length > 0) throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
 					data.if_block.push(object);

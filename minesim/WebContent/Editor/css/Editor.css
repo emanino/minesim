@@ -195,3 +195,7 @@ button, input, select, select > input[type="button"], textarea {
 	font-style: italic;
 	font-weight: bold;
 }
+
+.pre-initialised-variable {
+	display: none;
+}

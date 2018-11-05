@@ -1,23 +1,6 @@
 [
   {
-    "propertyName": "GeometryInMainTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "PersonInTunnel",
+    "propertyName": "PersonInLocation",
     "propertyVariables": [
       0,
       1
@@ -27,35 +10,35 @@
       0,
       "is",
       "in",
-      "tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "GeometryInLocation",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
       "location",
       1
     ]
   },
   {
-    "propertyName": "MainTunnelInGeometry",
+    "propertyName": "CarbonMonoxideMeasuredInTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "GeofencedAreaInGeometry",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "main tunnel",
+      "geofenced area",
       0,
       "is",
       "in",
@@ -64,33 +47,98 @@
     ]
   },
   {
-    "propertyName": "observableProperty",
+    "propertyName": "disjoint",
     "propertyVariables": [
       {
-        "URI": "e:Temperature"
+        "URI": "sosa:Sensor"
+      },
+      {
+        "URI": "sosa:ObservableProperty"
       }
     ],
     "label": [
-      0,
-      "is",
-      "an",
-      "observable",
-      "property"
+      "a",
+      "Sensor",
+      "cannot",
+      "be",
+      "a",
+      "Observable Property"
     ]
   },
   {
-    "propertyName": "observableProperty",
+    "propertyName": "triple",
     "propertyVariables": [
       {
-        "URI": "e:Temperature"
+        "URI": "example:Tunnel"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "tunnel",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
       }
     ],
     "label": [
-      0,
+      "tunnel",
+      "label",
+      "tunnel"
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:COconcentration"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "carbon monoxide",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "carbon monoxide",
+      "label",
+      "carbon monoxide"
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:FeatureOfInterest"
+      },
+      {
+        "URI": "sosa:Observation"
+      }
+    ],
+    "label": [
+      "a",
+      "Feature Of Interest",
+      "cannot",
+      "be",
+      "a",
+      "Observation"
+    ]
+  },
+  {
+    "propertyName": "GeometryInMainTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Geometry",
+      "carbon monoxide",
       "is",
-      "an",
-      "observable",
-      "property"
+      "in",
+      "main tunnel",
+      1
     ]
   },
   {
@@ -109,85 +157,32 @@
     ]
   },
   {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:Tunnel"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "tunnel"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "ObservationInMainTunnel",
+    "propertyName": "TemperatureMeasuredInLocation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "Observation",
+      "temperature",
       0,
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:FeatureOfInterest"
-      },
-      {
-        "URI": "sosa:Observation"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "PersonInLocation",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "person",
-      0,
-      "is",
+      "measured",
       "in",
       "location",
       1
     ]
   },
   {
-    "propertyName": "MainTunnelInTunnel",
+    "propertyName": "GeofencedAreaInGeofencedArea",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "main tunnel",
+      "geofenced area",
       0,
       "is",
       "in",
-      "tunnel",
+      "geofenced area",
       1
     ]
   },
@@ -203,15 +198,15 @@
     ],
     "label": [
       "a",
-      0,
+      "Observation",
       "cannot",
       "be",
       "a",
-      1
+      "location"
     ]
   },
   {
-    "propertyName": "GeometryInTunnel",
+    "propertyName": "GeometryInMainTunnel",
     "propertyVariables": [
       0,
       1
@@ -221,35 +216,289 @@
       0,
       "is",
       "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInLocation",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "location",
+      1
+    ]
+  },
+  {
+    "propertyName": "hasLocation",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      0,
+      "is",
+      "located",
+      "at",
+      1
+    ]
+  },
+  {
+    "propertyName": "hasLocation",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "is",
+      "located",
+      "at",
+      1
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInGeometry",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/Temperature"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "GeometryInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "Geometry",
+      0,
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Temperature"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "temperature",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "temperature",
+      "label",
+      "temperature"
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "example:Person"
+      },
+      {
+        "URI": "example:Place"
+      }
+    ],
+    "label": [
+      "a",
+      "person",
+      "cannot",
+      "be",
+      "a",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
       "tunnel",
       1
     ]
   },
   {
-    "propertyName": "hasLocation",
+    "propertyName": "ObservablePropertyInMainTunnel",
     "propertyVariables": [
-      0,
+      {
+        "URI": "http://example.com/COconcentration"
+      },
       1
     ],
     "label": [
-      0,
+      "Observable Property",
+      "carbon monoxide",
       "is",
-      "located",
-      "at",
+      "in",
+      "main tunnel",
       1
     ]
   },
   {
-    "propertyName": "hasLocation",
+    "propertyName": "propertyOfObservation",
+    "propertyVariables": [
+      0,
+      {
+        "URI": "example:COconcentration"
+      }
+    ],
+    "label": [
+      "observation",
+      0,
+      "measured",
+      "carbon monoxide"
+    ]
+  },
+  {
+    "propertyName": "MainTunnelInMainTunnel",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
+      "main tunnel",
       0,
       "is",
-      "located",
-      "at",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "observableProperty",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      }
+    ],
+    "label": [
+      "carbon monoxide",
+      "is",
+      "an",
+      "observable",
+      "property"
+    ]
+  },
+  {
+    "propertyName": "LocationInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "location",
+      0,
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Person"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "person",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "person",
+      "label",
+      "person"
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "temperature",
+      0,
+      "measured",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Fire"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "fire",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "fire",
+      "label",
+      "fire"
+    ]
+  },
+  {
+    "propertyName": "MainTunnelInLocation",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "main tunnel",
+      0,
+      "is",
+      "in",
+      "location",
       1
     ]
   },
@@ -269,147 +518,6 @@
     ]
   },
   {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:Temperature"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "temperature"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "range",
-    "propertyVariables": [
-      {
-        "URI": "sosa:observedProperty"
-      },
-      {
-        "URI": "sosa:ObservableProperty"
-      }
-    ],
-    "label": [
-      "range",
-      "of",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "example:Person"
-      },
-      {
-        "URI": "example:Place"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:Person"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "person"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "GeometryInGeometry",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "Geometry",
-      1
-    ]
-  },
-  {
-    "propertyName": "TunnelInLocation",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "tunnel",
-      0,
-      "is",
-      "in",
-      "location",
-      1
-    ]
-  },
-  {
-    "propertyName": "hasLocation",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      0,
-      "is",
-      "located",
-      "at",
-      1
-    ]
-  },
-  {
-    "propertyName": "domain",
-    "propertyVariables": [
-      {
-        "URI": "sosa:resultTime"
-      },
-      {
-        "URI": "sosa:Observation"
-      }
-    ],
-    "label": [
-      "domain",
-      "of",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
     "propertyName": "\u003d",
     "propertyVariables": [
       0,
@@ -424,17 +532,49 @@
     ]
   },
   {
-    "propertyName": "PersonInGeometry",
+    "propertyName": "GeometryInGeofencedArea",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Geometry",
+      "carbon monoxide",
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "GeometryInLocation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "person",
+      "Geometry",
       0,
       "is",
       "in",
-      "Geometry",
+      "location",
+      1
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInLocation",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      0,
+      "measured",
+      "in",
+      "location",
       1
     ]
   },
@@ -484,10 +624,40 @@
     ],
     "label": [
       "a",
+      "main tunnel",
+      "is",
+      "a",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "ObservationInMainTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "Observation",
+      0,
+      "is",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "hasClass",
+    "propertyVariables": [
+      0,
+      {
+        "URI": "http://example.com/Place"
+      }
+    ],
+    "label": [
       0,
       "is",
       "a",
-      1
+      "location"
     ]
   },
   {
@@ -505,6 +675,21 @@
     ]
   },
   {
+    "propertyName": "MainTunnelInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "main tunnel",
+      0,
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
     "propertyName": "triple",
     "propertyVariables": [
       {
@@ -514,32 +699,14 @@
         "URI": "rdfs:label"
       },
       {
-        "lexicalValue": "main tunnel"
+        "lexicalValue": "main tunnel",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
       }
     ],
     "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:COconcentration"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "carbon monoxide CO concentration"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
+      "main tunnel",
+      "label",
+      "main tunnel"
     ]
   },
   {
@@ -558,83 +725,32 @@
     ]
   },
   {
-    "propertyName": "range",
+    "propertyName": "TemperatureMeasuredInGeofencedArea",
     "propertyVariables": [
-      {
-        "URI": "sosa:hasFeatureOfInterest"
-      },
-      {
-        "URI": "sosa:FeatureOfInterest"
-      }
-    ],
-    "label": [
-      "range",
-      "of",
       0,
-      "is",
       1
-    ]
-  },
-  {
-    "propertyName": "domain",
-    "propertyVariables": [
-      {
-        "URI": "sosa:observedProperty"
-      },
-      {
-        "URI": "sosa:Observation"
-      }
     ],
     "label": [
-      "domain",
-      "of",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "hasClass",
-    "propertyVariables": [
-      0,
-      {
-        "URI": "e:Place"
-      }
-    ],
-    "label": [
-      0,
-      "is",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "hasClass",
-    "propertyVariables": [
-      0,
-      {
-        "URI": "e:Place"
-      }
-    ],
-    "label": [
-      0,
-      "is",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "propertyOfObservation",
-    "propertyVariables": [
-      0,
-      {
-        "URI": "example:COconcentration"
-      }
-    ],
-    "label": [
-      "observation",
+      "temperature",
       0,
       "measured",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      0,
+      "measured",
+      "in",
+      "Geometry",
       1
     ]
   },
@@ -655,99 +771,19 @@
     ]
   },
   {
-    "propertyName": "COconcentrationMeasuredInMainTunnel",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "carbon monoxide CO concentration",
-      "measured",
-      "in",
-      "main tunnel",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "domain",
+    "propertyName": "ObservablePropertyInGeofencedArea",
     "propertyVariables": [
       {
-        "URI": "sosa:hasFeatureOfInterest"
+        "URI": "http://example.com/Temperature"
       },
-      {
-        "URI": "sosa:Observation"
-      }
-    ],
-    "label": [
-      "domain",
-      "of",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "LocationInTunnel",
-    "propertyVariables": [
-      0,
       1
     ],
     "label": [
-      "location",
-      0,
+      "Observable Property",
+      "carbon monoxide",
       "is",
       "in",
-      "tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "measurementOfObservation",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "the",
-      "result",
-      "of",
-      "observation",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInMainTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "TunnelInTunnel",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "tunnel",
-      0,
-      "is",
-      "in",
-      "tunnel",
+      "geofenced area",
       1
     ]
   },
@@ -767,62 +803,14 @@
     ]
   },
   {
-    "propertyName": "TemperatureMeasuredInTunnel",
+    "propertyName": "TunnelInLocation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "temperature",
-      "measured",
-      "in",
       "tunnel",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "Geometry",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      }
-    ],
-    "label": [
-      "Geometry",
-      0
-    ]
-  },
-  {
-    "propertyName": "domain",
-    "propertyVariables": [
-      {
-        "URI": "sosa:madeObservation"
-      },
-      {
-        "URI": "sosa:Sensor"
-      }
-    ],
-    "label": [
-      "domain",
-      "of",
       0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInLocation",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
       "is",
       "in",
       "location",
@@ -830,40 +818,125 @@
     ]
   },
   {
-    "propertyName": "mainTunnel",
+    "propertyName": "Geometry",
     "propertyVariables": [
-      0
+      {
+        "URI": "http://example.com/COconcentration"
+      }
     ],
     "label": [
-      "main",
-      "tunnel",
-      0
+      "Geometry",
+      "carbon monoxide"
     ]
   },
   {
-    "propertyName": "mainTunnel",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      "main",
-      "tunnel",
-      0
-    ]
-  },
-  {
-    "propertyName": "MainTunnelInMainTunnel",
+    "propertyName": "measurementOfObservation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "main tunnel",
+      "the",
+      "result",
+      "of",
+      "observation",
       0,
       "is",
+      1
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInGeofencedArea",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInGeofencedArea",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInMainTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "temperature",
+      "carbon monoxide",
+      "measured",
       "in",
       "main tunnel",
       1
+    ]
+  },
+  {
+    "propertyName": "GeometryInLocation",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Geometry",
+      "carbon monoxide",
+      "is",
+      "in",
+      "location",
+      1
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "temperature",
+      0,
+      "measured",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "mainTunnel",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "main",
+      "tunnel",
+      0
     ]
   },
   {
@@ -878,40 +951,70 @@
       "observation",
       0,
       "measured",
-      1
+      "temperature"
     ]
   },
   {
-    "propertyName": "range",
+    "propertyName": "observableProperty",
     "propertyVariables": [
       {
-        "URI": "sosa:madeObservation"
-      },
-      {
-        "URI": "sosa:Observation"
+        "URI": "http://example.com/Temperature"
       }
     ],
     "label": [
-      "range",
-      "of",
-      0,
+      "temperature",
       "is",
+      "an",
+      "observable",
+      "property"
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInMainTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "main tunnel",
       1
     ]
   },
   {
-    "propertyName": "hasLocation",
+    "propertyName": "MainTunnelInTunnel",
     "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
+      0,
+      1
     ],
     "label": [
+      "main tunnel",
       0,
       "is",
-      "located",
-      "at",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "GeometryInTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Geometry",
+      "carbon monoxide",
+      "is",
+      "in",
+      "tunnel",
       1
     ]
   },
@@ -938,55 +1041,19 @@
       3
     ],
     "label": [
+      "WKT",
       0,
-      "is",
-      "situated",
-      "inside",
       1
     ]
   },
   {
-    "propertyName": "ObservablePropertyInMainTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "GeometryInGeometry",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "Geometry",
-      1
-    ]
-  },
-  {
-    "propertyName": "MainTunnelInLocation",
+    "propertyName": "GeofencedAreaInLocation",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "main tunnel",
+      "geofenced area",
       0,
       "is",
       "in",
@@ -995,139 +1062,22 @@
     ]
   },
   {
-    "propertyName": "Geometry",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      }
-    ],
-    "label": [
-      "Geometry",
-      0
-    ]
-  },
-  {
-    "propertyName": "GeometryInMainTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "PersonInMainTunnel",
+    "propertyName": "CarbonMonoxideMeasuredInMainTunnel",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "person",
+      "carbon monoxide",
       0,
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "range",
-    "propertyVariables": [
-      {
-        "URI": "ogc:within"
-      },
-      {
-        "URI": "example:Place"
-      }
-    ],
-    "label": [
-      "range",
-      "of",
-      0,
-      "is",
-      1
-    ]
-  },
-  {
-    "propertyName": "TemperatureMeasuredInMainTunnel",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "temperature",
       "measured",
       "in",
       "main tunnel",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "COconcentrationMeasuredInTunnel",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "carbon monoxide CO concentration",
-      "measured",
-      "in",
-      "tunnel",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:ObservableProperty"
-      },
-      {
-        "URI": "example:Place"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
       1
     ]
   },
   {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:Location"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "position"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "LocationInGeometry",
+    "propertyName": "LocationInTunnel",
     "propertyVariables": [
       0,
       1
@@ -1137,448 +1087,22 @@
       0,
       "is",
       "in",
-      "Geometry",
+      "tunnel",
       1
     ]
   },
   {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:FeatureOfInterest"
-      },
-      {
-        "URI": "sosa:ObservableProperty"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "ObservationInLocation",
+    "propertyName": "LocationInGeofencedArea",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "Observation",
-      0,
-      "is",
-      "in",
       "location",
-      1
-    ]
-  },
-  {
-    "propertyName": "triple",
-    "propertyVariables": [
-      {
-        "URI": "example:Place"
-      },
-      {
-        "URI": "rdfs:label"
-      },
-      {
-        "lexicalValue": "location"
-      }
-    ],
-    "label": [
-      0,
-      1,
-      2
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInGeometry",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "temperature",
-      "is",
-      "in",
-      "Geometry",
-      1
-    ]
-  },
-  {
-    "propertyName": "person",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      "person",
-      0
-    ]
-  },
-  {
-    "propertyName": "person",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      "person",
-      0
-    ]
-  },
-  {
-    "propertyName": "TemperatureMeasuredInGeometry",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "temperature",
-      "measured",
-      "in",
-      "Geometry",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:ObservableProperty"
-      },
-      {
-        "URI": "sosa:Observation"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "observation",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observation"
-    ]
-  },
-  {
-    "propertyName": "observation",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observation"
-    ]
-  },
-  {
-    "propertyName": "observation",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observation"
-    ]
-  },
-  {
-    "propertyName": "observation",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observation"
-    ]
-  },
-  {
-    "propertyName": "TemperatureMeasuredInLocation",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "temperature",
-      "measured",
-      "in",
-      "location",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "GeometryInLocation",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "Geometry",
       0,
       "is",
       "in",
-      "location",
-      1
-    ]
-  },
-  {
-    "propertyName": "subClass",
-    "propertyVariables": [
-      {
-        "URI": "example:Tunnel"
-      },
-      {
-        "URI": "example:Place"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "is",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "GeometryInTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:ObservableProperty"
-      },
-      {
-        "URI": "example:Person"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "TemperatureMeasuredInPerson",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "temperature",
-      "measured",
-      "in",
-      "person",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
-      "is",
-      "in",
-      "tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "disjoint",
-    "propertyVariables": [
-      {
-        "URI": "sosa:Observation"
-      },
-      {
-        "URI": "example:Person"
-      }
-    ],
-    "label": [
-      "a",
-      0,
-      "cannot",
-      "be",
-      "a",
-      1
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInGeometry",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "temperature",
-      "is",
-      "in",
-      "Geometry",
-      1
-    ]
-  },
-  {
-    "propertyName": "observableProperty",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      }
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observable",
-      "property"
-    ]
-  },
-  {
-    "propertyName": "observableProperty",
-    "propertyVariables": [
-      {
-        "URI": "e:COconcentration"
-      }
-    ],
-    "label": [
-      0,
-      "is",
-      "an",
-      "observable",
-      "property"
-    ]
-  },
-  {
-    "propertyName": "COconcentrationMeasuredInPerson",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "carbon monoxide CO concentration",
-      "measured",
-      "in",
-      "person",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "tunnel",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      "tunnel",
-      0
-    ]
-  },
-  {
-    "propertyName": "tunnel",
-    "propertyVariables": [
-      0
-    ],
-    "label": [
-      "tunnel",
-      0
-    ]
-  },
-  {
-    "propertyName": "GeometryInMainTunnel",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "main tunnel",
-      1
-    ]
-  },
-  {
-    "propertyName": "ObservationInGeometry",
-    "propertyVariables": [
-      0,
-      1
-    ],
-    "label": [
-      "Observation",
-      0,
-      "is",
-      "in",
-      "Geometry",
-      1
-    ]
-  },
-  {
-    "propertyName": "domain",
-    "propertyVariables": [
-      {
-        "URI": "sosa:hasSimpleResult"
-      },
-      {
-        "URI": "sosa:Observation"
-      }
-    ],
-    "label": [
-      "domain",
-      "of",
-      0,
-      "is",
+      "geofenced area",
       1
     ]
   },
@@ -1598,52 +1122,169 @@
     ]
   },
   {
+    "propertyName": "ObservationInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "Observation",
+      0,
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "range",
+    "propertyVariables": [
+      {
+        "URI": "ogc:within"
+      },
+      {
+        "URI": "example:Place"
+      }
+    ],
+    "label": [
+      "range",
+      "of",
+      "ogc:within",
+      "is",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "PersonInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "person",
+      0,
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:ObservableProperty"
+      },
+      {
+        "URI": "example:Place"
+      }
+    ],
+    "label": [
+      "a",
+      "Observable Property",
+      "cannot",
+      "be",
+      "a",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "GeofencedArea",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "geofenced area",
+      0
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Location"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "position",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "position",
+      "label",
+      "position"
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInMainTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/Temperature"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:FeatureOfInterest"
+      },
+      {
+        "URI": "sosa:ObservableProperty"
+      }
+    ],
+    "label": [
+      "a",
+      "Feature Of Interest",
+      "cannot",
+      "be",
+      "a",
+      "Observable Property"
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "temperature",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
     "propertyName": "ObservablePropertyInLocation",
     "propertyVariables": [
       {
-        "URI": "e:COconcentration"
+        "URI": "http://example.com/Temperature"
       },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
-      "is",
-      "in",
-      "location",
-      1
-    ]
-  },
-  {
-    "propertyName": "COconcentrationMeasuredInLocation",
-    "propertyVariables": [
-      0,
       1
     ],
     "label": [
-      "carbon monoxide CO concentration",
-      "measured",
+      "Observable Property",
+      "carbon monoxide",
+      "is",
       "in",
       "location",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "GeometryInTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "Geometry",
-      0,
-      "is",
-      "in",
-      "tunnel",
       1
     ]
   },
@@ -1663,15 +1304,370 @@
     ]
   },
   {
-    "propertyName": "GeometryInLocation",
+    "propertyName": "ObservablePropertyInGeometry",
     "propertyVariables": [
       {
-        "URI": "e:Temperature"
+        "URI": "http://example.com/COconcentration"
       },
-      0
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "TunnelInTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "tunnel",
+      0,
+      "is",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Place"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "location",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "location",
+      "label",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "GeometryInTunnel",
+    "propertyVariables": [
+      0,
+      1
     ],
     "label": [
       "Geometry",
+      0,
+      "is",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInLocation",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "temperature",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "location",
+      1
+    ]
+  },
+  {
+    "propertyName": "ObservablePropertyInTunnel",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/Temperature"
+      },
+      1
+    ],
+    "label": [
+      "Observable Property",
+      "carbon monoxide",
+      "is",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "person",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "person",
+      0
+    ]
+  },
+  {
+    "propertyName": "GeofencedAreaInMainTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "geofenced area",
+      0,
+      "is",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      0,
+      "measured",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "PersonInTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "person",
+      0,
+      "is",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "TunnelInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "tunnel",
+      0,
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:ObservableProperty"
+      },
+      {
+        "URI": "sosa:Observation"
+      }
+    ],
+    "label": [
+      "a",
+      "Observable Property",
+      "cannot",
+      "be",
+      "a",
+      "Observation"
+    ]
+  },
+  {
+    "propertyName": "geofenced",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "geofenced"
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInGeometry",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "observation",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "an",
+      "observation"
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInMainTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "temperature",
+      0,
+      "measured",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInGeometry",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "temperature",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "subClass",
+    "propertyVariables": [
+      {
+        "URI": "example:Tunnel"
+      },
+      {
+        "URI": "example:Place"
+      }
+    ],
+    "label": [
+      "a",
+      "tunnel",
+      "is",
+      "a",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:ObservableProperty"
+      },
+      {
+        "URI": "example:Person"
+      }
+    ],
+    "label": [
+      "a",
+      "Observable Property",
+      "cannot",
+      "be",
+      "a",
+      "person"
+    ]
+  },
+  {
+    "propertyName": "triple",
+    "propertyVariables": [
+      {
+        "URI": "example:Geofenced"
+      },
+      {
+        "URI": "rdfs:label"
+      },
+      {
+        "lexicalValue": "geofenced area",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    ],
+    "label": [
+      "geofenced area",
+      "label",
+      "geofenced area"
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:Observation"
+      },
+      {
+        "URI": "example:Person"
+      }
+    ],
+    "label": [
+      "a",
+      "Observation",
+      "cannot",
+      "be",
+      "a",
+      "person"
+    ]
+  },
+  {
+    "propertyName": "disjoint",
+    "propertyVariables": [
+      {
+        "URI": "sosa:Sensor"
+      },
+      {
+        "URI": "sosa:Observation"
+      }
+    ],
+    "label": [
+      "a",
+      "Sensor",
+      "cannot",
+      "be",
+      "a",
+      "Observation"
+    ]
+  },
+  {
+    "propertyName": "ObservationInLocation",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "Observation",
       0,
       "is",
       "in",
@@ -1680,35 +1676,171 @@
     ]
   },
   {
-    "propertyName": "COconcentrationMeasuredInGeometry",
+    "propertyName": "subClass",
+    "propertyVariables": [
+      {
+        "URI": "example:Geofenced"
+      },
+      {
+        "URI": "example:Place"
+      }
+    ],
+    "label": [
+      "a",
+      "geofenced area",
+      "is",
+      "a",
+      "location"
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInLocation",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "location",
+      1
+    ]
+  },
+  {
+    "propertyName": "tunnel",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "tunnel",
+      0
+    ]
+  },
+  {
+    "propertyName": "GeofencedAreaInTunnel",
     "propertyVariables": [
       0,
       1
     ],
     "label": [
-      "carbon monoxide CO concentration",
-      "measured",
-      "in",
-      "Geometry",
-      1,
-      "is",
-      0
-    ]
-  },
-  {
-    "propertyName": "ObservablePropertyInTunnel",
-    "propertyVariables": [
-      {
-        "URI": "e:Temperature"
-      },
-      0
-    ],
-    "label": [
-      "ObservableProperty",
-      "carbon monoxide CO concentration",
+      "geofenced area",
+      0,
       "is",
       "in",
       "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "PersonInMainTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "person",
+      0,
+      "is",
+      "in",
+      "main tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "MainTunnelInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "main tunnel",
+      0,
+      "is",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "ObservationInGeometry",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "Observation",
+      0,
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "TemperatureMeasuredInGeofencedArea",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "temperature",
+      "carbon monoxide",
+      "measured",
+      "in",
+      "geofenced area",
+      1
+    ]
+  },
+  {
+    "propertyName": "CarbonMonoxideMeasuredInTunnel",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "carbon monoxide",
+      0,
+      "measured",
+      "in",
+      "tunnel",
+      1
+    ]
+  },
+  {
+    "propertyName": "GeometryInGeometry",
+    "propertyVariables": [
+      {
+        "URI": "http://example.com/COconcentration"
+      },
+      1
+    ],
+    "label": [
+      "Geometry",
+      "carbon monoxide",
+      "is",
+      "in",
+      "Geometry",
+      1
+    ]
+  },
+  {
+    "propertyName": "PersonInGeofencedArea",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "person",
+      0,
+      "is",
+      "in",
+      "geofenced area",
       1
     ]
   }
