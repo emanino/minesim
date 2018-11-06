@@ -62,8 +62,8 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 
 
 <div>
-<h3>Describe this policy:</h3>
-<p>"If the carbon monoxide concentration in a tunnel <span class="varoptionc1">A</span> is greater than 29 ppm, and there is a person in that tunnel, then evacuate that tunnel."</p>
+<h3>Recreate this sentence:</h3>
+<p id="main-sentence"></p>
 </div>
 <h4>Your solution:</h4>
 <div class="border-div placeholder-area">
@@ -73,7 +73,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 </div>
 
 <div style="text-align:center; margin-top: 14px;">
-<button id="sub-button">Submit your answer.</button> <button id="info-button">Click here to read the instructions again.</button>
+<button id="sub-button">Submit your answer.</button> <button id="nosub-button">There is no good answer.</button> <button id="info-button">Read the instructions again.</button>
 </div>
 
 <div id="searchdiv">
@@ -132,6 +132,18 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
   </form>
 </div>
 
+<div id="dialog-form2" title="Solution not possible.">
+  <form>
+    <fieldset>
+      <p>For which words in the the original you could not find suitable sentence blocks? Please paste them here:</p>
+      <p class="italics" id="small-main-sentence"></p>
+      <label for="words" >Words:</label>
+      <input type="text" name="words" id="snippet-field" class="text ui-widget-content ui-corner-all">
+      
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
 
 
 

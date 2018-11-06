@@ -1,8 +1,38 @@
 var jsonData = [];
+var jsonSentences = [];
 var solution;
+
+//var tasknumber = "0";
+
+var bolts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+var starttime = new Date().getTime();
+
+var isIF = false;
+var mandatoryVar = null;
+
+function getBolts(){
+	var tot = 0;
+	for(index in bolts)
+		tot += bolts[index];
+	return tot;
+}
 
 function jsonLoaded(json){
 	jsonData = jsonData.concat(json);
+}
+function jsonSentencesLoaded(json){
+	jsonSentences = jsonSentences.concat(json);
+	for(index in jsonSentences){
+		if(jsonSentences[index]["sentenceID"] == gettasknumber()){
+			$("#main-sentence").html(jsonSentences[index]["sentence"]);			
+			$("#small-main-sentence").html('"'+jsonSentences[index]["sentence"]+'"');
+			isIF = jsonSentences[index]["isIF"] == 1;
+			if(jsonSentences[index]["mandatoryVariable"].length > 0)
+				mandatoryVar = jsonSentences[index]["mandatoryVariable"];
+		}
+		
+	}
 }
 
 
@@ -21,6 +51,9 @@ $( function() {
 	});
 	$.getJSON("js/actions.json", function(json) {
 		jsonLoaded(json); // this will show the info it in firebug console
+	});
+	$.getJSON("js/sentences.json", function(json) {
+		jsonSentencesLoaded(json); // this will show the info it in firebug console
 	});
 	
 	refresh();
@@ -102,6 +135,11 @@ $( function() {
 		  refreshEntityCreationDialog();
 	  }
   	});
+  
+  $( 'body' ).on('click', '#nosub-button', function() {
+	  $( "#dialog-form2" ).dialog( "open" );
+  });
+  
   $( 'body' ).on('click', '.entity-span', function() {
 	  $("select").removeClass("selectedselectmenu");
 	  $("entity-span").removeClass("selectedselectmenu");
@@ -123,10 +161,11 @@ $( function() {
   $("#sub-button").button({icon: "ui-icon-check"});
   $("#sub-button").click(function() {
 	  solution = getJsonResult();
-	  if (solution != null){
+	  if (solution != null && checkTime()){
 		  post_submit();
 	  }
 	  });
+  $("#nosub-button").button({icon: "ui-icon-closethick"});
   
   
   $('#searchfield').keypress(function (e) {
@@ -160,6 +199,21 @@ $( function() {
       addEntity();
     });
 
+  dialog2 = $( "#dialog-form2" ).dialog({
+      autoOpen: false,
+      height: 350,
+      width: 450,
+      modal: true,
+      buttons: {
+        "Report impossible answer": submitNoAnswer,
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+    	  $("#snippet-field").val("");
+      }
+    });
   $("#entitytypeselect").selectmenu({
 	  change: function( event, ui ) {
 		  refreshEntityCreationDialog();
@@ -169,7 +223,32 @@ $( function() {
 	  }
   });
   refreshEntityCreationDialog();
+  
+  if(isFormDisabled()){
+	  $("button").attr("disabled", "disabled");
+  }
 });
+
+function submitNoAnswer(){
+	solution = getNoJsonResult();
+	  if (solution != null && checkTime()){
+		  post_submit();
+	  } else {
+		  if (solution == null){			  
+			  bolts[9] = 3;
+			  display_error("This field cannot be empty.",$("#snippet-field"),3000);
+		  }
+	  }
+}
+
+function checkTime(){
+	var timenow = new Date().getTime();
+	var interval  = timenow - starttime;
+	if (interval < 10000) {
+		bolts[10] = 10;
+		display_error("Warning: you attempted to submit your answer too soon! Are you sure you have already completed the task?",$("#sortable"),10000);
+	} else return true;
+}
 
 function refreshEntityCreationDialog(){
   $(".hiddenDialogFields").hide();
@@ -196,6 +275,7 @@ function checkVal() {
 }
 function validateType(val,type){
 	if($("#value-field-id").val().trim().length <= 0){
+		bolts[8] = 1;
 		$('#value-field-id').prop('title', ' ');
 		//$("#value-field-id").uitooltip( "option", "disabled", false );
 		$("#value-field-id").uitooltip({
@@ -205,6 +285,7 @@ function validateType(val,type){
 		return false;
 	}
 	if(type == "http://www.w3.org/2001/XMLSchema#decimal" && isNaN(val)) {
+		bolts[7] = 1;
 		$('#value-field-id').prop('title', ' ');
 		//$("#value-field-id").uitooltip( "option", "disabled", false );
 		$("#value-field-id").uitooltip({
@@ -359,8 +440,6 @@ function addPredicate(predicate, score){
 					+ ' value-literal-type="' + $(varObject).attr('datatype') + '"'
 					+ '></span> ';
 			}
-		} else {
-			content += '<span class="block-variable" var-num="'+label+'">'+getVariableSelection()+"</span> ";
 		}
 	};
 	
@@ -401,9 +480,18 @@ function display_error(message,entity,delay){
 			entity.uitooltip('disable').removeClass("ui-state-error");
 		}, delay);
 }
+function getNoJsonResult(){
+	if($("#snippet-field").val().length > 0){		
+		data = {
+				nosolution: $("#snippet-field").val()
+		}
+		return data;
+	} else return null;
+}
 
 function getJsonResult(){
 	emptyErrorMessage = "Warning: the solution is empty. Please drag and drop here the blocks that you think make the best solution.";
+	var containsMandatoryVar = false;
 	try{
 		if($("#sortable li").length < 1) throw emptyErrorMessage;
 		data = {
@@ -431,6 +519,7 @@ function getJsonResult(){
 						value = variable.find('select').val();
 						if(value.trim().length <= 0) {
 							display_error("Empty field!",$(this),5000);
+							bolts[6] = 2;
 							throw "Warning: not all fields have been chosen in your solution. Please choose a variable, or a number/text if required.";
 						}
 						object.variables.push({
@@ -438,11 +527,15 @@ function getJsonResult(){
 							type: "variable",
 							val: value
 						});
+						if(mandatoryVar != null && value == mandatoryVar) containsMandatoryVar = true;
 					} else {
 						// it is a constant field
 						value = variable.find(".entity-span-val").text();
 						lit_type = variable.find(".entity-span-type").text();
-						if(value.trim().length <= 0) throw "ERROR, not all entities have been initialised in your solution.";
+						if(value.trim().length <= 0) {
+							bolts[5] = 2;							
+							throw "ERROR, not all entities have been initialised in your solution.";
+						}
 						object.variables.push({
 							varnum: varnumber,
 							type: lit_type,
@@ -471,25 +564,44 @@ function getJsonResult(){
 				});
 				
 				
-				if(object.variables.length < blockvarnum) 
+				if(object.variables.length < blockvarnum) {
+					bolts[4] = 2;					
 					throw "Error, a predicate does not have all the required variables.";
+				}
 				if(scope == "if"){					
-					if(data.then_block.length > 0) throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
+					if(data.then_block.length > 0) {
+						bolts[3] = 2;	
+						throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
+					}
 					data.if_block.push(object);
 				} else if(scope == "then"){
-					if(data.if_block.length < 1) throw "Warning: you have statements after 'then' but there are no 'if' statement before 'then'. To fix this, add the 'if' block and its conditions before 'then'.";
+					if(data.if_block.length < 1) {
+						bolts[2] = 4;						
+						throw "Warning: you have statements after 'then' but there are no 'if' statement before 'then'. To fix this, add the 'if' block and its conditions before 'then'.";
+					}
 					data.then_block.push(object);
 				} else {
 					data.unassigned.push(object);
 				}
 			}
 		});
-		if(data.if_block.length > 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) 
+		if(isIF && data.if_block.length == 0){
+			bolts[11] = 3;
+			throw 'Warning: the sentence you have to recreate contains an "if", but your solution does not contain any "if" statements';
+		}
+		if(mandatoryVar != null && !containsMandatoryVar){
+			bolts[12] = 3;
+			throw 'Warning: the sentence you have to recreate contains variable "'+mandatoryVar+'", but you have not used this variable in your solution.';
+		}
+		if(data.if_block.length > 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) {			
+			bolts[1] = 4;
 			throw "Warning: you have statements after 'if', but there is no statement after 'then'.";
+		}
 		if(data.if_block.length <= 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) 
 			throw emptyErrorMessage;
 		return data;
 	} catch(err) {
+		if(err == emptyErrorMessage) bolts[0] = 10;
 		display_error(err,$("#sortable"),10000);
 		return null;
 	}

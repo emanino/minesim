@@ -1,0 +1,14 @@
+[
+  {
+    "sentence": "If the carbon monoxide concentration in a tunnel is greater than 29 ppm, and there is a person in that tunnel, then evacuate that tunnel",
+    "sentenceID": 0, 
+    "isIF": 1,
+    "mandatoryVariable": "X"
+  },
+  {
+    "sentence": "If  then evacuate that tunnel",
+    "sentenceID": 1,
+    "isIF": 1,
+    "mandatoryVariable": "X"
+  }
+]
