@@ -24,45 +24,115 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
   </ol>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img class="d-block w-100" src="holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide1">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide1">
       <div class="carousel-caption d-none d-md-block">
-    	<h1>Welcome!</h1>
+    	<h1>Your task is to "capture" the meaning of a sentence.</h1>
 			<ul>
-			<li><span class="underline">Please take a few minutes to read through the instructions</span>. It should take about 5 minutes.</li>
+			<li><span class="underline">The first time you do this task, please take a few minutes to read through the instructions and watch the videos</span>. </br>It should take less than 5 minutes.</li>
 			<li>Use the arrows on this page to navigate through the instructions.</li>
 			<li>On the last page, you will be able to complete the task and submit your result.</li>
 			<li>On the last page there will also be a link back to read these instructions again.</li>
+			<li><span class="underline">Important: To complete this task you need to have a basic understanding of variables.</span></li>
   	  		</ul>
   	  </div>
     </div>
+    
     <div class="carousel-item">
-      <img class="d-block w-100" src="holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
       <div class="carousel-caption d-none d-md-block">
-    	<h5>Task instructions:</h5>
-			<ul>
-			<li>You will be given a policy, which is in the form of an "if then else" sentence. For example "if the distance to a restaurant is more than 10 miles, then book a taxi to the restaurant") </li>
-			<li>Your task is to recreate this sentence as accurately as possible using the building blocks provided.</li>
-			<li>You can search the available building blocks using the search option provided.</li>
-			<li>The building blocks are pieces of sentences, or the words "if" and "then".</li>
-			<li>These building blocks might allow you to select variables, such as "A", "B" and "C".</li>
-			<li>You have to use these variables to make the meaning of the sentence very clear.</li>
-			<li>For example "if the distance to a restaurant 'A' is more than 10 miles, then book a taxi to restaurant 'A'")</li>
-			<li>If you don't want to use a variable, you can select the option "[...]" which will allow you to enter a number or a piece of text instead.</li>
-  	  		</ul>
-  	  		
-  	  		
+    	<div id="svg-container">
+    	<object type="image/svg+xml" data="video/EditorSchema.svg">
+  			Your browser does not support SVG
+		</object>
+		</div>
   	  </div>
     </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5>This quick video will give you an idea of how to "capture" the meaning of a sentence.</h5>
+			<video width="550" height="400" controls>
+  				<source src="video/Editor1.mp4" type="video/mp4">
+  				<source src="video/Editor1.mkv" type="video/webm">
+				WARNING! Your browser does not support the video tag. Please complete this task using a modern browser.
+			</video>
+  	  </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5>To complete this task follow those steps:</h5>
+			<ol>
+			<li>Read carefully the sentence that is given to you. <span class="italics smaller">For example: "The menu of vegan restaurant A contains a tofu dish".</span></li>
+			<li>Your goal is to recreate the meaning of this sentence as accurately as possible using the sentence snippets provided.</li>
+			<li>Search suitable sentence snippets using the search option provided. <span class="italics smaller">For example, there might a snippet to describe a ""vegan restaurant".</span></li>
+			<li>Once you have chosen a snippet, drag and drop it in your answer box.</li>
+			<li>If the sentence given to you is an "if-then" sentence, use the "if" and "then" snippets to capture the condition and the consequence.</li>
+			<li>These building blocks might require you to select variables, such as "A", "B" and "C".</li>
+			<li>If the sentence you are given contains variables, you must use them in your snippets.</li>
+			<li>If instead of a variable you want to specify a specific value (such as a number), choose the option "[...]" in the variable selection.</li>
+			<li>Once you are satisfied that you captured the meaning of the sentence well, click on "Submit your answer".</li>
+			<li>If you think it is not possible to capture the meaning of the sentence, click on "There is no good answer". You will be asked to specify which part of the sentence is problematic.</li>
+  	  		</ol>
+  	  </div>
+    </div>
+    
+    
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5>This video shows how to capture the meaning of an "if-then" sentence.</h5>
+			<video width="550" height="400" controls>
+  				<source src="video/Editor2.mp4" type="video/mp4">
+  				<source src="video/Editor2.mkv" type="video/webm">
+				WARNING! Your browser does not support the video tag. Please complete this task using a modern browser.
+			</video>
+  	  </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5>This video shows what to do when it is not possible to capture the meaning of a sentence.</h5>
+			<video width="550" height="400" controls>
+  				<source src="video/Editor3.mp4" type="video/mp4">
+  				<source src="video/Editor3.mkv" type="video/webm">
+				WARNING! Your browser does not support the video tag. Please complete this task using a modern browser.
+			</video>
+  	  </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5>Important hints:</h5>
+			<ol>
+			<li>When searching for snippets, try using synonyms. <span class="italics smaller">For example, you might not find a snippet that contains "more", but you can find one that contains "greater".</span></li>
+  	  		<li>If your search finds many results, you might have to scroll down to see them all.</li>
+  	  		<li>Don't worry if your solution contains some small grammatical mistakes, as long as the meaning is clear.</li>
+  	  		<li>If you make a mistake, you can always delete selected snippets by clicking on the bin icon on the right.</li>
+  	  		</ol>
+  	  </div>
+    </div>
+    
     <div class="carousel-item" >
 
 
 
 
 <div>
-<h3>Recreate this sentence:</h3>
+<h3>Capture the meaning of this sentence:</h3>
 <p id="main-sentence"></p>
 </div>
 <h4>Your solution:</h4>
@@ -77,8 +147,8 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 </div>
 
 <div id="searchdiv">
-<p>Search sentences:</p>
-<input type="text" name="search" id="searchfield" value="person" placeholder="Enter some search keywords here"> <button id="search-button">Search</button>
+<p>Search sentence snippets:</p>
+<input type="text" name="search" id="searchfield" value="" placeholder="Enter some search keywords here"> <button id="search-button">Search</button>
 </div>
 
 <div class="border-div overflowautosearch">

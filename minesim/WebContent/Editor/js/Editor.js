@@ -2,14 +2,16 @@ var jsonData = [];
 var jsonSentences = [];
 var solution;
 
-//var tasknumber = "0";
+/////////////////////////////////////
+function gettasknumber() {return "sample0";}; function isFormDisabled() {return false;};
+/////////////////////////////////////
 
 var bolts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 var starttime = new Date().getTime();
 
 var isIF = false;
-var mandatoryVar = null;
+var mandatoryVars = null;
 
 function getBolts(){
 	var tot = 0;
@@ -28,8 +30,8 @@ function jsonSentencesLoaded(json){
 			$("#main-sentence").html(jsonSentences[index]["sentence"]);			
 			$("#small-main-sentence").html('"'+jsonSentences[index]["sentence"]+'"');
 			isIF = jsonSentences[index]["isIF"] == 1;
-			if(jsonSentences[index]["mandatoryVariable"].length > 0)
-				mandatoryVar = jsonSentences[index]["mandatoryVariable"];
+			if(jsonSentences[index]["mandatoryVariables"].length > 0)
+				mandatoryVars = jsonSentences[index]["mandatoryVariables"];
 		}
 		
 	}
@@ -55,6 +57,14 @@ $( function() {
 	$.getJSON("js/sentences.json", function(json) {
 		jsonSentencesLoaded(json); // this will show the info it in firebug console
 	});
+	
+	
+	/////////////////////////////////////
+	//jsonData = [];
+	//$.getJSON("js/fakepredicates.json", function(json) {
+	//	jsonLoaded(json); // this will show the info it in firebug console
+	//});
+	/////////////////////////////////////
 	
 	refresh();
 	var $item = $('.carousel-item'); 
@@ -82,10 +92,12 @@ $( function() {
 	$('.carousel').on('slid.bs.carousel', function () {
 		    $('.carousel-control-prev').show();
 		    $('.carousel-control-next').show();
+		    $('.carousel-indicators').show();
 		  if($('.carousel-indicators li:first').hasClass('active')) {
 		    $('.carousel-control-prev').hide();
 		  } else if($('.carousel-indicators li:last').hasClass('active')) {
 		    $('.carousel-control-prev').hide();
+		    $('.carousel-indicators').hide();
 		    $('.carousel-control-next').hide();
 		  }
 	});
@@ -231,7 +243,7 @@ $( function() {
 
 function submitNoAnswer(){
 	solution = getNoJsonResult();
-	  if (solution != null && checkTime()){
+	  if (solution != null && checkTime() && verifyNoAnswer()){
 		  post_submit();
 	  } else {
 		  if (solution == null){			  
@@ -239,6 +251,21 @@ function submitNoAnswer(){
 			  display_error("This field cannot be empty.",$("#snippet-field"),3000);
 		  }
 	  }
+}
+
+function verifyNoAnswer() {
+	solution = $("#snippet-field").val().toLowerCase();
+	sentence = $("#main-sentence").text().toLowerCase();
+	sentence = sentence.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+	tokens = sentence.split(" ");
+	for(i in tokens){
+		if(stopwords.indexOf(tokens[i]) < 0)
+			if(solution.indexOf(tokens[i]) !== -1) 
+				return true;
+	}
+	bolts[13] = 3;
+	display_error("The words for which you didn't find a suitable sentence block do not appear in the original sentence to recreate.",$("#snippet-field"),5000);
+	return false;
 }
 
 function checkTime(){
@@ -350,7 +377,7 @@ function search(){
 	objs = []
 	for(index in jsonData){
 		score = scoreSimilarity(keywords, jsonData[index])
-		if(score >= 1){
+		if(score > 0){
 			objs.push({"score": score, "data": index})
 		}
 	}
@@ -381,10 +408,18 @@ function search(){
 }
 var stopwords = ["a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any","are","aren't","as","at","be","because","been","before","being","below","between","both","but","by","can't","cannot","could","couldn't","did","didn't","do","does","doesn't","doing","don't","down","during","each","few","for","from","further","had","hadn't","has","hasn't","have","haven't","having","he","he'd","he'll","he's","her","here","here's","hers","herself","him","himself","his","how","how's","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","itself","let's","me","more","most","mustn't","my","myself","no","nor","not","of","off","on","once","only","or","other","ought","our","ours","ourselves","out","over","own","same","shan't","she","she'd","she'll","she's","should","shouldn't","so","some","such","than","that","that's","the","their","theirs","them","themselves","then","there","there's","these","they","they'd","they'll","they're","they've","this","those","through","to","too","under","until","up","very","was","wasn't","we","we'd","we'll","we're","we've","were","weren't","what","what's","when","when's","where","where's","which","while","who","who's","whom","why","why's","with","won't","would","wouldn't","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves"];
 
+function scoreWordSimilarity(word1, word2) {
+	if(word1 == word2) return 1.5;
+	if(word1.indexOf(word2) != -1 || word2.indexOf(word1) != -1) return 1;
+	return longestCommonSubstring(word1, word2)/Math.min(word1.length, word2.length);
+}
+
 function scoreSimilarity(keywords, predicate){
-	score = 0;
-	score_cumulative = 0;
-	cumulative_num = 0;
+	var scores = {};
+	for(var i = 0; i < keywords.length; i++){
+		scores[i] = 0;
+	}
+	var token_num = 0;
 	for(labelI in predicate["label"]){
 		if(isNaN(predicate["label"][labelI])){
 			tokens = [];
@@ -394,22 +429,68 @@ function scoreSimilarity(keywords, predicate){
 			}
 			else tokens = predicate["label"][labelI].split(" ");
 			for(token in tokens){
+				if(stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0) token_num += 1;
 				for(wordI in keywords){
-					if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 ){						
+					if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 )
+						scores[wordI] = Math.max(scores[wordI], scoreWordSimilarity(keywords[wordI].toLowerCase().trim(), tokens[token].toLowerCase().trim()));
+					/*if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 ){						
 						if(keywords[wordI].toLowerCase().trim() == tokens[token].toLowerCase().trim()) 
 							score++;
 						else {
 							score_cumulative = score_cumulative + Math.pow(1/levenshteinDistance(keywords[wordI].toLowerCase().trim(), tokens[token].toLowerCase().trim()),3);
 							cumulative_num++;
 						}
-					}
+					}*/
 				} 
+			}
+			
+		}
+	}
+	var keyword_length = 0;
+	for(wordI in keywords){
+		if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0) keyword_length++;
+	}
+	var total_score = Object.values(scores).reduce(add, 0);
+	var token_difference = Math.max(token_num-keyword_length, keyword_length-token_num);
+	if(total_score >= 1) return 10+total_score-token_difference;
+	else return 0;
+}
+function add(a, b) {
+    return a + b;
+}
+function longestCommonSubstring(string1, string2){
+	// init max value
+	var longestCommonSubstring = 0;
+	// init 2D array with 0
+	var table = [],
+            len1 = string1.length,
+            len2 = string2.length,
+            row, col;
+	for(row = 0; row <= len1; row++){
+		table[row] = [];
+		for(col = 0; col <= len2; col++){
+			table[row][col] = 0;
+		}
+	}
+	// fill table
+        var i, j;
+	for(i = 0; i < len1; i++){
+		for(j = 0; j < len2; j++){
+			if(string1[i] === string2[j]){
+				if(table[i][j] === 0){
+					table[i+1][j+1] = 1;
+				} else {
+					table[i+1][j+1] = table[i][j] + 1;
+				}
+				if(table[i+1][j+1] > longestCommonSubstring){
+					longestCommonSubstring = table[i+1][j+1];
+				}
+			} else {
+				table[i+1][j+1] = 0;
 			}
 		}
 	}
-	if(cumulative_num > 0)
-		score = score + score_cumulative;
-	return score;
+	return longestCommonSubstring;
 }
 
 function addPredicate(predicate, score){
@@ -460,10 +541,10 @@ function getVariableSelectionHelper(disabled){
 	'<option value="A" class="varoption varoptionc1">A</option>'+
 	'<option value="B" class="varoption varoptionc2">B</option>'+
 	'<option value="C" class="varoption varoptionc3">C</option>'+
-	'<option value="X" class="varoption varoptionc4">X</option>'+
+	'<option value="X" class="varoption varoptionc7">X</option>'+
 	'<option value="Y" class="varoption varoptionc5">Y</option>'+
 	'<option value="Z" class="varoption varoptionc6">Z</option>'+
-	'<option value="W" class="varoption varoptionc7">W</option>'+
+	'<option value="W" class="varoption varoptionc4">W</option>'+
 	'<option value="K" class="varoption varoptionc8">K</option>'+
 	'<option value="?" class="varoption varoptionc0">[...]</option>'+
 	'</select>';
@@ -491,7 +572,8 @@ function getNoJsonResult(){
 
 function getJsonResult(){
 	emptyErrorMessage = "Warning: the solution is empty. Please drag and drop here the blocks that you think make the best solution.";
-	var containsMandatoryVar = false;
+	var remainingMandatoryVars = [];
+	remainingMandatoryVars = remainingMandatoryVars.concat(mandatoryVars);
 	try{
 		if($("#sortable li").length < 1) throw emptyErrorMessage;
 		data = {
@@ -527,7 +609,14 @@ function getJsonResult(){
 							type: "variable",
 							val: value
 						});
-						if(mandatoryVar != null && value == mandatoryVar) containsMandatoryVar = true;
+						var indexToRemove = -1
+						for(mvIndex in remainingMandatoryVars){							
+							if(value == remainingMandatoryVars[mvIndex]) indexToRemove = mvIndex;
+						}
+						if(indexToRemove != -1){
+							remainingMandatoryVars.splice(indexToRemove,1);
+						}
+						
 					} else {
 						// it is a constant field
 						value = variable.find(".entity-span-val").text();
@@ -589,9 +678,9 @@ function getJsonResult(){
 			bolts[11] = 3;
 			throw 'Warning: the sentence you have to recreate contains an "if", but your solution does not contain any "if" statements';
 		}
-		if(mandatoryVar != null && !containsMandatoryVar){
+		if(mandatoryVars != null && remainingMandatoryVars.length > 0){
 			bolts[12] = 3;
-			throw 'Warning: the sentence you have to recreate contains variable "'+mandatoryVar+'", but you have not used this variable in your solution.';
+			throw 'Warning: the sentence you have to recreate contains variable "'+remainingMandatoryVars[0]+'", but you have not used this variable in your solution.';
 		}
 		if(data.if_block.length > 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) {			
 			bolts[1] = 4;

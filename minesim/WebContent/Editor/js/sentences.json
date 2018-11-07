@@ -1,14 +1,152 @@
 [
   {
-    "sentence": "If the carbon monoxide concentration in a tunnel is greater than 29 ppm, and there is a person in that tunnel, then evacuate that tunnel",
-    "sentenceID": 0, 
-    "isIF": 1,
-    "mandatoryVariable": "X"
+    "sentence": "The menu of vegan restaurant 'A' contains a tofu dish.",
+    "sentenceID": "sample0", 
+    "isIF": 0,
+    "mandatoryVariables": []
   },
   {
-    "sentence": "If  then evacuate that tunnel",
-    "sentenceID": 1,
+    "sentence": "If the distance to the restaurant is more than 10, then book a taxi to the restaurant.",
+    "sentenceID": "sample1", 
+    "isIF": 0,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "Restaurant 'A' is closed on Mondays.",
+    "sentenceID": "sample2", 
+    "isIF": 0,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "Person A is in a geofenced area B",
+    "sentenceID": "a0", 
+    "isIF": 0,
+    "mandatoryVariables": ["A", "B"]
+  },
+  {
+    "sentence": "The temperature in tunnel X is greater than 48 and the carbon monoxide concentration is greater than 78",
+    "sentenceID": "a1",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "The temperature in the main escape tunnel X is greater than 48 and the carbon monoxide concentration is greater than 78",
+    "sentenceID": "a2",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "The temperature in tunnel X is greater than 38",
+    "sentenceID": "a3",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "In tunnel X there is a person, and the carbon monoxide concentration there is greater than 68",
+    "sentenceID": "a4",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "The temperature in the main escape tunnel X is greater than 38",
+    "sentenceID": "a5",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "The carbon monoxide concentration in the ship’s engine room X is greater than 85",
+    "sentenceID": "a6",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": " The methane levels in the main tunnel X is greater than 183",
+    "sentenceID": "a7",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "Coal truck A is in tunnel X",
+    "sentenceID": "a8",
+    "isIF": 0,
+    "mandatoryVariables": ["A","X"]
+  },
+  {
+    "sentence": "Tunnel X is flooded",
+    "sentenceID": "a9",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "The temperature in tunnel X is less than the temperature outside the mine.",
+    "sentenceID": "a10",
+    "isIF": 0,
+    "mandatoryVariables": ["X"]
+  },
+  {
+    "sentence": "If a person is in a geofenced tunnel, then recall that person.",
+    "sentenceID": "b0",
     "isIF": 1,
-    "mandatoryVariable": "X"
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If there is a fire in a main escape tunnel, evacuate the whole mine.",
+    "sentenceID": "b1",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If there is a fire in a tunnel, send the fire team in that tunnel.",
+    "sentenceID": "b2",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If temperature is greater than 38 in a tunnel, evacuate that tunnel.",
+    "sentenceID": "b3",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If the carbon monoxide concentration is greater than 68 in a tunnel, and there is a person there, then activate the ventilation in that tunnel.",
+    "sentenceID": "b4",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If the temperature in the main escape tunnel is greater than 38, then evacuate the whole mine.",
+    "sentenceID": "b5",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If a person is in the the ship’s engine room, then recall that person.",
+    "sentenceID": "b6",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If the methane levels in the main tunnel X is greater than 83, then evacuate the mine.",
+    "sentenceID": "b7",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If a coal truck is stuck in a tunnel, then activate the ventilation in that tunnel.",
+    "sentenceID": "b8",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If a tunnel is flooded, then evacuate that tunnel.",
+    "sentenceID": "b9",
+    "isIF": 1,
+    "mandatoryVariables": []
+  },
+  {
+    "sentence": "If the temperature in a tunnel is less than 8, then send a cold weather alert.",
+    "sentenceID": "b10",
+    "isIF": 1,
+    "mandatoryVariables": []
   }
 ]

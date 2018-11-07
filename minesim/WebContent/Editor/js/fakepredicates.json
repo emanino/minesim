@@ -1,0 +1,184 @@
+[
+  {
+    "propertyName": "Restaurant",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "a",
+      "restaurant"
+    ]
+  },{
+    "propertyName": "VeganRestaurant",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "a",
+      "vegan",
+      "restaurant"
+    ]
+  },
+  {
+    "propertyName": "VegetarianRestaurant",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "a",
+      "vegetarian",
+      "restaurant"
+    ]
+  },
+  {
+    "propertyName": "AsianRestaurant",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "an",
+      "Asian",
+      "restaurant"
+    ]
+  },
+  {
+    "propertyName": "AmericanRestaurant",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      0,
+      "is",
+      "an",
+      "American",
+      "restaurant"
+    ]
+  },
+  {
+    "propertyName": "hasMenu",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "restaurant",
+      0,
+      "has",
+      "menu",
+	  1
+    ]
+  },
+  {
+    "propertyName": "hasDish",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "menu",
+      0,
+      "has",
+      "dish",
+	  1
+    ]
+  },
+  {
+    "propertyName": "TofuDish",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "dish",
+      0,
+      "is",
+      "made with tofu"
+    ]
+  },
+  {
+    "propertyName": "MeatDish",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "dish",
+      0,
+      "is",
+      "made with meat"
+    ]
+  },
+  {
+    "propertyName": "FishDish",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "dish",
+      0,
+      "contains",
+      "fish"
+    ]
+  },
+  {
+    "propertyName": "",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "dish",
+      0,
+      "contains",
+      "nuts"
+    ]
+  },
+  {
+    "propertyName": "distance",
+    "propertyVariables": [
+      0,
+      1
+    ],
+    "label": [
+      "the distance to",
+      0,
+      "is",
+	  1
+    ]
+  },
+  {
+    "propertyName": "booktaxi",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "book a taxi to",
+      0
+    ]
+  },
+  {
+    "propertyName": "bookferry",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "book a ferry to",
+      0
+    ]
+  },
+  {
+    "propertyName": "bookplane",
+    "propertyVariables": [
+      0
+    ],
+    "label": [
+      "book a plane to",
+      0
+    ]
+  }
+]

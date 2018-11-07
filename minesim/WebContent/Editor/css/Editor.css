@@ -209,3 +209,15 @@ button, input, select, select > input[type="button"], textarea {
 .italics {
 	font-style: italic;
 }
+.smaller {
+	font-size: 0.8em;
+}
+.carousel-control-next-icon, .carousel-control-prev-icon {
+    width: 50px !important; 
+    height: 50px !important;
+}
+
+#svg-container {
+	    max-width: 90%;
+    max-height: 90%;
+}
