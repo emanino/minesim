@@ -167,7 +167,7 @@ button, input, select, select > input[type="button"], textarea {
    width:50%;
 }
 .overflowautosearch {		
-	max-height: 255px;
+	max-height: 235px;
 	overflow: auto;
 }
 

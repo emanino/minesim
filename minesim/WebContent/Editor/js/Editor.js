@@ -3,10 +3,11 @@ var jsonSentences = [];
 var solution;
 
 /////////////////////////////////////
-function gettasknumber() {return "sample0";}; function isFormDisabled() {return false;};
+//function gettasknumber() {return "sample0";}; function isFormDisabled() {return false;};
 /////////////////////////////////////
 
 var bolts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var boltsFreq = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 var starttime = new Date().getTime();
 
@@ -18,6 +19,10 @@ function getBolts(){
 	for(index in bolts)
 		tot += bolts[index];
 	return tot;
+}
+
+function getBoltsString(){
+	return JSON.stringify(boltsFreq);
 }
 
 function jsonLoaded(json){
@@ -248,6 +253,7 @@ function submitNoAnswer(){
 	  } else {
 		  if (solution == null){			  
 			  bolts[9] = 3;
+			  boltsFreq[9] += 1;
 			  display_error("This field cannot be empty.",$("#snippet-field"),3000);
 		  }
 	  }
@@ -264,6 +270,7 @@ function verifyNoAnswer() {
 				return true;
 	}
 	bolts[13] = 3;
+	boltsFreq[13] += 1;
 	display_error("The words for which you didn't find a suitable sentence block do not appear in the original sentence to recreate.",$("#snippet-field"),5000);
 	return false;
 }
@@ -273,6 +280,7 @@ function checkTime(){
 	var interval  = timenow - starttime;
 	if (interval < 10000) {
 		bolts[10] = 10;
+		boltsFreq[10] += 1;
 		display_error("Warning: you attempted to submit your answer too soon! Are you sure you have already completed the task?",$("#sortable"),10000);
 	} else return true;
 }
@@ -303,6 +311,7 @@ function checkVal() {
 function validateType(val,type){
 	if($("#value-field-id").val().trim().length <= 0){
 		bolts[8] = 1;
+		boltsFreq[8] += 1;
 		$('#value-field-id').prop('title', ' ');
 		//$("#value-field-id").uitooltip( "option", "disabled", false );
 		$("#value-field-id").uitooltip({
@@ -313,6 +322,7 @@ function validateType(val,type){
 	}
 	if(type == "http://www.w3.org/2001/XMLSchema#decimal" && isNaN(val)) {
 		bolts[7] = 1;
+		boltsFreq[7] += 1;
 		$('#value-field-id').prop('title', ' ');
 		//$("#value-field-id").uitooltip( "option", "disabled", false );
 		$("#value-field-id").uitooltip({
@@ -375,7 +385,7 @@ function search(){
 	var keywords = $("#searchfield").val().split(" ");
 	$("#searchlist").empty();
 	objs = []
-	for(index in jsonData){
+	if($("#searchfield").val().trim().length > 0) for(index in jsonData){
 		score = scoreSimilarity(keywords, jsonData[index])
 		if(score > 0){
 			objs.push({"score": score, "data": index})
@@ -409,13 +419,14 @@ function search(){
 var stopwords = ["a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any","are","aren't","as","at","be","because","been","before","being","below","between","both","but","by","can't","cannot","could","couldn't","did","didn't","do","does","doesn't","doing","don't","down","during","each","few","for","from","further","had","hadn't","has","hasn't","have","haven't","having","he","he'd","he'll","he's","her","here","here's","hers","herself","him","himself","his","how","how's","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","itself","let's","me","more","most","mustn't","my","myself","no","nor","not","of","off","on","once","only","or","other","ought","our","ours","ourselves","out","over","own","same","shan't","she","she'd","she'll","she's","should","shouldn't","so","some","such","than","that","that's","the","their","theirs","them","themselves","then","there","there's","these","they","they'd","they'll","they're","they've","this","those","through","to","too","under","until","up","very","was","wasn't","we","we'd","we'll","we're","we've","were","weren't","what","what's","when","when's","where","where's","which","while","who","who's","whom","why","why's","with","won't","would","wouldn't","you","you'd","you'll","you're","you've","your","yours","yourself","yourselves"];
 
 function scoreWordSimilarity(word1, word2) {
-	if(word1 == word2) return 1.5;
+	if(word1 == word2) return 4;
 	if(word1.indexOf(word2) != -1 || word2.indexOf(word1) != -1) return 1;
 	return longestCommonSubstring(word1, word2)/Math.min(word1.length, word2.length);
 }
 
 function scoreSimilarity(keywords, predicate){
 	var scores = {};
+	var highestScore = 0
 	for(var i = 0; i < keywords.length; i++){
 		scores[i] = 0;
 	}
@@ -431,8 +442,11 @@ function scoreSimilarity(keywords, predicate){
 			for(token in tokens){
 				if(stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0) token_num += 1;
 				for(wordI in keywords){
-					if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 )
+					if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 ){						
 						scores[wordI] = Math.max(scores[wordI], scoreWordSimilarity(keywords[wordI].toLowerCase().trim(), tokens[token].toLowerCase().trim()));
+						highestScore = Math.max(highestScore,scores[wordI]);
+					}
+						
 					/*if(stopwords.indexOf(keywords[wordI].toLowerCase().trim()) < 0 && stopwords.indexOf(tokens[token].toLowerCase().trim()) < 0 ){						
 						if(keywords[wordI].toLowerCase().trim() == tokens[token].toLowerCase().trim()) 
 							score++;
@@ -452,7 +466,7 @@ function scoreSimilarity(keywords, predicate){
 	}
 	var total_score = Object.values(scores).reduce(add, 0);
 	var token_difference = Math.max(token_num-keyword_length, keyword_length-token_num);
-	if(total_score >= 1) return 10+total_score-token_difference;
+	if(highestScore >= 1) return 10+total_score-token_difference;
 	else return 0;
 }
 function add(a, b) {
@@ -602,6 +616,7 @@ function getJsonResult(){
 						if(value.trim().length <= 0) {
 							display_error("Empty field!",$(this),5000);
 							bolts[6] = 2;
+							boltsFreq[6] += 1;
 							throw "Warning: not all fields have been chosen in your solution. Please choose a variable, or a number/text if required.";
 						}
 						object.variables.push({
@@ -622,7 +637,8 @@ function getJsonResult(){
 						value = variable.find(".entity-span-val").text();
 						lit_type = variable.find(".entity-span-type").text();
 						if(value.trim().length <= 0) {
-							bolts[5] = 2;							
+							bolts[5] = 2;		
+							boltsFreq[5] += 1;
 							throw "ERROR, not all entities have been initialised in your solution.";
 						}
 						object.variables.push({
@@ -654,18 +670,21 @@ function getJsonResult(){
 				
 				
 				if(object.variables.length < blockvarnum) {
-					bolts[4] = 2;					
+					bolts[4] = 2;
+					boltsFreq[4] += 1;
 					throw "Error, a predicate does not have all the required variables.";
 				}
 				if(scope == "if"){					
 					if(data.then_block.length > 0) {
-						bolts[3] = 2;	
+						bolts[3] = 2;
+						boltsFreq[3] += 1;
 						throw "Warning: you cannot put 'if' statements after 'then'. Please move your if statements before the 'then' block.";
 					}
 					data.if_block.push(object);
 				} else if(scope == "then"){
 					if(data.if_block.length < 1) {
-						bolts[2] = 4;						
+						bolts[2] = 4;
+						boltsFreq[2] += 1;
 						throw "Warning: you have statements after 'then' but there are no 'if' statement before 'then'. To fix this, add the 'if' block and its conditions before 'then'.";
 					}
 					data.then_block.push(object);
@@ -676,21 +695,27 @@ function getJsonResult(){
 		});
 		if(isIF && data.if_block.length == 0){
 			bolts[11] = 3;
+			boltsFreq[11] += 1;
 			throw 'Warning: the sentence you have to recreate contains an "if", but your solution does not contain any "if" statements';
 		}
 		if(mandatoryVars != null && remainingMandatoryVars.length > 0){
 			bolts[12] = 3;
+			boltsFreq[12] += 1;
 			throw 'Warning: the sentence you have to recreate contains variable "'+remainingMandatoryVars[0]+'", but you have not used this variable in your solution.';
 		}
 		if(data.if_block.length > 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) {			
 			bolts[1] = 4;
+			boltsFreq[1] += 1;
 			throw "Warning: you have statements after 'if', but there is no statement after 'then'.";
 		}
 		if(data.if_block.length <= 0 &&  data.then_block.length <= 0 && data.unassigned.length <= 0) 
 			throw emptyErrorMessage;
 		return data;
 	} catch(err) {
-		if(err == emptyErrorMessage) bolts[0] = 10;
+		if(err == emptyErrorMessage) {
+			bolts[0] = 10;
+			boltsFreq[0] += 1;
+		}
 		display_error(err,$("#sortable"),10000);
 		return null;
 	}

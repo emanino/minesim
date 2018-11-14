@@ -29,6 +29,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
     <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
   </ol>
   <div class="carousel-inner">
     <div class="carousel-item active">
@@ -36,8 +37,8 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
       <div class="carousel-caption d-none d-md-block">
     	<h1>Your task is to "capture" the meaning of a sentence.</h1>
 			<ul>
-			<li><span class="underline">The first time you do this task, please take a few minutes to read through the instructions and watch the videos</span>. </br>It should take less than 5 minutes.</li>
-			<li>Use the arrows on this page to navigate through the instructions.</li>
+			<li><span class="underline">The first time you do this task, please take a few minutes to read through the instructions and watch the videos</span>. </br>It should take between 5 and 10 minutes.</li>
+			<li>Use the arrows on the left and right to navigate through the instructions.</li>
 			<li>On the last page, you will be able to complete the task and submit your result.</li>
 			<li>On the last page there will also be a link back to read these instructions again.</li>
 			<li><span class="underline">Important: To complete this task you need to have a basic understanding of variables.</span></li>
@@ -71,15 +72,14 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
     <div class="carousel-item">
       <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
       <div class="carousel-caption d-none d-md-block">
-    	<h5>To complete this task follow those steps:</h5>
+    	<h5>Step by step instructions:</h5>
 			<ol>
-			<li>Read carefully the sentence that is given to you. <span class="italics smaller">For example: "The menu of vegan restaurant A contains a tofu dish".</span></li>
-			<li>Your goal is to recreate the meaning of this sentence as accurately as possible using the sentence snippets provided.</li>
-			<li>Search suitable sentence snippets using the search option provided. <span class="italics smaller">For example, there might a snippet to describe a ""vegan restaurant".</span></li>
-			<li>Once you have chosen a snippet, drag and drop it in your answer box.</li>
-			<li>If the sentence given to you is an "if-then" sentence, use the "if" and "then" snippets to capture the condition and the consequence.</li>
-			<li>These building blocks might require you to select variables, such as "A", "B" and "C".</li>
-			<li>If the sentence you are given contains variables, you must use them in your snippets.</li>
+			<li>Read carefully the sentence. Your task is to capture its meaning using the sentence snippets provided.<span class="italics smaller">For example: "The menu of vegan restaurant A contains a tofu dish".</span></li>
+			<li>Search suitable snippets using the search option provided. <span class="italics smaller">For example, there might a snippet to describe a ""vegan restaurant".</span></li>
+			<li>Once you have chosen a snippet, drag and drop it inside "Your solution" box.</li>
+			<li>If the sentence given to you is an "if-then" sentence, recreate it using the "if" and "then" snippets.</li>
+			<li>Most snippets require you to select variables, such as "A", "B" and "C". </li>
+			<li>If the sentence you are given contains variables, you must use them in your snippets accordingly.</li>
 			<li>If instead of a variable you want to specify a specific value (such as a number), choose the option "[...]" in the variable selection.</li>
 			<li>Once you are satisfied that you captured the meaning of the sentence well, click on "Submit your answer".</li>
 			<li>If you think it is not possible to capture the meaning of the sentence, click on "There is no good answer". You will be asked to specify which part of the sentence is problematic.</li>
@@ -92,7 +92,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
     <div class="carousel-item">
       <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
       <div class="carousel-caption d-none d-md-block">
-    	<h5>This video shows how to capture the meaning of an "if-then" sentence.</h5>
+    	<h5>Example of dealing with an "if-then" sentence.</h5>
 			<video width="550" height="400" controls>
   				<source src="video/Editor2.mp4" type="video/mp4">
   				<source src="video/Editor2.mkv" type="video/webm">
@@ -104,7 +104,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
     <div class="carousel-item">
       <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
       <div class="carousel-caption d-none d-md-block">
-    	<h5>This video shows what to do when it is not possible to capture the meaning of a sentence.</h5>
+    	<h5>Example of what to do when it is not possible to capture the meaning of a sentence.</h5>
 			<video width="550" height="400" controls>
   				<source src="video/Editor3.mp4" type="video/mp4">
   				<source src="video/Editor3.mkv" type="video/webm">
@@ -120,9 +120,22 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 			<ol>
 			<li>When searching for snippets, try using synonyms. <span class="italics smaller">For example, you might not find a snippet that contains "more", but you can find one that contains "greater".</span></li>
   	  		<li>If your search finds many results, you might have to scroll down to see them all.</li>
-  	  		<li>Don't worry if your solution contains some small grammatical mistakes, as long as the meaning is clear.</li>
+  	  		<li>Don't worry if your solution contains some small grammatical mistakes.</li>
   	  		<li>If you make a mistake, you can always delete selected snippets by clicking on the bin icon on the right.</li>
+  	  		<li>Please make an effort! If you submit random answers they will be rejected and you will be banned from further HITs.</li>
   	  		</ol>
+  	  </div>
+    </div>
+    
+    <div class="carousel-item">
+      <img class="d-block w-100" src="js/holder.js/800x400?auto=yes&bg=4286f4&fg=555&text= &" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+    	<h5 class="italics">Consent to the study</h5>
+		<p class="italics">
+Please read this information carefully before deciding to take part in this research.  It is up to you to decide whether or not to take part. By continuing with the task you agree to take part in this research and consent for the data collected to be used for the purpose of this study. Participation is voluntary and you can withdraw at any time for any reason.
+This task is intended for adults only and participation from minors is strictly prohibited. By continuing with this task you are confirming that you have reached the adult age both in your country of origin and in the country you are currently accessing this webpage from.
+We will not collect any personal information and all information collected will be treated anonymously. All the data that we collect in this study will be analysed for research purposes and it will be published within academic papers. This study, with reference number ERGO/FPSE/42898, has received ethical approval on date 25/06/2018, following the University of Southampton guidelines.
+		</p>
   	  </div>
     </div>
     
