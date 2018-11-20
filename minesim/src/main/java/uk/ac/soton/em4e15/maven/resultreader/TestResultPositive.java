@@ -12,10 +12,12 @@ import org.eclipse.rdf4j.repository.http.HTTPQueryEvaluationException;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
 import logic.ExternalDB;
+import logic.PredicateEvaluation;
 import logic.RDFUtil;
 import logic.TextTemplate;
 import uk.ac.soton.em4e15.maven.minesim.Mine;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a4;
 
 public abstract class TestResultPositive extends TestResultAbstract implements TestResultPositiveInterface{
 
@@ -26,13 +28,17 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		if(isIfThen() && (r.getIfBlock().size() == 0 || r.getThenBlock().size() == 0)) return 0;
 		if(!isIfThen() && (r.getIfBlock().size() != 0 || r.getThenBlock().size() != 0)) return 0;
 		// test cases when the predicate should trigger
+		System.out.println(r);
 		for(int i = 0; i  < TestResultUtil.getIterations(); i++) {
 			totScore += scoreIteration(true, r);
+			System.out.println("  POS "+totScore);
 		}
 		// test cases when the predicate should not trigger
 		for(int i = 0; i  < TestResultUtil.getIterations(); i++) {
 			totScore += scoreIteration(false, r);
+			System.out.println("  POS+NEG "+totScore);
 		}
+		System.out.println("  TOT: ... ...  "+(totScore/(TestResultUtil.getIterations()*2) > 0.9 ? 1 : 0));
  		return totScore/(TestResultUtil.getIterations()*2) > 0.9 ? 1 : 0;
 	}
 	
@@ -51,6 +57,10 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		// generate suitable RDF
 		ExternalDB eDB = TestResultUtil.getDB();
 		eDB.loadRDF(new StringReader(m.getSensorRDF()), RDFFormat.TURTLE);	
+		// computing rule closure is expensive, so we only do it when necessary
+		if(this.getClass() == TestResult_a4.class) {			
+			PredicateEvaluation.computeRuleClosure(eDB, TestResultUtil.getRules(), TestResultUtil.getPredicates());
+		}
 		TestResultUtil.addVocabularyFiles(eDB);
 		
 		double score = -1;
