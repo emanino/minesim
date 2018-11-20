@@ -12,7 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a1;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a10;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a2;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a3;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a4;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a5;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a6;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a7;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a8;
@@ -54,6 +59,7 @@ public class ScoreSet {
 		for(String s: solutions.keySet()) {
 			score(s, solutions.get(s));
 		}
+		System.out.println();
 	}
 	public void score(String label, Set<Result> results) throws FileNotFoundException, IOException {
 		TestResult tr;
@@ -77,6 +83,16 @@ public class ScoreSet {
 			tr = new TestResult_a7();
 		} else if(label.equals("a6")) {
 			tr = new TestResult_a6();
+		} else if(label.equals("a1")) {
+			tr = new TestResult_a1();
+		} else if(label.equals("a2")) {
+			tr = new TestResult_a2();
+		} else if(label.equals("a3")) {
+			tr = new TestResult_a3();
+		} else if(label.equals("a4")) {
+			tr = new TestResult_a4();
+		} else if(label.equals("a5")) {
+			tr = new TestResult_a5();
 		} else {
 			tr = null;
 		}

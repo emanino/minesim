@@ -92,7 +92,7 @@ public class Person implements MovingObject {
 	@Override
 	public void update(Set<UserAction> actions, MineObjectScheduler scheduler, Random rand, MineState next) {
 		new Person(this, next);
-		// so far simple people have nothing to do in our beloved mine
+		// so far simple people have nothing to do in our mine
 	}
 	
 	protected Position moveAlongPath(Path path, LayoutAtom currAtom) {

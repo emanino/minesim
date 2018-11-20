@@ -83,8 +83,8 @@ public class SimpleSensor implements MovingObject {
 			case TEMP:
 				reading = new ObservedDouble(atom.getStatus().getTemp()); // perfect sensor for now
 				break;
-			case CO2:
-				reading = new ObservedDouble(atom.getStatus().getCO2()); // perfect sensor for now
+			case CO:
+				reading = new ObservedDouble(atom.getStatus().getCO()); // perfect sensor for now
 				break;
 			case LOCATION:
 				reading = new ObservedPosition(pos); // perfect sensor for now
@@ -108,7 +108,7 @@ public class SimpleSensor implements MovingObject {
 			propertyName = "Temperature";
 			unitName = "degrees celsius";
 			break;
-		case CO2:
+		case CO:
 			propertyName = "Carbon Monoxide Concentration";
 			unitName = "ppm";
 			break;
@@ -140,7 +140,7 @@ public class SimpleSensor implements MovingObject {
 		case TEMP:
 			datatype = new BaseDatatype(XMLSchema.DECIMAL.stringValue());
 			break;
-		case CO2:
+		case CO:
 			datatype = new BaseDatatype(XMLSchema.DECIMAL.stringValue());
 			break;
 		case LOCATION:

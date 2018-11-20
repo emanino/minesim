@@ -10,12 +10,30 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
+
 public class LunchReader {
 
 	private static String fieldEncloseCharacters = "@";
 	private static String fieldSeparatorCharacters = "\\|";
 
+	public static void setLoggingLevel(ch.qos.logback.classic.Level level) {
+	    ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+	    root.setLevel(level);
+	}	
+	/**
+	 * This program requires GraphDB as an external database where to run queries with GeoSparql support.
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
+		
+		setLoggingLevel(ch.qos.logback.classic.Level.ERROR);
+		
 		String resultFile = "res003.csv";
 		
 		BufferedReader reader;
@@ -37,6 +55,19 @@ public class LunchReader {
 				solutions.put(r.stn, new HashSet<Result>());
 			solutions.get(r.stn).add(r);
 			//System.out.println(r);
+			
+			// interpret the statements before the IF as part of the IF, as they effectively form a condition
+			if(r.solutionFound() && r.getUnsassigned().size() > 0 && r.getIfBlock().size() > 0) {
+				JsonArrayBuilder builder = Json.createArrayBuilder();
+				for(JsonValue obj: r.getIfBlock()) {
+					  builder.add(obj);
+					}
+				for(JsonValue obj: r.getUnsassigned()) {
+					  builder.add(obj);
+					}
+				r.setIfBlock(builder.build());
+				r.setUnsassigned(Json.createArrayBuilder().build());
+			}
 			line = reader.readLine();
 			
 		}

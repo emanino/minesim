@@ -375,7 +375,7 @@ public class Mine {
 			if(Boolean.parseBoolean((state.getProp().getProperty("sensorsRegisteredWithTunnel"))))
 				featureOfInterest = state.getProp().getProperty("baseURI")+atom.getSuperId();
 			new SimpleSensor(atom.getPosition(), state, SensorType.TEMP, featureOfInterest);
-			new SimpleSensor(atom.getPosition(), state, SensorType.CO2, featureOfInterest);
+			new SimpleSensor(atom.getPosition(), state, SensorType.CO, featureOfInterest);
 			prob = 1.0;
 		
 			// or decrease the probability of not creating one next

@@ -124,6 +124,9 @@ public class Tunnel implements LayoutObject {
 		// TODO Auto-generated method stub
 		
 	}
+	public String getURI() {
+		return this.getState().getProp().getProperty("baseURI")+this.getId();
+	}
 	
 	@Override
 	public Set<Triple> getSensorInfoRDF() {

@@ -63,7 +63,7 @@ public class LayoutAtomStatus {
 		return temp.getValue();
 	}
 	
-	public double getCO2() {
+	public double getCO() {
 		return co2.getValue();
 	}
 	
@@ -84,14 +84,14 @@ public class LayoutAtomStatus {
 		ArrayList<Double> neighbourCO2 = new ArrayList<Double>();
 		for(LayoutAtomStatus status: neighbours) {
 			neighbourTemp.add(status.getTemp());
-			neighbourCO2.add(status.getCO2());
+			neighbourCO2.add(status.getCO());
 		}
 		
 		// standard update
 		temp.update(neighbourTemp, rand);
 		co2.update(neighbourCO2, rand);
 		
-		// Tragedy! A fire/gas leak/temperature increase is happening!
+		// A fire/gas leak/temperature increase is happening
 		for(EventObject e: nearbyEvents)
 			if(e instanceof Fire) {
 				temp.forceValueUpTowardsLevel(LayoutAtomStatusLevel.EXTREME); // ignore the strength of the fire for now

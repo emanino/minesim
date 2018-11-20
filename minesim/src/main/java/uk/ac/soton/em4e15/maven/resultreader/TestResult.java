@@ -3,10 +3,12 @@ package uk.ac.soton.em4e15.maven.resultreader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Random;
 
 import uk.ac.soton.em4e15.maven.minesim.Mine;
+import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public interface TestResult {
 	
@@ -53,28 +55,5 @@ public interface TestResult {
 		return r > 0.01;
 	}
 	
-	/**
-	 * How many scenarios to consider for every solution
-	 * @return
-	 */
-	public static int getIterations() {
-		return 3;
-	}
-	public static Random rand = new Random();
 	
-	public static Integer getRandomUpdateSeed() {
-		return rand.nextInt();
-	}
-	public static Integer getRandomLayoutSeed() {
-		return rand.nextInt();
-	}
-	public static Mine getRandomMine() throws FileNotFoundException, IOException {
-		int mineSeed = getRandomLayoutSeed();
-		int updateSeed = getRandomUpdateSeed();
-		Properties prop = new Properties();
-		prop.load(new FileReader("WebContent/WEB-INF/minesim.properties"));
-		//prop.load(new FileInputStream(new File(resourceUrl.toString())));
-		Mine mine = new Mine(prop, mineSeed, updateSeed, 0);
-		return mine;
-	}
 }

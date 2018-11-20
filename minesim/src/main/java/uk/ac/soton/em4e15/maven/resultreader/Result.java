@@ -5,6 +5,7 @@ import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParsingException;
@@ -61,6 +62,33 @@ public class Result {
 	}
 	public JsonArray getThenBlock() {
 		return result.getJsonArray("then_block");
+	}
+	public void setUnsassigned(JsonArray newArray) {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		for(String key: result.keySet()) {
+			if(key.equals("unassigned")) {
+				builder.add(key, newArray);
+			} else builder.add(key, result.get(key));
+		}
+		result = builder.build();
+	}
+	public void setIfBlock(JsonArray newArray) {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		for(String key: result.keySet()) {
+			if(key.equals("if_block")) {
+				builder.add(key, newArray);
+			} else builder.add(key, result.get(key));
+		}
+		result = builder.build();
+	}
+	public void setThenBlock(JsonArray newArray) {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		for(String key: result.keySet()) {
+			if(key.equals("then_block")) {
+				builder.add(key, newArray);
+			} else builder.add(key, result.get(key));
+		}
+		result = builder.build();
 	}
 	
 	public static String resultPrettyPrint(Result result) {

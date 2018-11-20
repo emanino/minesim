@@ -14,9 +14,11 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import logic.ExternalDB;
 import logic.ExternalDB_GraphDB;
 import uk.ac.soton.em4e15.maven.minesim.AtomObject;
+import uk.ac.soton.em4e15.maven.minesim.EscapeTunnel;
 import uk.ac.soton.em4e15.maven.minesim.FirePerson;
 import uk.ac.soton.em4e15.maven.minesim.LayoutAtom;
 import uk.ac.soton.em4e15.maven.minesim.Mine;
+import uk.ac.soton.em4e15.maven.minesim.Person;
 import uk.ac.soton.em4e15.maven.minesim.SensorType;
 import uk.ac.soton.em4e15.maven.minesim.SimpleSensor;
 import uk.ac.soton.em4e15.maven.minesim.Tunnel;
@@ -29,10 +31,10 @@ import uk.ac.soton.em4e15.maven.resultreader.TestResultPositive;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultPositiveFact;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultUtil;
 
-public class TestResult_a1 extends TestResultPositiveFact{
+public class TestResult_a4 extends TestResultPositiveFact{
 	
 	/**
-	 * The condition A1 is "The temperature in tunnel X is greater than 48 and the carbon monoxide concentration is greater than 78"
+	 * The condition A4 is "In tunnel X there is a person, and the carbon monoxide concentration there is greater than 68"
 	 * @param positive
 	 * @param m
 	 * @return
@@ -52,10 +54,10 @@ public class TestResult_a1 extends TestResultPositiveFact{
 		return false;
 	}*/
 
-	public Set<String> expectedSet(Mine m){
-		Set<String> highCO = TestResultUtil.getTunnelsAbove(m, SensorType.CO, 78);
-		Set<String> highTemp = TestResultUtil.getTunnelsAbove(m, SensorType.TEMP, 48);
-		highCO.retainAll(highTemp);
+	public Set<String> expectedSet(Mine m) {
+		Set<String> highCO = TestResultUtil.getTunnelsAbove(m, SensorType.CO, 68);
+		Set<String> tunnelWithHumans = TestResultUtil.getTunnelsWithHumans(m);
+		highCO.retainAll(tunnelWithHumans);
 		return highCO;
 	}
 
