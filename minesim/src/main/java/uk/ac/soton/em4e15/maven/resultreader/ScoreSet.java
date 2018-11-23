@@ -23,6 +23,9 @@ import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a7;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a8;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a9;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b10;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b3;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b4;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b5;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b6;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b7;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b8;
@@ -41,10 +44,14 @@ public class ScoreSet {
 	
 	DecimalFormat df = new DecimalFormat("#.####");
 	
+	public EvaluationFile eval;
+	
 	// enable debug prints
 	public boolean dp = true;
 	
-	public ScoreSet() {
+	public ScoreSet(EvaluationFile eval) {
+		this.eval = eval;
+		
 		df.setRoundingMode(RoundingMode.CEILING);
 		
 		negativeScores =  new HashMap<String, List<Double>>();
@@ -73,6 +80,12 @@ public class ScoreSet {
 			tr = new TestResult_b7();
 		} else if(label.equals("b6")) {
 			tr = new TestResult_b6();
+		} else if(label.equals("b5")) {
+			tr = new TestResult_b5();
+		} else if(label.equals("b4")) {
+			tr = new TestResult_b4();
+		} else if(label.equals("b3")) {
+			tr = new TestResult_b3();
 		} else if(label.equals("a10")) {
 			tr = new TestResult_a10();
 		} else if(label.equals("a9")) {
@@ -99,15 +112,32 @@ public class ScoreSet {
 		
 		if(tr != null) {
 			if(dp) System.out.println("SCORING HIT "+label);	
-			for(Result r: results)
-				score(label, tr, r);
+			for(Result r: results) {
+				if(eval.containsAsID(r.assignment_id) && 
+						(
+								(tr.isPositiveInstance() && eval.getPos(r.assignment_id).size() >= (TestResultUtil.getIterations())) 
+								|| 
+								(!tr.isPositiveInstance())
+						)
+						){
+					if(dp) System.out.println("Already has enough eval for "+r.assignment_id);
+				}
+				else {
+					if(eval.containsAsID(r.assignment_id)){
+						System.out.println("Wrong number of tests for "+r.assignment_id+" (rerunning) "+(eval.getPos(r.assignment_id).size())+" vs "+(TestResultUtil.getIterations()*2));
+						eval.removeEntry(r.assignment_id);
+					}
+					// only score it if necessary
+					score(label, tr, r);				
+				}
+			}
 		} else {
 			if(dp) System.out.println("DOES NOT HAVE AUTOMATIC TESTS FOR "+label);			
 		}
 	}
 	
 	public void score(String label, TestResult tr, Result r) throws FileNotFoundException, IOException {
-		Double score = tr.score(r);
+		Double score = tr.score(r, eval);
 		Map<String, List<Double>> relevantScores = positiveScores;
 		Map<String, Integer> relevantTotalAnswers = positiveTotalAnswers;
 		Map<String, Integer> relevantCorrectAnswers = positiveCorrectAnswers;

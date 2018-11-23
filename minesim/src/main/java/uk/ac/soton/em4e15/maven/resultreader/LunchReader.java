@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +17,9 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 public class LunchReader {
 
@@ -35,6 +40,19 @@ public class LunchReader {
 		setLoggingLevel(ch.qos.logback.classic.Level.ERROR);
 		
 		String resultFile = "res003.csv";
+		String evaluationFile = "eval.csv";
+		
+		EvaluationFile eval = new EvaluationFile(evaluationFile);
+		/*System.out.println("a "+eval.containsAsID("asdas"));
+		System.out.println(" "+eval.containsAsID("test_as"));
+		System.out.println(" "+eval.getPos("test_as"));
+		List<Double> pos = eval.getPos("test_as");
+		List<Double> neg = eval.getPos("test_as");
+		eval.removeEntry("test_as");
+		eval.addEntry("asdas","b12",pos, neg);
+		System.out.println("a "+eval.containsAsID("asdas"));
+		if(!eval.containsAsID("asdas")) throw new RuntimeException();
+		if(eval.containsAsID("asdas")) throw new RuntimeException();*/
 		
 		BufferedReader reader;
 		reader = new BufferedReader(new FileReader(resultFile));
@@ -73,14 +91,17 @@ public class LunchReader {
 		}
 		reader.close();
 		
-		for(String stn : solutions.keySet()){
+		/*for(String stn : solutions.keySet()){
 			System.out.println("STN "+stn);
 			for(Result r : solutions.get(stn)) {
 				System.out.println("> "+r.getPrettyResultPrint());
 			}
 			System.out.println("<<<<<");
-		}
-		ScoreSet score = new ScoreSet();
+		}*/
+		
+		TestResultUtil.computePredicates();
+		
+		ScoreSet score = new ScoreSet(eval);
 		score.score(solutions);
 		score.prettyPrintScores();
 	}

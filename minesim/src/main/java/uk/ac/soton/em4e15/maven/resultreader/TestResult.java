@@ -26,7 +26,7 @@ public interface TestResult {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public double score(Result r) throws FileNotFoundException, IOException;
+	public double score(Result r, EvaluationFile eval) throws FileNotFoundException, IOException;
 	
 	/**
 	 * Returns true if the result is correct

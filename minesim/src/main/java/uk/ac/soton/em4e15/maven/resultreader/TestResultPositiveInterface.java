@@ -17,7 +17,7 @@ public interface TestResultPositiveInterface {
 	 */
 	public boolean isIfThen();
 	
-	public double evaluateQueryResults(Mine m, TupleQueryResult result);
+	public double evaluateQueryResults(Mine m, TupleQueryResult result, Result r);
 	
 	/**
 	 * Checks whether a mine complies with a certain condition

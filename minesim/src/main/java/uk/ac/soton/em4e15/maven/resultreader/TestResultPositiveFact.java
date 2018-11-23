@@ -18,7 +18,7 @@ abstract public class TestResultPositiveFact extends TestResultPositive implemen
 	
 	
 	@Override
-	public double evaluateQueryResults(Mine m, TupleQueryResult result) {
+	public double evaluateQueryResults(Mine m, TupleQueryResult result, Result r) {
 		// collect set of desired answers
 		Set<String> tunnels = expectedSet(m);
 		Set<String> results = new HashSet<String>();

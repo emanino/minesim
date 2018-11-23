@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
+import javax.json.JsonArray;
 import javax.json.JsonValue;
 
 import org.apache.jena.rdf.model.Model;
@@ -67,9 +68,9 @@ public class TestResultUtil {
 		return predicates;
 	}
 	
-	public static String getSPARQLquery(Result r) throws IOException {
+	public static String getSPARQLquery(JsonArray r) throws IOException {
 		Set<String> query = new HashSet<String>();
-		for(JsonValue obj : r.getUnsassigned()) {
+		for(JsonValue obj : r) {
 			query.add(formalisePredicate(obj));
 		}
 		String queryString = RDFUtil.getSPARQLdefaultPrefixes()+"\nSELECT * WHERE {\n";
@@ -128,10 +129,9 @@ public class TestResultUtil {
 	}
 	
 	
-	private static void computePredicates() throws IOException {
+	public static void computePredicates() throws IOException {
 		System.out.println("*************** COMPUTING RULE EXPANSION\n");
 		String basePath = System.getProperty("user.dir");
-		basePath = "/home/paolo/eclipse-workspace2/Simulator2D";
 		String rulefile =  basePath+ "/resources/rulesBasic01.txt";
 		String[] vocabularyFiles = new String[] {
 				basePath + "/resources/vocabularies/SSN.ttl",
@@ -166,7 +166,7 @@ public class TestResultUtil {
 		expansion.setPrefixes(prefixes);
 		Set<PredicateInstantiation> newPredicates = expansion.expand(existingPredicates);
 		predicates = expansion.getPredicates();
-		
+		eDB.clearDB();
 		System.out.println("*************** EXPANSION FINISHED\n");
 	}
 	
@@ -175,7 +175,7 @@ public class TestResultUtil {
 	 * @return
 	 */
 	public static int getIterations() {
-		return 2;
+		return 5;
 	}
 	public static Random rand = new Random();
 	
