@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -23,8 +24,8 @@ import org.apache.commons.csv.CSVRecord;
 
 public class LunchReader {
 
-	private static String fieldEncloseCharacters = "@";
-	private static String fieldSeparatorCharacters = "\\|";
+	public static String fieldEncloseCharacters = "@";
+	public static String fieldSeparatorCharacters = "\\|";
 
 	public static void setLoggingLevel(ch.qos.logback.classic.Level level) {
 	    ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -33,10 +34,27 @@ public class LunchReader {
 	/**
 	 * This program requires GraphDB as an external database where to run queries with GeoSparql support.
 	 * @param args
+	 * @throws InterruptedException 
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
-		
+	public static void main(String[] args) throws InterruptedException {
+		boolean finished = false;
+		while(!finished) {
+			try{
+				finished = computeEvaluations();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				TimeUnit.SECONDS.sleep(5);
+				System.out.println("EXCEPTION -- STOP");
+				System.gc();
+				TimeUnit.SECONDS.sleep(5);
+				System.out.println("EXCEPTION -- RESTART");
+			}
+		}
+		System.out.println("\n\n *** Evaluation complete");
+	}
+	
+	public static boolean computeEvaluations() throws Exception {
 		setLoggingLevel(ch.qos.logback.classic.Level.ERROR);
 		
 		String resultFile = "res003.csv";
@@ -104,6 +122,7 @@ public class LunchReader {
 		ScoreSet score = new ScoreSet(eval);
 		score.score(solutions);
 		score.prettyPrintScores();
+		return true;
 	}
 	
 	public static String clean(String str) throws Exception {

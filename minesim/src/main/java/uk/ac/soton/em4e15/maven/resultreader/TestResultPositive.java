@@ -69,10 +69,10 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		ExternalDB eDB = TestResultUtil.getDB();
 		eDB.loadRDF(new StringReader(m.getSensorRDF()), RDFFormat.TURTLE);	
 		// computing rule closure is expensive, so we only do it when necessary
+		TestResultUtil.addVocabularyFiles(eDB);
 		if(this.getClass() == TestResult_a4.class || this.getClass() == TestResult_b4.class) {			
 			PredicateEvaluation.computeRuleClosure(eDB, TestResultUtil.getRules(), TestResultUtil.getPredicates());
 		}
-		TestResultUtil.addVocabularyFiles(eDB);
 		
 		double score = -1;
 		String query;
@@ -89,6 +89,7 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 			score = evaluateQueryResults(m,result,r);
 			result.close();				
 		} catch (HTTPQueryEvaluationException e) {
+			System.out.println("  ~~ Query not completable");
 			score = 0;
 			eDB.clearDB();
 		}
@@ -101,7 +102,7 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		Mine m = TestResultUtil.getRandomMine();
 		while(!conditionHolds(positive, m)) {
 			for(int i = 0; i < 50; i++) {	
-				for(int j = 0; j < 10; j++) {
+				for(int j = 0; j < 20; j++) {
 					m.update(new HashSet<UserAction>());					
 				}
 				if(conditionHolds(positive, m)) {

@@ -12,8 +12,10 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.json.Json;
@@ -35,6 +37,7 @@ public class EvaluationFile {
 	
 	private String file;
 	private Iterable<CSVRecord> records;
+	
 	public EvaluationFile(String filename) throws IOException {
 		this.file = filename;
 		
@@ -45,10 +48,37 @@ public class EvaluationFile {
 		records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 		for (CSVRecord record : records) {
 		    if(record.get("asID").equals(asID))
+		    	in.close();
 		    	return true;
 		}
+		in.close();
 		return false;
 	} 
+	
+	
+	public Set<String> getAllStns() throws IOException{
+		Reader in = new FileReader(file);
+		records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
+		Set<String> stns = new HashSet<String>();
+		for (CSVRecord record : records) {
+			stns.add(record.get("stn"));
+		}
+		in.close();
+		return stns;
+	}
+	
+	public Set<String> getasIDforStn(String stn) throws IOException{
+		Reader in = new FileReader(file);
+		records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
+		Set<String> asIDs = new HashSet<String>();
+		for (CSVRecord record : records) {
+			if(record.get("stn").equals(stn)) {
+				asIDs.add(record.get("asID"));
+			}
+		}
+		in.close();
+		return asIDs;
+	}
 	
 	public List<Double> getPos(String asID) throws IOException{
 		return getDoubles(asID, "pos");
@@ -64,13 +94,17 @@ public class EvaluationFile {
 		    if(record.get("asID").equals(asID))
 		    	results = record.get(key);
 		}
-		if(results == null) return null;
+		if(results == null) {
+			in.close();
+			return null;
+		}
 		JsonReader jsonReader = Json.createReader(new StringReader(results));
 		JsonArray jarr = jsonReader.readArray();
 		List<Double> doublelist = new LinkedList<Double>();
 		for(JsonNumber jn: jarr.getValuesAs(JsonNumber.class)) {
 			doublelist.add(jn.doubleValue());
 		}
+		in.close();
 		return doublelist;
 	}
 	

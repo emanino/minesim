@@ -116,7 +116,6 @@ public class TestResultUtil {
 	
 	public static void addVocabularyFiles(ExternalDB eDB) throws RDFParseException, RepositoryException, IOException {
 		String basePath = System.getProperty("user.dir");
-		basePath = "/home/paolo/eclipse-workspace2/Simulator2D";
 		String[] vocabularyFiles = new String[] {
 				basePath + "/resources/vocabularies/SSN.ttl",
 				basePath + "/resources/vocabularies/rdf.ttl",
@@ -132,6 +131,7 @@ public class TestResultUtil {
 	public static void computePredicates() throws IOException {
 		System.out.println("*************** COMPUTING RULE EXPANSION\n");
 		String basePath = System.getProperty("user.dir");
+		basePath = "/home/paolo/eclipse-workspace2/Simulator2D";
 		String rulefile =  basePath+ "/resources/rulesBasic01.txt";
 		String[] vocabularyFiles = new String[] {
 				basePath + "/resources/vocabularies/SSN.ttl",
@@ -193,7 +193,7 @@ public class TestResultUtil {
 		//prop.load(new FileInputStream(new File(resourceUrl.toString())));
 		Mine mine = new Mine(prop, mineSeed, updateSeed, 0);
 		// add a small amount of update actions, so that we do not consider mines with no history
-		for(int i = 0; i < 1+Math.random()*30; i++) {
+		for(int i = 0; i < 1+Math.random()*20; i++) {
 			mine.update(new HashSet<UserAction>());
 		}
 		return mine;

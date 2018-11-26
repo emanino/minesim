@@ -3,7 +3,7 @@ var jsonSentences = [];
 var solution;
 
 /////////////////////////////////////
-//function gettasknumber() {return "sample0";}; function isFormDisabled() {return false;};
+function gettasknumber() {return "sample0";}; function isFormDisabled() {return false;};
 /////////////////////////////////////
 
 var bolts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -33,7 +33,7 @@ function jsonSentencesLoaded(json){
 	for(index in jsonSentences){
 		if(jsonSentences[index]["sentenceID"] == gettasknumber()){
 			$("#main-sentence").html(jsonSentences[index]["sentence"]);			
-			$("#small-main-sentence").html('"'+jsonSentences[index]["sentence"]+'"');
+			$(".small-main-sentence").html('"'+jsonSentences[index]["sentence"]+'"');
 			isIF = jsonSentences[index]["isIF"] == 1;
 			if(jsonSentences[index]["mandatoryVariables"].length > 0)
 				mandatoryVars = jsonSentences[index]["mandatoryVariables"];
@@ -719,6 +719,11 @@ function getJsonResult(){
 		display_error(err,$("#sortable"),10000);
 		return null;
 	}
+}
+
+function populateHumanReadableSentence(){
+	var translation = "";
+	$(".human-readable-sentence").text(translation);
 }
 
 /*

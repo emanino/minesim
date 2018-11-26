@@ -221,3 +221,7 @@ button, input, select, select > input[type="button"], textarea {
 	    max-width: 90%;
     max-height: 90%;
 }
+
+li {
+	box-sizing: content-box;
+}

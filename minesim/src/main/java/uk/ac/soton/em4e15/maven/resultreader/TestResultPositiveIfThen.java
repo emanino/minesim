@@ -29,13 +29,33 @@ abstract public class TestResultPositiveIfThen extends TestResultPositive implem
 		
 		JsonArray ja = r.getThenBlock();
 		// in these examples the action to take is a single one
-		if(ja.size() != 1) return 0;
+		boolean fullEvac = false;
+		boolean onlyEvacActions = true;
+		if(ja.size() == 0) return 0;
+		if(ja.size() > 1) {
+			// remove redundant actions, 
+			// for example, evacuating the whole mine makes evacuating single tunnels redundant
+			for(JsonObject jo : ja.getValuesAs(JsonObject.class)) {
+				if(jo.getString("name").equals("fullEvacuation")) {
+					fullEvac =  true;
+				} else if(!jo.getString("name").equals("evacuate")) {
+					onlyEvacActions = false;
+				}
+			}
+		}
 		JsonObject jo = (JsonObject) ja.get(0);
 		String predicateName = jo.getString("name");
 		Map<Integer,Binding> bindings = new HashMap<Integer,Binding>();
 		for(JsonValue var: jo.asJsonObject().getJsonArray("variables")){
 			TestResultUtil.processBinding(bindings, var);
 		}		
+		if(fullEvac && onlyEvacActions) {
+			predicateName = "fullEvacuation";
+			bindings = new HashMap<Integer,Binding>();
+		} else {			
+			if(ja.size() != 1) return 0;
+		}
+		
 		// in these examples, the action to take has either 1 or 0 variables
 		if(bindings.keySet().size() > 1) return 0;
 		Binding requiredBinding = null;
@@ -50,9 +70,11 @@ abstract public class TestResultPositiveIfThen extends TestResultPositive implem
 		// check that the action is the right one
 		if(! predicateName.equals(expected.getRight())) return 0;
 		
-		if(requiredBinding == null) {
+		if(expected.getRight().equals("fullEvacuation")) {
 			// if the consequent predicate does not have variables, we should just check whether it triggers or not
-			if(result.hasNext() && expected.getLeft().size() > 0) return 1;
+			boolean triggers = false;
+			if(result.hasNext()) triggers = true;
+			if(triggers == (expected.getLeft().size() > 0) ) return 1;
 			else return 0;
 		} else {
 			// otherwise we need to check that the variable binding is correct

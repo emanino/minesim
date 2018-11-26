@@ -204,7 +204,7 @@ We will not collect any personal information and all information collected will 
       <option value=" " > </option>
       <option value="variable">Variable</option>
       <option value="http://www.w3.org/2001/XMLSchema#decimal">Number</option>
-      <option value="http://www.w3.org/2001/XMLSchema#string">Text</option>
+      <!--  <option value="http://www.w3.org/2001/XMLSchema#string">Text</option> -->
       </select> </br>
       <span id="value-field-block" class="hiddenDialogFields form-element">
       <label for="value" >Value</label>
@@ -219,7 +219,7 @@ We will not collect any personal information and all information collected will 
   <form>
     <fieldset>
       <p>For which words in the the original you could not find suitable sentence blocks? Please paste them here:</p>
-      <p class="italics" id="small-main-sentence"></p>
+      <p class="italics" class="small-main-sentence"></p>
       <label for="words" >Words:</label>
       <input type="text" name="words" id="snippet-field" class="text ui-widget-content ui-corner-all">
       
@@ -228,7 +228,18 @@ We will not collect any personal information and all information collected will 
   </form>
 </div>
 
-
+<div id="dialog-form3" title="Confirm submission:">
+  <form>
+    <fieldset>
+      <p>Your solution:</p>
+      <p class="italics" class="human-readable-sentence"></p>
+      <p>... captures the meaning of this sentence:</p>
+      <p class="italics" class="small-main-sentence"></p>
+      
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
 
 
 
