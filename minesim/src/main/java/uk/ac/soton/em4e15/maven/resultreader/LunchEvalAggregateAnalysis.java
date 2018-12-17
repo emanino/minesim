@@ -3,12 +3,15 @@ package uk.ac.soton.em4e15.maven.resultreader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -21,21 +24,23 @@ public class LunchEvalAggregateAnalysis {
 
 	private static EvaluationFile eval;
 	
+	public static DecimalFormat df = new DecimalFormat("#.###");
+	
 	public static void main(String[] args) throws InterruptedException, IOException {
 		
 		String evaluationFile = "eval.csv";
 		eval = new EvaluationFile(evaluationFile);
 		double totNeg = 0;
 		double totPos = 0;
-		for(String s : eval.getAllStns()) {
+		for(String s : eval.getAllStns().stream().sorted(Comparator.comparing(n->n.toString())).collect(Collectors.toList())) {
 			Pair<Double,Double> result = processStn(s);
-			System.out.println("Score of "+s+" POS: "+result.getLeft()+" NEG: "+result.getRight());
+			System.out.println("Score of   "+s+"   POS: "+df.format(result.getLeft())+" NEG: "+df.format(result.getRight()));
 			totNeg += result.getRight();
 			totPos += result.getLeft();
 		}
 		int numStns = eval.getAllStns().size();
-		System.out.println("TOTAL SCORE:\n >> POS: "+(totPos/numStns)+" NEG: "+(totNeg/numStns));
-		System.out.println("               >> Aggregate: "+(((totPos/numStns)+(totNeg/numStns))/2));
+		System.out.println("TOTAL SCORE:\n >> POS: "+df.format((totPos/numStns))+" NEG: "+df.format((totNeg/numStns)));
+		System.out.println(" >> Aggregate: "+df.format((((totPos/numStns)+(totNeg/numStns))/2)));
 	}
 	
 	public static Pair<Double,Double> processStn(String stn) throws IOException {

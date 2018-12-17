@@ -24,7 +24,7 @@ public class MineStatisticsTest {
 		
 		Position pos = new Position(2.0, 0.0, 0.0);
 		SortedSet<LayoutAtom> layoutAtomToUpdate = new TreeSet<LayoutAtom>(Comparator.comparing(MineObject::getId));
-		new Tunnel(state, new Position(0.0, 0.0, 0.0), pos, 3, new LayoutAtomStatus(prop, -1), 1.0, layoutAtomToUpdate, true);
+		new Tunnel(state, new Position(0.0, 0.0, 0.0), pos, 3, new LayoutAtomStatus(prop, -1), 1.0, layoutAtomToUpdate, true, false);
 		MinerPerson miner = new MinerPerson(pos, state, new PersonStatus(prop), stats);
 		Fire fire = new Fire(pos, state, new FireStatus(prop), stats);
 		

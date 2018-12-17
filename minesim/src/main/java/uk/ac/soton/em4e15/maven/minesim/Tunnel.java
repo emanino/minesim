@@ -24,8 +24,10 @@ public class Tunnel implements LayoutObject {
 	
 	private boolean allowVehicles;
 	
+	private boolean isGeofenced;
+	
 	// create a new Tunnel between two given positions
-	Tunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean allowVehicles) {
+	Tunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean allowVehicles, boolean isGeofenced) {
 		id = state.getNextId();
 		this.state = state;
 		this.head = head;
@@ -33,6 +35,7 @@ public class Tunnel implements LayoutObject {
 		atoms = new ArrayList<Integer>();
 		this.allowVehicles = allowVehicles;
 		state.addNew(this);
+		this.isGeofenced = isGeofenced;
 		
 		// check increment.length inside (radius/2, radius)
 		Position increment = tail.minus(head).times(1.0 / (double) nAtoms);
@@ -60,9 +63,14 @@ public class Tunnel implements LayoutObject {
 		tail = tunnel.getTail();
 		atoms = tunnel.getAtomList();
 		allowVehicles = tunnel.areVehiclesAllowed();
+		isGeofenced = tunnel.isGeofenced();
 		state.addOld(this);
 	}
 
+	public boolean isGeofenced() {
+		return isGeofenced;
+	}
+	
 	@Override
 	public Integer getId() {
 		return id;
@@ -136,7 +144,20 @@ public class Tunnel implements LayoutObject {
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"Tunnel")));
+		triples.addAll(getGeofencedInformation());
 		triples.addAll(getSensorInfoRDFPosition());
+		return triples;
+	}
+	
+	public Set<Triple> getGeofencedInformation() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String baseURI = state.getProp().getProperty("baseURI");
+		if(isGeofenced()) {
+			triples.add(new Triple(
+					NodeFactory.createURI(baseURI+id), 
+					NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
+					NodeFactory.createURI(baseURI+"Geofenced")));
+		}
 		return triples;
 	}
 	

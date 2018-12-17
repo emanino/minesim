@@ -11,8 +11,8 @@ import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class MainTunnel extends Tunnel {
 
-	MainTunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate) {
-		super(state, head, tail, nAtoms, status, radius, layoutAtomtoUpdate, true); // vehicles are allowed
+	MainTunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean isGeofenced) {
+		super(state, head, tail, nAtoms, status, radius, layoutAtomtoUpdate, true, isGeofenced); // vehicles are allowed
 	}
 	
 	MainTunnel(MainTunnel tunnel, MineState next) {
@@ -39,6 +39,7 @@ public class MainTunnel extends Tunnel {
 				NodeFactory.createURI(baseURI+this.getId()), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"MainTunnel")));
+		triples.addAll(getGeofencedInformation());
 		triples.addAll(getSensorInfoRDFPosition());
 		return triples;
 	}

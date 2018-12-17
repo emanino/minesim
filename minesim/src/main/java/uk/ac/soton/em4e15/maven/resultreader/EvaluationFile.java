@@ -47,9 +47,10 @@ public class EvaluationFile {
 		Reader in = new FileReader(file);
 		records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 		for (CSVRecord record : records) {
-		    if(record.get("asID").equals(asID))
+		    if(record.get("asID").equals(asID)) {		    	
 		    	in.close();
 		    	return true;
+		    }
 		}
 		in.close();
 		return false;
@@ -133,9 +134,11 @@ public class EvaluationFile {
 		while((currentLine = reader.readLine()) != null) {
 		    // trim newline when comparing with lineToRemove
 		    String trimmedLine = currentLine.trim();
-		    if(trimmedLine.contains("\""+asID+"\"")) continue;
+		    if(trimmedLine.contains("\""+asID+"\"")) {
+		    	System.out.println("Removed line "+asID);
+		    	continue;
+		    }
 		    writer.write(currentLine + System.getProperty("line.separator"));
-		    System.out.println("Removed line "+asID);
 		}
 		writer.close(); 
 		reader.close(); 

@@ -11,8 +11,8 @@ import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
 public class EscapeTunnel extends Tunnel {
 	
-	EscapeTunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate) {
-		super(state, head, tail, nAtoms, status, radius, layoutAtomtoUpdate, false); // no vehicles allowed
+	EscapeTunnel(MineState state, Position head, Position tail, int nAtoms, LayoutAtomStatus status, double radius, SortedSet<LayoutAtom> layoutAtomtoUpdate, boolean isGeofenced) {
+		super(state, head, tail, nAtoms, status, radius, layoutAtomtoUpdate, false, isGeofenced); // no vehicles allowed
 	}
 	
 	EscapeTunnel(EscapeTunnel tunnel, MineState next) {

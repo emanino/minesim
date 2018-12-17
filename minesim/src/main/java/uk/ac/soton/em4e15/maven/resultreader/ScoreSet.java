@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a0;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a1;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a10;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a2;
@@ -42,7 +43,7 @@ public class ScoreSet {
 	public Map<String, Integer> negativeCorrectAnswers;
 	public Map<String, Integer> positiveCorrectAnswers;
 	
-	DecimalFormat df = new DecimalFormat("#.####");
+	public DecimalFormat df = new DecimalFormat("#.###");
 	
 	public EvaluationFile eval;
 	
@@ -96,7 +97,9 @@ public class ScoreSet {
 			tr = new TestResult_a7();
 		} else if(label.equals("a6")) {
 			tr = new TestResult_a6();
-		} else if(label.equals("a1")) {
+		} else if(label.equals("a0")) {
+			tr = new TestResult_a0();
+		}else if(label.equals("a1")) {
 			tr = new TestResult_a1();
 		} else if(label.equals("a2")) {
 			tr = new TestResult_a2();

@@ -38,6 +38,7 @@ import logic.RDFUtil;
 import logic.ResourceLiteral;
 import logic.ResourceURI;
 import logic.Rule;
+import logic.VariableImpl;
 import uk.ac.soton.em4e15.maven.minesim.EscapeTunnel;
 import uk.ac.soton.em4e15.maven.minesim.LayoutAtom;
 import uk.ac.soton.em4e15.maven.minesim.Mine;
@@ -108,7 +109,7 @@ public class TestResultUtil {
 		else if(type.equals("http://www.w3.org/2001/XMLSchema#decimal")) 
 			bindings.put(varnum, new BindingImpl(new ResourceLiteral(var.asJsonObject().getString("val"), type)));
 		else if(type.equals("variable")) {
-			bindings.put(varnum, new BindingImpl(stringToInt(var.asJsonObject().getString("val"))));
+			bindings.put(varnum, new BindingImpl(new VariableImpl(stringToInt(var.asJsonObject().getString("val")))));
 		} else {
 			bindings.put(varnum, new BindingImpl(new ResourceLiteral(var.asJsonObject().getString("val"), type)));
 		}
@@ -116,6 +117,7 @@ public class TestResultUtil {
 	
 	public static void addVocabularyFiles(ExternalDB eDB) throws RDFParseException, RepositoryException, IOException {
 		String basePath = System.getProperty("user.dir");
+		basePath = "/home/paolo/eclipse-workspace2/Simulator2D";
 		String[] vocabularyFiles = new String[] {
 				basePath + "/resources/vocabularies/SSN.ttl",
 				basePath + "/resources/vocabularies/rdf.ttl",
@@ -164,7 +166,7 @@ public class TestResultUtil {
 		}
 		PredicateExpansion expansion = new PredicateExpansionBySPARQLquery(predicates, rules, additionalVocabularies);
 		expansion.setPrefixes(prefixes);
-		Set<PredicateInstantiation> newPredicates = expansion.expand(existingPredicates);
+		Set<PredicateInstantiation> newPredicates = expansion.expand(0,existingPredicates);
 		predicates = expansion.getPredicates();
 		eDB.clearDB();
 		System.out.println("*************** EXPANSION FINISHED\n");
@@ -175,7 +177,7 @@ public class TestResultUtil {
 	 * @return
 	 */
 	public static int getIterations() {
-		return 5;
+		return 10;
 	}
 	public static Random rand = new Random();
 	
@@ -206,6 +208,17 @@ public class TestResultUtil {
 		}
 		return mainTunnels;
 	}
+	
+	public static Set<String> getGeofencedTunnels(Mine m){
+		Set<String> tunnels = new HashSet<String>();
+		for(Tunnel s: m.getState().getObjects(Tunnel.class)) {
+			if(s.isGeofenced()) {				
+				tunnels.add(s.getURI());
+			}
+		}
+		return tunnels;
+	}
+	
 	public static Set<String> getTunnelsAbove(Mine m, SensorType t, double treshold){
 		Set<String> highT = new HashSet<String>();
 		for(SimpleSensor s: m.getState().getObjects(SimpleSensor.class)) {

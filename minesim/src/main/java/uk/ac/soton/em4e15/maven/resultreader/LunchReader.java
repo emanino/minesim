@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,10 +41,14 @@ public class LunchReader {
 	public static void main(String[] args) throws InterruptedException {
 		boolean finished = false;
 		while(!finished) {
+			System.out.println("\n\n *** Evaluation start");
+			printTime();
 			try{
 				finished = computeEvaluations();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
+				System.out.println(e);
+				e.printStackTrace();
 				TimeUnit.SECONDS.sleep(5);
 				System.out.println("EXCEPTION -- STOP");
 				System.gc();
@@ -52,9 +57,14 @@ public class LunchReader {
 			}
 		}
 		System.out.println("\n\n *** Evaluation complete");
+		printTime();
 	}
 	
-	public static boolean computeEvaluations() throws Exception {
+	private static void printTime() {
+		System.out.println(new Date().toString());
+	}
+	
+	public static boolean computeEvaluations() throws IOException  {
 		setLoggingLevel(ch.qos.logback.classic.Level.ERROR);
 		
 		String resultFile = "res003.csv";
@@ -118,6 +128,7 @@ public class LunchReader {
 		}*/
 		
 		TestResultUtil.computePredicates();
+		printTime();
 		
 		ScoreSet score = new ScoreSet(eval);
 		score.score(solutions);
@@ -125,10 +136,10 @@ public class LunchReader {
 		return true;
 	}
 	
-	public static String clean(String str) throws Exception {
-		if(str.indexOf(fieldEncloseCharacters) != 0) throw new Exception("ERROR, malformed field");
+	public static String clean(String str) throws RuntimeException {
+		if(str.indexOf(fieldEncloseCharacters) != 0) throw new RuntimeException("ERROR, malformed field");
 		str = str.substring(1);
-		if(! str.substring(str.length()-1, str.length()).equals(fieldEncloseCharacters)) throw new Exception("ERROR, malformed field");
+		if(! str.substring(str.length()-1, str.length()).equals(fieldEncloseCharacters)) throw new RuntimeException("ERROR, malformed field");
 		str = str.substring(0,str.length()-1);
 		return str;
 	}
