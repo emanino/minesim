@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.json.Json;
@@ -32,13 +35,20 @@ public class LunchReader {
 	    ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 	    root.setLevel(level);
 	}	
+	
+	
+	// Configure input files
+	static private String resultFile = "res003.csv";
+	static private String evaluationFile = "eval.csv";
+
 	/**
 	 * This program requires GraphDB as an external database where to run queries with GeoSparql support.
 	 * @param args
 	 * @throws InterruptedException 
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		boolean finished = false;
 		while(!finished) {
 			System.out.println("\n\n *** Evaluation start");
@@ -67,8 +77,6 @@ public class LunchReader {
 	public static boolean computeEvaluations() throws IOException  {
 		setLoggingLevel(ch.qos.logback.classic.Level.ERROR);
 		
-		String resultFile = "res003.csv";
-		String evaluationFile = "eval.csv";
 		
 		EvaluationFile eval = new EvaluationFile(evaluationFile);
 		/*System.out.println("a "+eval.containsAsID("asdas"));

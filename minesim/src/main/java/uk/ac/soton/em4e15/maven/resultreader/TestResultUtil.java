@@ -129,17 +129,20 @@ public class TestResultUtil {
 		}
 	}
 	
+	static String ruleFilePath = "/resources/rulesBasic01.txt";
+	static String ruleBasePath = "/home/paolo/eclipse-workspace2/Simulator2D";
+	static String[] vocabularyFiles = new String[] {
+			ruleBasePath + "/resources/vocabularies/SSN.ttl",
+			ruleBasePath + "/resources/vocabularies/rdf.ttl",
+			ruleBasePath + "/resources/vocabularies/rdfs.ttl"
+	};
 	
 	public static void computePredicates() throws IOException {
 		System.out.println("*************** COMPUTING RULE EXPANSION\n");
 		String basePath = System.getProperty("user.dir");
-		basePath = "/home/paolo/eclipse-workspace2/Simulator2D";
-		String rulefile =  basePath+ "/resources/rulesBasic01.txt";
-		String[] vocabularyFiles = new String[] {
-				basePath + "/resources/vocabularies/SSN.ttl",
-				basePath + "/resources/vocabularies/rdf.ttl",
-				basePath + "/resources/vocabularies/rdfs.ttl"
-		};
+		basePath = ruleBasePath;
+		String rulefile =  basePath+ ruleFilePath;
+		
 		ExternalDB eDB = new ExternalDB_GraphDB("http://10.22.15.92:7200/", "test", "temp");
 		for(String filepath : vocabularyFiles) {
 			eDB.loadRDF(new File(filepath), RDFFormat.TURTLE);
@@ -172,12 +175,13 @@ public class TestResultUtil {
 		System.out.println("*************** EXPANSION FINISHED\n");
 	}
 	
-	/**
+	/*
 	 * How many scenarios to consider for every solution
-	 * @return
 	 */
+	
+	public static int test_iterations = 10;
 	public static int getIterations() {
-		return 10;
+		return test_iterations;
 	}
 	public static Random rand = new Random();
 	

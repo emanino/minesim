@@ -11,6 +11,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a0;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a1;
@@ -140,6 +147,28 @@ public class ScoreSet {
 	}
 	
 	public void score(String label, TestResult tr, Result r) throws FileNotFoundException, IOException {
+		/*Double score = 0.0;
+		try {
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			TestResultRunnable runnableTest = new TestResultRunnable(tr, r, eval);
+			
+			Future<?> future = executorService.submit(runnableTest);
+			future.get(10L, TimeUnit.SECONDS);
+			score = runnableTest.result;
+			executorService.shutdownNow();
+		} catch (InterruptedException ie) { 
+			  System.out.println("InterruptedException");
+			  }
+		catch (ExecutionException ee) { 
+			  System.out.println("ExecutionException");		
+			  }
+		catch (TimeoutException te) { 
+		  System.out.println("TimeoutException");
+		}
+		 
+        
+        */
+		
 		Double score = tr.score(r, eval);
 		Map<String, List<Double>> relevantScores = positiveScores;
 		Map<String, Integer> relevantTotalAnswers = positiveTotalAnswers;

@@ -6,6 +6,12 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.BindingSet;
@@ -36,14 +42,14 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		// test cases when the predicate should trigger
 		System.out.println(r);
 		for(int i = 0; i  < TestResultUtil.getIterations(); i++) {
-			double score = scoreIteration(true, r);
+			double score = scoreIterationTimelimited(true, r);
 			totScore += score;
 			posScore.add(score);
 			System.out.println("  POS "+totScore);
 		}
 		// test cases when the predicate should not trigger
 		for(int i = 0; i  < TestResultUtil.getIterations(); i++) {
-			double score =  scoreIteration(false, r);
+			double score =  scoreIterationTimelimited(false, r);
 			totScore += score;
 			negScore.add(score);
 			System.out.println("  POS+NEG "+totScore);
@@ -57,6 +63,29 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 	@Override
 	public boolean isPositiveInstance() {
 		return true;
+	}
+	
+	public double scoreIterationTimelimited(boolean positive, Result r) throws FileNotFoundException, IOException {
+		ScoreIterationRunnable runnable = new ScoreIterationRunnable(this, positive, r);
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Future future = executor.submit(runnable);
+		double result = 0;
+		try {
+			future.get(10, TimeUnit.MINUTES); 
+			result = runnable.result;
+			
+		} catch (InterruptedException ie) { 
+			  System.out.println("InterruptedException");
+			  }
+		catch (ExecutionException ee) { 
+			  System.out.println("ExecutionException");		
+			  }
+		catch (TimeoutException te) { 
+		  System.out.println("TimeoutException");
+		}
+		executor.shutdownNow();
+		return result;
+		
 	}
 	
 	@Override
