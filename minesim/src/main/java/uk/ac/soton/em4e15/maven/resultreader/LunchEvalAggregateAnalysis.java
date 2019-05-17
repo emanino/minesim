@@ -26,21 +26,26 @@ public class LunchEvalAggregateAnalysis {
 	
 	public static DecimalFormat df = new DecimalFormat("#.###");
 	
+	public static String evaluationFile = "eval.csv";
+
 	public static void main(String[] args) throws InterruptedException, IOException {
 		
-		String evaluationFile = "eval.csv";
 		eval = new EvaluationFile(evaluationFile);
-		double totNeg = 0;
-		double totPos = 0;
+		double totPrecision = 0;
+		double totRecall = 0;
 		for(String s : eval.getAllStns().stream().sorted(Comparator.comparing(n->n.toString())).collect(Collectors.toList())) {
 			Pair<Double,Double> result = processStn(s);
 			System.out.println("Score of   "+s+"   POS: "+df.format(result.getLeft())+" NEG: "+df.format(result.getRight()));
-			totNeg += result.getRight();
-			totPos += result.getLeft();
+			totPrecision += result.getRight();
+			totRecall += result.getLeft();
 		}
-		int numStns = eval.getAllStns().size();
-		System.out.println("TOTAL SCORE:\n >> POS: "+df.format((totPos/numStns))+" NEG: "+df.format((totNeg/numStns)));
-		System.out.println(" >> Aggregate: "+df.format((((totPos/numStns)+(totNeg/numStns))/2)));
+		double numStns = eval.getAllStns().size();
+		
+		double averagePrecision = totPrecision/numStns;
+		double averageRecall = totRecall/numStns;
+		double averageF = 2*( (averagePrecision*averageRecall) / (averagePrecision + averageRecall) );
+		System.out.println("TOTAL SCORE:\n >> Average Precision: "+averagePrecision+" Average recall: "+averageRecall);
+		System.out.println(" >> Average F score: "+averageF);
 	}
 	
 	public static Pair<Double,Double> processStn(String stn) throws IOException {
@@ -52,8 +57,19 @@ public class LunchEvalAggregateAnalysis {
 			totNeg += result.getRight();
 			totPos += result.getLeft();
 		}
-		int asIDnum = eval.getasIDforStn(stn).size();
-		return new ImmutablePair<Double,Double>(totPos/(double)asIDnum, totNeg/(double)asIDnum);
+		double asIDnum = eval.getasIDforStn(stn).size();
+		double truePositive = totPos;
+		double falsePositive = asIDnum-totPos;
+		double trueNegative = totNeg;
+		double falseNegative = asIDnum-totNeg;
+		double precision = truePositive / (truePositive+falsePositive);
+		double recall = truePositive / (truePositive+falseNegative);
+		double fScore = 2*( (precision*recall) / (precision + recall) );
+		System.out.println("Task ["+stn+"]  TP("+truePositive+") TN("+trueNegative+") FP("+falsePositive+") FN("+falseNegative+") + "+totPos/(double)asIDnum+" + "+totNeg/(double)asIDnum+" ");
+		System.out.println("  - F-measure = "+fScore);
+		System.out.println("  - Precision = "+precision);
+		System.out.println("  - Recall = "+recall); 
+		return new ImmutablePair<Double,Double>(precision, recall);
 	}
 	
 	public static Pair<Double,Double> processEntry(String asID) throws IOException {

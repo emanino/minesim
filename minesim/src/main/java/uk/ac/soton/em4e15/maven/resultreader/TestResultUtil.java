@@ -92,9 +92,31 @@ public class TestResultUtil {
 		for(int i = 0; i < b.length; i++) {
 			b[i] = bindings.get(i);
 		}
-		Predicate p = PredicateUtil.get(predicateName, bindings.size(), getPredicates());
-		PredicateInstantiation pi = new PredicateInstantiationImpl(p, b);
-		return pi.toSPARQL();
+		if(predicateName.equals("fire")) {
+			Predicate gt = PredicateUtil.get("\u003e", 2, getPredicates());
+
+			Predicate p1 = PredicateUtil.get("TemperatureOfTunnel", 2, getPredicates());
+			Binding v1 = new BindingImpl(new VariableImpl(VariableImpl.getNewVarNum()));
+			Binding[] b1 = new Binding[] {bindings.get(0), v1};
+			Binding[] b1g = new Binding[] {v1, new BindingImpl(new ResourceLiteral("48", "http://www.w3.org/2001/XMLSchema#decimal"))};
+
+			Predicate p2 = PredicateUtil.get("CarbonMonoxideOfTunnel", 2, getPredicates());
+			Binding v2 = new BindingImpl(new VariableImpl(VariableImpl.getNewVarNum()));
+			Binding[] b2 = new Binding[] {bindings.get(0), v2};
+			Binding[] b2g = new Binding[] {v2, new BindingImpl(new ResourceLiteral("78", "http://www.w3.org/2001/XMLSchema#decimal"))};
+			
+			PredicateInstantiation pi1 = new PredicateInstantiationImpl(p1, b1);
+			PredicateInstantiation pi2 = new PredicateInstantiationImpl(p2, b2);
+			
+			PredicateInstantiation pg1 = new PredicateInstantiationImpl(gt, b1g);
+			PredicateInstantiation pg2 = new PredicateInstantiationImpl(gt, b2g);
+			String queryString = pi1.toSPARQL()+"\n"+pi2.toSPARQL()+"\n"+pg1.toSPARQL()+"\n"+pg2.toSPARQL();
+			return queryString;
+		} else {
+			Predicate p = PredicateUtil.get(predicateName, bindings.size(), getPredicates());
+			PredicateInstantiation pi = new PredicateInstantiationImpl(p, b);
+			return pi.toSPARQL();
+		}
 	}
 	public static int stringToInt(String s) {
 		String r = "";

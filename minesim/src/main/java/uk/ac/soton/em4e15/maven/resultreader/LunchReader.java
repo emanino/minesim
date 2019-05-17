@@ -26,6 +26,8 @@ import javax.json.JsonValue;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
+import GraphDB.EmbeddedGraphDB;
+
 public class LunchReader {
 
 	public static String fieldEncloseCharacters = "@";
@@ -141,6 +143,7 @@ public class LunchReader {
 		ScoreSet score = new ScoreSet(eval);
 		score.score(solutions);
 		score.prettyPrintScores();
+		EmbeddedGraphDB.closeAllOpenConnections();
 		return true;
 	}
 	

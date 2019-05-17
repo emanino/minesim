@@ -65,13 +65,16 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		return true;
 	}
 	
+	private static TimeUnit timeout_unit = TimeUnit.MINUTES;
+	private static int timeout_threshold = 10;
+	
 	public double scoreIterationTimelimited(boolean positive, Result r) throws FileNotFoundException, IOException {
 		ScoreIterationRunnable runnable = new ScoreIterationRunnable(this, positive, r);
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		Future future = executor.submit(runnable);
 		double result = 0;
 		try {
-			future.get(10, TimeUnit.MINUTES); 
+			future.get(timeout_threshold, timeout_unit); 
 			result = runnable.result;
 			
 		} catch (InterruptedException ie) { 
