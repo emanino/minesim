@@ -27,6 +27,7 @@ import uk.ac.soton.em4e15.maven.minesim.Mine;
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a0;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a4;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b0;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b4;
 
 public abstract class TestResultPositive extends TestResultAbstract implements TestResultPositiveInterface{
@@ -66,7 +67,7 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 	}
 	
 	private static TimeUnit timeout_unit = TimeUnit.MINUTES;
-	private static int timeout_threshold = 10;
+	private static int timeout_threshold = 15;
 	
 	public double scoreIterationTimelimited(boolean positive, Result r) throws FileNotFoundException, IOException {
 		ScoreIterationRunnable runnable = new ScoreIterationRunnable(this, positive, r);
@@ -78,13 +79,13 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 			result = runnable.result;
 			
 		} catch (InterruptedException ie) { 
-			  System.out.println("InterruptedException");
+			  System.out.println("InterruptedException "+ie.getMessage());
 			  }
 		catch (ExecutionException ee) { 
-			  System.out.println("ExecutionException");		
+			  System.out.println("ExecutionException "+ee.getMessage());		
 			  }
 		catch (TimeoutException te) { 
-		  System.out.println("TimeoutException");
+		  System.out.println("TimeoutException "+te.getMessage());
 		}
 		executor.shutdownNow();
 		return result;
@@ -103,7 +104,7 @@ public abstract class TestResultPositive extends TestResultAbstract implements T
 		eDB.loadRDF(new StringReader(m.getSensorRDF()), RDFFormat.TURTLE);	
 		// computing rule closure is expensive, so we only do it when necessary
 		TestResultUtil.addVocabularyFiles(eDB);
-		if(this.getClass() == TestResult_a4.class || this.getClass() == TestResult_a0.class || this.getClass() == TestResult_b4.class) {			
+		if(this.getClass() == TestResult_b0.class || this.getClass() == TestResult_a0.class || this.getClass() == TestResult_a4.class || this.getClass() == TestResult_a0.class || this.getClass() == TestResult_b4.class) {			
 			PredicateEvaluation.computeRuleClosure(eDB, TestResultUtil.getRules(), TestResultUtil.getPredicates());
 		}
 		

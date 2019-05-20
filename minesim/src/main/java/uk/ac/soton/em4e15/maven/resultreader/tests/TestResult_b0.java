@@ -6,6 +6,8 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -27,47 +29,44 @@ import uk.ac.soton.em4e15.maven.resultreader.TestResult;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultNegative;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultPositive;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultPositiveFact;
+import uk.ac.soton.em4e15.maven.resultreader.TestResultPositiveIfThen;
 import uk.ac.soton.em4e15.maven.resultreader.TestResultUtil;
 
-public class TestResult_a0 extends TestResultPositiveFact{
+public class TestResult_b0 extends TestResultPositiveIfThen{
 	
 	/**
-	 * The condition A0 is "Person A is in a geofenced area B"
+	 * If a person is in a geofenced tunnel, then recall that person."
 	 * @param positive
 	 * @param m
 	 * @return
 	 */
 	@Override
 	public boolean conditionHolds(boolean positive, Mine m) {
-		if(positive) return expectedSet(m).size() > 0;
-		else return expectedSet(m).size() == 0;
-	}
-	/*public boolean conditionHolds(boolean positive, Mine m) {
-		for(LayoutAtom t: m.getState().getObjects(LayoutAtom.class)) {
-			double CO = t.getStatus().getCO();
-			double temp = t.getStatus().getTemp();
-			if(CO > (78+MineTestHelper.getCOslack()) && 
-					temp > (48+MineTestHelper.getTempslack())) return true;
-		}
-		return false;
-	}*/
-
-	public Set<String> expectedSet(Mine m){
-		Set<String> geofencedTunnel = TestResultUtil.getGeofencedTunnels(m);
-		Set<String> tunnelsWithHumans = TestResultUtil.getTunnelsWithHumans(m);
-		geofencedTunnel.retainAll(tunnelsWithHumans);
-		
-		Set<String> result = new HashSet<String>();
-
-		for(String s : geofencedTunnel) {
-			for(String p : TestResultUtil.getHumansInTunnel(m, s)) {
-				result.add(p+"|"+s);
-			}
-		}
-		
-		return result;
+		if(positive) return expectedSet(m).getLeft().size() > 0;
+		else return expectedSet(m).getLeft().size() == 0 ;
 	}
 
+	@Override
+	public Pair<Set<String>, String> expectedSet(Mine m) {
+		Set<String> geofenced = TestResultUtil.getGeofencedTunnels(m);
+		Set<String> tunnelsWithPeople = TestResultUtil.getTunnelsWithHumans(m);
+		geofenced.retainAll(tunnelsWithPeople);
+		
+		Set<String> humansInGeofencedTunnel = new HashSet<String>();
+		for(String s : geofenced) {
+			humansInGeofencedTunnel.addAll(TestResultUtil.getHumansInTunnel(m, s));
+		}
+		
+		/*if(humansInGeofencedTunnel.size() >0) {
+			System.out.print("");
+			for(String s : geofenced) {
+				humansInGeofencedTunnel.addAll(TestResultUtil.getHumansInTunnel(m, s));
+			}			
+		}*/
+		
+		return new ImmutablePair<Set<String>, String>(humansInGeofencedTunnel,"recall");
+	}
+	
 
 
 

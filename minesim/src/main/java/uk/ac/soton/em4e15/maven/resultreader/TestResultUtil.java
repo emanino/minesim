@@ -263,5 +263,15 @@ public class TestResultUtil {
 		}
 		return tunnelWithHumans;
 	}
+	public static Set<String> getHumansInTunnel(Mine m, String tunnelURI){	
+		Set<String> humansInTunnel = new HashSet<String>();
+		for(Person s: m.getState().getObjects(Person.class)) {
+			LayoutAtom currAtom = m.getState().getClosestLayoutAtom(s.getPosition());
+			Tunnel t = m.getState().getObject(Tunnel.class, currAtom.getSuperId());
+			if(t.getURI().equals(tunnelURI))
+				humansInTunnel.add(s.getURI());
+		}
+		return humansInTunnel;
+	}
 	
 }

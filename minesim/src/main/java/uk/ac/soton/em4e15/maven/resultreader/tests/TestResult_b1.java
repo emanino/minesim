@@ -43,7 +43,7 @@ public class TestResult_b1 extends TestResultPositiveIfThen{
 	@Override
 	public boolean conditionHolds(boolean positive, Mine m) {
 		if(positive) return expectedSet(m).getLeft().size() > 0;
-		else return Math.random() > 0.5 ?
+		else return Math.random() > 0.9 ?
 				expectedSet(m).getLeft().size() == 0 : 
 				expectedSetHelper(m).getLeft().size() > 0 && expectedSet(m).getLeft().size() == 0;
 	}

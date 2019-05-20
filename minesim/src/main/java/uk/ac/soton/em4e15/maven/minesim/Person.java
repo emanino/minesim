@@ -6,8 +6,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 import uk.ac.soton.em4e15.maven.minesim.useractions.UserAction;
 
@@ -145,6 +147,11 @@ public class Person implements MovingObject {
 		
 	}
 
+	public String getURI() {
+		return this.getState().getProp().getProperty("baseURI")+this.getId();
+	}
+	
+	
 	@Override
 	public Set<Triple> getSensorInfoRDF() {
 		Set<Triple> triples = new HashSet<Triple>();
@@ -153,6 +160,22 @@ public class Person implements MovingObject {
 				NodeFactory.createURI(baseURI+id), 
 				NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), 
 				NodeFactory.createURI(baseURI+"Person")));
+		triples.addAll(getPersonInfoRDFPosition());
+		return triples;
+	}
+	
+	public Set<Triple> getPersonInfoRDFPosition() {
+		Set<Triple> triples = new HashSet<Triple>();
+		String baseURI = state.getProp().getProperty("baseURI");
+		triples.add(new Triple(
+				NodeFactory.createURI(baseURI+id), 
+				NodeFactory.createURI("http://www.opengis.net/rdf#hasGeometry"), 
+				NodeFactory.createURI(baseURI+"geo"+id)));
+		triples.add(new Triple(
+				NodeFactory.createURI(baseURI+"geo"+id), 
+				NodeFactory.createURI("http://www.opengis.net/ont/geosparql#asWKT"), 
+				ResourceFactory.createTypedLiteral("POINT("+pos.getX()+" "+pos.getY()+")", new BaseDatatype("http://www.opengis.net/ont/geosparql#wktLiteral")).asNode()));
+		
 		return triples;
 	}
 

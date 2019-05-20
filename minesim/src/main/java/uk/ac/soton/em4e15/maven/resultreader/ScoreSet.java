@@ -30,6 +30,7 @@ import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a6;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a7;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a8;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_a9;
+import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b0;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b1;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b10;
 import uk.ac.soton.em4e15.maven.resultreader.tests.TestResult_b2;
@@ -94,7 +95,9 @@ public class ScoreSet {
 			tr = new TestResult_b5();
 		} else if(label.equals("b4")) {
 			tr = new TestResult_b4();
-		} else if(label.equals("b1")) {
+		} else if(label.equals("b0")) {
+			tr = new TestResult_b0();
+		}else if(label.equals("b1")) {
 			tr = new TestResult_b1();
 		} else if(label.equals("b2")) {
 			tr = new TestResult_b2();
